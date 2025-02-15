@@ -4,10 +4,10 @@ public class Transaction : ISharedColumns
 {
     public string Id { get; set; } = null!;
 
-    public string UserID { get; set; } = null!;
+    public string UserId { get; set; } = null!;
     public User? User { get; set; }
 
-    public string BookID { get; set; } = null!;
+    public string BookId { get; set; } = null!;
     public Book? Book { get; set; }
 
     public DateTime IssueDate { get; set; }

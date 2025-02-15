@@ -1,4 +1,6 @@
-﻿namespace LMS.DAL;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace LMS.DAL;
 
 public class FeedbackRepository : GenericRepository<Feedback>, IFeedbackRepository
 {
@@ -18,6 +20,11 @@ public class FeedbackRepository : GenericRepository<Feedback>, IFeedbackReposito
     #endregion
 
     #region Functions
-
+    public async Task<IEnumerable<Feedback>> GetAllFeedbacksByBookIdAsync(string bookId)
+    {
+        return await _context.Feedback
+            .Where(f => f.BookId == bookId)
+            .ToListAsync();
+    }
     #endregion
 }

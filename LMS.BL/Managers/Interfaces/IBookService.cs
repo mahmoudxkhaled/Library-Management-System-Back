@@ -1,5 +1,14 @@
-﻿namespace LMS.BL;
+﻿using LMS.BL.Shared.Models;
+using Microsoft.AspNetCore.Http;
 
-public interface IBookService
+namespace LMS.BL
 {
+    public interface IBookService
+    {
+        Task<ApiResult> GetAllBooksAsync();
+        Task<ApiResult> GetBookByIdAsync(string id);
+        Task<ApiResult> AddBookAsync(AddBookDto request, HttpContext httpContext);
+        Task<ApiResult> UpdateBookAsync(UpdateBookDto request, HttpContext httpContext);
+        Task<ApiResult> DeleteBookAsync(string id);
+    }
 }

@@ -29,6 +29,7 @@ public class LMSDbContext : IdentityDbContext<User>
 
     #endregion
 
+
     private static LambdaExpression CreateIsDeletedFilter(Type entityType)
     {
         var parameter = Expression.Parameter(entityType, "e");

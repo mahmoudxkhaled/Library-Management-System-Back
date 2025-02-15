@@ -50,6 +50,9 @@ namespace LMS.DAL.Migrations
                     b.Property<string>("DeletedUserId")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("InsertedTime")
                         .HasColumnType("datetime2");
 
@@ -100,6 +103,9 @@ namespace LMS.DAL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DeletedUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("InsertedTime")
@@ -199,7 +205,7 @@ namespace LMS.DAL.Migrations
                     b.Property<string>("ActivationUserId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("BookID")
+                    b.Property<string>("BookId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
@@ -240,15 +246,15 @@ namespace LMS.DAL.Migrations
                     b.Property<string>("UpdateUserId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserID")
+                    b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookID");
+                    b.HasIndex("BookId");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Transaction");
                 });
@@ -258,7 +264,7 @@ namespace LMS.DAL.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("BookID")
+                    b.Property<string>("BookId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
@@ -267,7 +273,7 @@ namespace LMS.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookID");
+                    b.HasIndex("BookId");
 
                     b.ToTable("TrendingBooks");
                 });
@@ -345,6 +351,9 @@ namespace LMS.DAL.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("ProfileImageUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
                         .IsRequired()
@@ -546,13 +555,13 @@ namespace LMS.DAL.Migrations
                 {
                     b.HasOne("LMS.DAL.Book", "Book")
                         .WithMany("Transactions")
-                        .HasForeignKey("BookID")
+                        .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("LMS.DAL.User", "User")
                         .WithMany("Transactions")
-                        .HasForeignKey("UserID")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -565,7 +574,7 @@ namespace LMS.DAL.Migrations
                 {
                     b.HasOne("LMS.DAL.Book", "Book")
                         .WithMany()
-                        .HasForeignKey("BookID")
+                        .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

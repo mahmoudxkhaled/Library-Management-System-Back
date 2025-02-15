@@ -2,10 +2,12 @@
 
 namespace LMS.DAL
 {
-    public class User : IdentityUser
+    public class User : IdentityUser, ISharedColumns
     {
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
+        public string? ProfileImageUrl { get; set; }
+
         public string Role { get; set; } = null!; // Admin, Librarian, Member
 
         public ICollection<Transaction> Transactions { get; set; } = new HashSet<Transaction>();

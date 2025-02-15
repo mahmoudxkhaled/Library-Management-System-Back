@@ -8,4 +8,6 @@ public interface IUnitOfWork
     IFeedbackRepository FeedbackRepository { get; }
     ITransactionRepository TransactionRepository { get; }
     ITrendingBooksRepository TrendingBooksRepository { get; }
+    Task<int> SaveChangesAsync();
+
 }

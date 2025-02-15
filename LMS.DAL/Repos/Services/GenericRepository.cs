@@ -36,5 +36,24 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     public void Update(T entity) => _context.Set<T>().Update(entity);
     public async Task AddRangeAsync(IEnumerable<T> entities) => await _context.Set<T>().AddRangeAsync(entities);
 
+    public async Task DeleteAsync(T entity, string userId)
+    {
+        var type = typeof(T);
+        var isDeletedProp = type.GetProperty("IsDeleted");
+        var deletedTimeProp = type.GetProperty("DeletedTime");
+        var deletedUserIdProp = type.GetProperty("DeletedUserId");
+
+        if (isDeletedProp != null)
+            isDeletedProp.SetValue(entity, true);
+
+        if (deletedTimeProp != null)
+            deletedTimeProp.SetValue(entity, DateTime.Now);
+
+        if (deletedUserIdProp != null)
+            deletedUserIdProp.SetValue(entity, userId);
+
+        _context.Set<T>().Update(entity);
+        await _context.SaveChangesAsync();
+    }
     #endregion
 }

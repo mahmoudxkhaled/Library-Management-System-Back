@@ -1,5 +1,12 @@
-﻿namespace LMS.BL;
+﻿using LMS.BL.Shared.Models;
 
-public interface ITrendingBooksService
+namespace LMS.BL
 {
+    public interface ITrendingBooksService
+    {
+        Task<ApiResult> GetAllTrendingBooksAsync();
+        Task<ApiResult> IncrementTrendingBookAsync(string bookId);
+
+
+    }
 }
