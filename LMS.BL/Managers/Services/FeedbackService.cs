@@ -6,10 +6,12 @@ namespace LMS.BL
     public class FeedbackService : IFeedbackService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICurrentUserService _currentUserService;
 
-        public FeedbackService(IUnitOfWork unitOfWork)
+        public FeedbackService(IUnitOfWork unitOfWork, ICurrentUserService currentUserService)
         {
             _unitOfWork = unitOfWork;
+            _currentUserService = currentUserService;
         }
 
         public async Task<ApiResult> GetAllFeedbacksAsync()
@@ -67,6 +69,7 @@ namespace LMS.BL
                     BookId = request.BookId,
                     Rating = request.Rating,
                     Comment = request.Comment,
+                    InsertedUserId = _currentUserService.UserId,
                     InsertedTime = DateTime.Now
                 };
 

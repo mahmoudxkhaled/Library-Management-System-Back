@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 
 namespace LMS.BL;
 
@@ -7,9 +7,9 @@ public class HelperService : IHelperService
 {
     #region Fields & Properties
 
-    private readonly IHostEnvironment _webHostEnvironment;
+    private readonly IWebHostEnvironment _webHostEnvironment;
 
-    public HelperService(IHostEnvironment webHostEnvironment)
+    public HelperService(IWebHostEnvironment webHostEnvironment)
     {
         _webHostEnvironment = webHostEnvironment;
     }
@@ -23,11 +23,11 @@ public class HelperService : IHelperService
         if (file == null || file.Length == 0)
             throw new ArgumentException("File cannot be empty");
 
-        var uploadsFolder = Path.Combine(_webHostEnvironment.ContentRootPath, "Uploads", folderName);
+        var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Uploads", folderName);
         if (!Directory.Exists(uploadsFolder))
             Directory.CreateDirectory(uploadsFolder);
 
-        var timestamp = DateTime.UtcNow.ToString("yyyyMMdd_HHmmss");
+        var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
         var uniqueFileName = $"{Guid.NewGuid()}_{timestamp}{Path.GetExtension(file.FileName)}";
         var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
@@ -37,8 +37,8 @@ public class HelperService : IHelperService
         }
 
         var baseUrl = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}";
-        var relativePath = filePath.Replace(_webHostEnvironment.ContentRootPath, string.Empty).Replace('\\', '/');
-        return $"{baseUrl}{relativePath}";
+        var relativePath = Path.Combine("Uploads", folderName, uniqueFileName).Replace('\\', '/');
+        return $"{baseUrl}/{relativePath}";
     }
 
     #endregion

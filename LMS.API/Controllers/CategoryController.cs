@@ -29,14 +29,14 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost("AddCategory")]
-    public async Task<IActionResult> AddCategory(AddCategoryDto request)
+    public async Task<IActionResult> AddCategory([FromForm] AddCategoryDto request)
     {
         var result = await _categoryService.AddCategoryAsync(request, HttpContext);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
     [HttpPut("UpdateCategory/{id}")]
-    public async Task<IActionResult> UpdateCategory(UpdateCategoryDto request)
+    public async Task<IActionResult> UpdateCategory([FromForm] UpdateCategoryDto request)
     {
         var result = await _categoryService.UpdateCategoryAsync(request, HttpContext);
         return result.IsSuccess ? Ok(result) : BadRequest(result);

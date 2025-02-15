@@ -8,11 +8,16 @@ namespace LMS.BL
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHelperService _helperService;
+        private readonly ICurrentUserService _currentUserService;
 
-        public CategoryService(IUnitOfWork unitOfWork, IHelperService helperService)
+        public CategoryService(
+            IUnitOfWork unitOfWork,
+            IHelperService helperService,
+            ICurrentUserService currentUserService)
         {
             _unitOfWork = unitOfWork;
             _helperService = helperService;
+            _currentUserService = currentUserService;
 
         }
 
@@ -69,7 +74,8 @@ namespace LMS.BL
                 {
                     Id = Guid.NewGuid().ToString(),
                     Name = request.Name,
-                    InsertedTime = DateTime.Now
+                    InsertedUserId = _currentUserService.UserId,
+                    InsertedTime = DateTime.Now,
                 };
                 if (request.ImageUrl is not null)
                 {
@@ -78,7 +84,7 @@ namespace LMS.BL
 
                 await _unitOfWork.CategoryRepository.AddAsync(category);
                 await _unitOfWork.SaveChangesAsync();
-                return new ApiResult { IsSuccess = true, Message = "Category created successfully", Data = category };
+                return new ApiResult { IsSuccess = true, Message = "Category created successfully" };
             }
             catch (Exception ex)
             {
@@ -96,8 +102,9 @@ namespace LMS.BL
 
                 category.Name = request.Name ?? category.Name;
                 category.ImageUrl = request.ImageUrl is not null ? await _helperService.SaveFileAsync(request.ImageUrl, "Books", httpContext) : category.ImageUrl;
-
                 category.UpdateTime = DateTime.Now;
+                category.UpdateUserId = _currentUserService.UserId;
+
 
                 _unitOfWork.CategoryRepository.Update(category);
                 await _unitOfWork.SaveChangesAsync();
@@ -117,7 +124,7 @@ namespace LMS.BL
                 if (category == null)
                     return new ApiResult { IsSuccess = false, Message = "Category not found" };
 
-                //await _unitOfWork.CategoryRepository.DeleteAsync(category, userId);
+                await _unitOfWork.CategoryRepository.DeleteAsync(category, _currentUserService.UserId!);
                 return new ApiResult { IsSuccess = true, Message = "Category marked as deleted" };
             }
             catch (Exception ex)

@@ -24,7 +24,7 @@ public class UserController : ControllerBase
 
 
     [HttpPost("Register")]
-    public async Task<IActionResult> Register(UserRegisterDto registerCredentials)
+    public async Task<IActionResult> Register([FromForm] UserRegisterDto registerCredentials)
     {
         var result = await _userService.RegisterUserAsync(registerCredentials);
         return result.IsSuccess ? Ok(result) : BadRequest(result);

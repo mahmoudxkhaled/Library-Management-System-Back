@@ -74,7 +74,6 @@ public class UserService : IUserService
                 {
                     Id = user.Id,
                     Email = user.Email,
-                    ProfileImageUrl = user.ProfileImageUrl,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Role = user.Role,

@@ -29,14 +29,14 @@ public class BookController : ControllerBase
     }
 
     [HttpPost("AddBook")]
-    public async Task<IActionResult> AddBook(AddBookDto request)
+    public async Task<IActionResult> AddBook([FromForm] AddBookDto request)
     {
         var result = await _bookService.AddBookAsync(request, HttpContext);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
     [HttpPut("UpdateBook/{id}")]
-    public async Task<IActionResult> UpdateBook(UpdateBookDto request)
+    public async Task<IActionResult> UpdateBook([FromForm] UpdateBookDto request)
     {
         var result = await _bookService.UpdateBookAsync(request, HttpContext);
         return result.IsSuccess ? Ok(result) : BadRequest(result);

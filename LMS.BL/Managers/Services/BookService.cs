@@ -8,11 +8,17 @@ namespace LMS.BL
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHelperService _helperService;
+        private readonly ICurrentUserService _currentUserService;
 
-        public BookService(IUnitOfWork unitOfWork, IHelperService helperService)
+        public BookService(
+            IUnitOfWork unitOfWork,
+            IHelperService helperService,
+            ICurrentUserService currentUserService)
         {
             _unitOfWork = unitOfWork;
             _helperService = helperService;
+            _currentUserService = currentUserService;
+
         }
 
         public async Task<ApiResult> GetAllBooksAsync()
@@ -39,7 +45,6 @@ namespace LMS.BL
                 return new ApiResult { IsSuccess = false, Message = ex.Message };
             }
         }
-
         public async Task<ApiResult> GetBookByIdAsync(string id)
         {
             try
@@ -69,7 +74,6 @@ namespace LMS.BL
                 return new ApiResult { IsSuccess = false, Message = ex.Message };
             }
         }
-
         public async Task<ApiResult> AddBookAsync(AddBookDto request, HttpContext httpContext)
         {
             try
@@ -83,6 +87,7 @@ namespace LMS.BL
                     AvailableCopies = request.AvailableCopies,
                     TotalCopies = request.TotalCopies,
                     CategoryId = request.CategoryId,
+                    InsertedUserId = _currentUserService.UserId,
                     InsertedTime = DateTime.Now
                 };
                 if (request.ImageUrl is not null)
@@ -115,6 +120,7 @@ namespace LMS.BL
                 book.TotalCopies = request.TotalCopies;
                 book.CategoryId = request.CategoryId ?? book.CategoryId;
                 book.ImageUrl = request.ImageUrl is not null ? await _helperService.SaveFileAsync(request.ImageUrl, "Books", httpContext) : book.ImageUrl;
+                book.UpdateUserId = _currentUserService.UserId;
                 book.UpdateTime = DateTime.Now;
 
                 _unitOfWork.BookRepository.Update(book);
@@ -135,7 +141,7 @@ namespace LMS.BL
                 if (book == null)
                     return new ApiResult { IsSuccess = false, Message = "Book not found" };
 
-                //await _unitOfWork.BookRepository.DeleteAsync(book, userId);
+                await _unitOfWork.BookRepository.DeleteAsync(book, _currentUserService.UserId!);
                 return new ApiResult { IsSuccess = true, Message = "Book marked as deleted" };
             }
             catch (Exception ex)

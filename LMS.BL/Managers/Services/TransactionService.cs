@@ -7,11 +7,17 @@ namespace LMS.BL
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ITrendingBooksService _trendingBooksService;
+        private readonly ICurrentUserService _currentUserService;
 
-        public TransactionService(IUnitOfWork unitOfWork, ITrendingBooksService trendingBooksService)
+
+        public TransactionService(
+            IUnitOfWork unitOfWork,
+            ITrendingBooksService trendingBooksService,
+            ICurrentUserService currentUserService)
         {
             _unitOfWork = unitOfWork;
             _trendingBooksService = trendingBooksService;
+            _currentUserService = currentUserService;
         }
 
         public async Task<ApiResult> GetAllTransactionsAsync()
@@ -79,6 +85,7 @@ namespace LMS.BL
                     IssueDate = request.IssueDate,
                     DueDate = request.DueDate,
                     Status = TransactionStatus.Issued.ToString(),
+                    InsertedUserId = _currentUserService.UserId,
                     InsertedTime = DateTime.Now
                 };
                 _trendingBooksService.IncrementTrendingBookAsync(request.BookId);
@@ -103,6 +110,7 @@ namespace LMS.BL
 
                 transaction.ReturnDate = request.ReturnDate ?? transaction.ReturnDate;
                 transaction.Status = request.Status ?? transaction.Status;
+                transaction.UpdateUserId = _currentUserService.UserId;
                 transaction.UpdateTime = DateTime.Now;
 
                 _unitOfWork.TransactionRepository.Update(transaction);
@@ -123,7 +131,7 @@ namespace LMS.BL
                 if (transaction == null)
                     return new ApiResult { IsSuccess = false, Message = "Transaction not found" };
 
-                //await _unitOfWork.TransactionRepository.DeleteAsync(transaction, userId);
+                await _unitOfWork.TransactionRepository.DeleteAsync(transaction, _currentUserService.UserId!);
                 return new ApiResult { IsSuccess = true, Message = "Transaction marked as deleted" };
             }
             catch (Exception ex)
