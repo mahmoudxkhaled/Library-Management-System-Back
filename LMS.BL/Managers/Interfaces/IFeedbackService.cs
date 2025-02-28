@@ -1,11 +1,10 @@
 ﻿using LMS.BL.Shared.Models;
 
-namespace LMS.BL
+namespace LMS.BL;
+
+public interface IFeedbackService
 {
-    public interface IFeedbackService
-    {
-        Task<ApiResult> GetAllFeedbacksAsync();
-        Task<ApiResult> GetAllFeedbacksByBookIdAsync(string bookId);
-        Task<ApiResult> AddFeedbackAsync(AddFeedbackDto request);
-    }
+    Task<ApiResult> GetAllFeedbacksAsync();
+    Task<ApiResult> GetAllFeedbacksByBookIdAsync(string bookId);
+    Task<ApiResult> AddFeedbackAsync(AddFeedbackDto request);
 }

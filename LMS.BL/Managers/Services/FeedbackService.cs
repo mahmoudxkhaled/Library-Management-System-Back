@@ -1,86 +1,83 @@
 ﻿using LMS.BL.Shared.Models;
 using LMS.DAL;
-
-namespace LMS.BL
+namespace LMS.BL;
+public class FeedbackService : IFeedbackService
 {
-    public class FeedbackService : IFeedbackService
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly ICurrentUserService _currentUserService;
+
+    public FeedbackService(IUnitOfWork unitOfWork, ICurrentUserService currentUserService)
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly ICurrentUserService _currentUserService;
+        _unitOfWork = unitOfWork;
+        _currentUserService = currentUserService;
+    }
 
-        public FeedbackService(IUnitOfWork unitOfWork, ICurrentUserService currentUserService)
+    public async Task<ApiResult> GetAllFeedbacksAsync()
+    {
+        try
         {
-            _unitOfWork = unitOfWork;
-            _currentUserService = currentUserService;
+            var feedbacks = await _unitOfWork.FeedbackRepository.GetAllAsync();
+            var feedbackList = feedbacks.Select(f => new GetFeedbackDto
+            {
+                Id = f.Id,
+                UserId = f.UserId,
+                BookId = f.BookId,
+                Rating = f.Rating,
+                Comment = f.Comment
+            }).ToList();
+
+            return new ApiResult { IsSuccess = true, Data = feedbackList };
         }
-
-        public async Task<ApiResult> GetAllFeedbacksAsync()
+        catch (Exception ex)
         {
-            try
-            {
-                var feedbacks = await _unitOfWork.FeedbackRepository.GetAllAsync();
-                var feedbackList = feedbacks.Select(f => new GetFeedbackDto
-                {
-                    Id = f.Id,
-                    UserId = f.UserId,
-                    BookId = f.BookId,
-                    Rating = f.Rating,
-                    Comment = f.Comment
-                }).ToList();
-
-                return new ApiResult { IsSuccess = true, Data = feedbackList };
-            }
-            catch (Exception ex)
-            {
-                return new ApiResult { IsSuccess = false, Message = ex.Message };
-            }
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
         }
-        public async Task<ApiResult> GetAllFeedbacksByBookIdAsync(string bookId)
+    }
+    public async Task<ApiResult> GetAllFeedbacksByBookIdAsync(string bookId)
+    {
+        try
         {
-            try
+            var feedbacks = await _unitOfWork.FeedbackRepository.GetAllFeedbacksByBookIdAsync(bookId);
+            var feedbackList = feedbacks.Select(f => new GetFeedbackDto
             {
-                var feedbacks = await _unitOfWork.FeedbackRepository.GetAllFeedbacksByBookIdAsync(bookId);
-                var feedbackList = feedbacks.Select(f => new GetFeedbackDto
-                {
-                    Id = f.Id,
-                    UserId = f.UserId,
-                    BookId = f.BookId,
-                    Rating = f.Rating,
-                    Comment = f.Comment
-                }).ToList();
+                Id = f.Id,
+                UserId = f.UserId,
+                BookId = f.BookId,
+                Rating = f.Rating,
+                Comment = f.Comment
+            }).ToList();
 
-                return feedbackList.Any()
-                    ? new ApiResult { IsSuccess = true, Data = feedbackList }
-                    : new ApiResult { IsSuccess = false, Message = "No feedbacks found for this book" };
-            }
-            catch (Exception ex)
-            {
-                return new ApiResult { IsSuccess = false, Message = ex.Message };
-            }
+            return feedbackList.Any()
+                ? new ApiResult { IsSuccess = true, Data = feedbackList }
+                : new ApiResult { IsSuccess = false, Message = "No feedbacks found for this book" };
         }
-        public async Task<ApiResult> AddFeedbackAsync(AddFeedbackDto request)
+        catch (Exception ex)
         {
-            try
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
+        }
+    }
+    public async Task<ApiResult> AddFeedbackAsync(AddFeedbackDto request)
+    {
+        try
+        {
+            var feedback = new Feedback
             {
-                var feedback = new Feedback
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    UserId = request.UserId,
-                    BookId = request.BookId,
-                    Rating = request.Rating,
-                    Comment = request.Comment,
-                    InsertedUserId = _currentUserService.UserId,
-                    InsertedTime = DateTime.Now
-                };
+                Id = Guid.NewGuid().ToString(),
+                UserId = request.UserId,
+                BookId = request.BookId,
+                Rating = request.Rating,
+                Comment = request.Comment,
+                InsertedUserId = _currentUserService.UserId,
+                InsertedTime = DateTime.Now
+            };
 
-                await _unitOfWork.FeedbackRepository.AddAsync(feedback);
-                await _unitOfWork.SaveChangesAsync();
-                return new ApiResult { IsSuccess = true, Message = "Feedback created successfully", Data = feedback };
-            }
-            catch (Exception ex)
-            {
-                return new ApiResult { IsSuccess = false, Message = ex.Message };
-            }
+            await _unitOfWork.FeedbackRepository.AddAsync(feedback);
+            await _unitOfWork.SaveChangesAsync();
+            return new ApiResult { IsSuccess = true, Message = "Feedback created successfully", Data = feedback };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
         }
     }
 }

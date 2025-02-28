@@ -49,6 +49,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         if (deletedTimeProp != null)
             deletedTimeProp.SetValue(entity, DateTime.Now);
 
+        if (userId == null) { userId = "UnKnown"; };
         if (deletedUserIdProp != null)
             deletedUserIdProp.SetValue(entity, userId);
 

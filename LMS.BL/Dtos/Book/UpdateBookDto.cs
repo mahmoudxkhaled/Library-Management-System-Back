@@ -6,6 +6,7 @@ public class UpdateBookDto
 {
     public string Id { get; set; } = null!;
     public string Title { get; set; } = null!;
+    public string Description { get; set; } = null!;
     public string CategoryId { get; set; } = null!;
     public string Author { get; set; } = null!;
     public int PublicationYear { get; set; }

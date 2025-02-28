@@ -1,67 +1,63 @@
 ﻿using LMS.BL.Shared.Models;
 using LMS.DAL;
+namespace LMS.BL;
 
-namespace LMS.BL
+public class TrendingBooksService : ITrendingBooksService
 {
-    public class TrendingBooksService : ITrendingBooksService
+    private readonly IUnitOfWork _unitOfWork;
+
+    public TrendingBooksService(IUnitOfWork unitOfWork)
     {
-        private readonly IUnitOfWork _unitOfWork;
+        _unitOfWork = unitOfWork;
+    }
 
-        public TrendingBooksService(IUnitOfWork unitOfWork)
+    public async Task<ApiResult> GetAllTrendingBooksAsync()
+    {
+        try
         {
-            _unitOfWork = unitOfWork;
-        }
+            var trendingBooks = await _unitOfWork.TrendingBooksRepository.GetAllAsync();
+            var trendingList = trendingBooks.Select(t => new GetTrendingBookDto
+            {
+                Id = t.Id,
+                BookId = t.BookId,
+                BorrowCount = t.BorrowCount
+            }).ToList();
 
-        public async Task<ApiResult> GetAllTrendingBooksAsync()
+            return new ApiResult { IsSuccess = true, Data = trendingList };
+        }
+        catch (Exception ex)
         {
-            try
-            {
-                var trendingBooks = await _unitOfWork.TrendingBooksRepository.GetAllAsync();
-                var trendingList = trendingBooks.Select(t => new GetTrendingBookDto
-                {
-                    Id = t.Id,
-                    BookId = t.BookId,
-                    BorrowCount = t.BorrowCount
-                }).ToList();
-
-                return new ApiResult { IsSuccess = true, Data = trendingList };
-            }
-            catch (Exception ex)
-            {
-                return new ApiResult { IsSuccess = false, Message = ex.Message };
-            }
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
         }
+    }
 
-        public async Task<ApiResult> IncrementTrendingBookAsync(string bookId)
+    public async Task<ApiResult> IncrementTrendingBookAsync(string bookId)
+    {
+        try
         {
-            try
+            var trendingBook = await _unitOfWork.TrendingBooksRepository.GetByIdAsync(bookId);
+            if (trendingBook == null)
             {
-                var trendingBook = await _unitOfWork.TrendingBooksRepository.GetByIdAsync(bookId);
-                if (trendingBook == null)
+                trendingBook = new TrendingBook
                 {
-                    trendingBook = new TrendingBook
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        BookId = bookId,
-                        BorrowCount = 1
-                    };
-                    await _unitOfWork.TrendingBooksRepository.AddAsync(trendingBook);
-                }
-                else
-                {
-                    trendingBook.BorrowCount++;
-                    _unitOfWork.TrendingBooksRepository.Update(trendingBook);
-                }
+                    Id = Guid.NewGuid().ToString(),
+                    BookId = bookId,
+                    BorrowCount = 1
+                };
+                await _unitOfWork.TrendingBooksRepository.AddAsync(trendingBook);
+            }
+            else
+            {
+                trendingBook.BorrowCount++;
+                _unitOfWork.TrendingBooksRepository.Update(trendingBook);
+            }
 
-                await _unitOfWork.SaveChangesAsync();
-                return new ApiResult { IsSuccess = true, Message = "Trending book updated successfully", Data = trendingBook };
-            }
-            catch (Exception ex)
-            {
-                return new ApiResult { IsSuccess = false, Message = ex.Message };
-            }
+            await _unitOfWork.SaveChangesAsync();
+            return new ApiResult { IsSuccess = true, Message = "Trending book updated successfully", Data = trendingBook };
         }
-
-
+        catch (Exception ex)
+        {
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
+        }
     }
 }

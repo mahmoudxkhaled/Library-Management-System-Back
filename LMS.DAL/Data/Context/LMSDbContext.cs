@@ -22,13 +22,24 @@ public class LMSDbContext : IdentityDbContext<User>
     public DbSet<Transaction> Transaction => Set<Transaction>();
     public DbSet<TrendingBook> TrendingBooks => Set<TrendingBook>();
     public DbSet<User> User => Set<User>();
-    protected override void OnModelCreating(ModelBuilder builder)
-    {
-        base.OnModelCreating(builder);
-    }
+
+
 
     #endregion
 
+    #region OnModelCreating
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            if (typeof(ISharedColumns).IsAssignableFrom(entityType.ClrType) && entityType.BaseType == null)
+                modelBuilder.Entity(entityType.ClrType).HasQueryFilter(CreateIsDeletedFilter(entityType.ClrType));
+        }
+    }
+    #endregion
 
     private static LambdaExpression CreateIsDeletedFilter(Type entityType)
     {

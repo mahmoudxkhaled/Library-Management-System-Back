@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-
 namespace LMS.BL;
 
 public class HelperService : IHelperService
@@ -36,10 +35,11 @@ public class HelperService : IHelperService
             await file.CopyToAsync(fileStream);
         }
 
-        var baseUrl = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}";
+        // Return only the relative path
         var relativePath = Path.Combine("Uploads", folderName, uniqueFileName).Replace('\\', '/');
-        return $"{baseUrl}/{relativePath}";
+        return relativePath;
     }
+
 
     #endregion
 }

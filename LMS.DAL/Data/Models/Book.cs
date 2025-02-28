@@ -6,6 +6,7 @@ public class Book : ISharedColumns
     public string Title { get; set; } = null!;
     public string Author { get; set; } = null!;
     public string? ImageUrl { get; set; }
+    public string Description { get; set; }
     public int PublicationYear { get; set; }
     public int AvailableCopies { get; set; }
     public int TotalCopies { get; set; }

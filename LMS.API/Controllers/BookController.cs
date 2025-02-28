@@ -35,7 +35,7 @@ public class BookController : ControllerBase
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpPut("UpdateBook/{id}")]
+    [HttpPut("UpdateBook")]
     public async Task<IActionResult> UpdateBook([FromForm] UpdateBookDto request)
     {
         var result = await _bookService.UpdateBookAsync(request, HttpContext);
@@ -48,4 +48,12 @@ public class BookController : ControllerBase
         var result = await _bookService.DeleteBookAsync(id);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
+
+    [HttpPut("ActivateOrDeactivateBook/{id}")]
+    public async Task<IActionResult> ActivateOrDeactivateBook(string id)
+    {
+        var result = await _bookService.ActivateOrDeactivateBookAsync(id);
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
+
 }

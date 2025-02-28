@@ -4,6 +4,7 @@ public class GetBookDto
 {
     public string Id { get; set; } = null!;
     public string Title { get; set; } = null!;
+    public string Description { get; set; } = null!;
     public string Author { get; set; } = null!;
     public string? ImageUrl { get; set; }
     public int PublicationYear { get; set; }

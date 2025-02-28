@@ -35,7 +35,7 @@ public class CategoryController : ControllerBase
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpPut("UpdateCategory/{id}")]
+    [HttpPut("UpdateCategory")]
     public async Task<IActionResult> UpdateCategory([FromForm] UpdateCategoryDto request)
     {
         var result = await _categoryService.UpdateCategoryAsync(request, HttpContext);
@@ -46,6 +46,13 @@ public class CategoryController : ControllerBase
     public async Task<IActionResult> DeleteCategory(string id)
     {
         var result = await _categoryService.DeleteCategoryAsync(id);
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
+
+    [HttpPut("ActivateOrDeactivateCategory/{id}")]
+    public async Task<IActionResult> ActivateOrDeactivateCategory(string id)
+    {
+        var result = await _categoryService.ActivateOrDeactivateCategoryAsync(id);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 }

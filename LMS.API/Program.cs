@@ -24,6 +24,25 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddBusinessLayer();
 builder.Services.AddDataAccessLayer();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
+
+#region Base URL Filter
+//builder.Services.AddControllers(options =>
+//{
+//    options.Filters.Add<AttachDomainResponseFilter>(); 
+//});
+//builder.Services.AddHttpContextAccessor(); / 
+#endregion
+
 
 
 #region Identity
@@ -70,12 +89,18 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowAll");
+
+app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 

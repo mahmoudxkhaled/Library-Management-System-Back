@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
-
 namespace LMS.BL;
 
 public class CurrentUserService : ICurrentUserService

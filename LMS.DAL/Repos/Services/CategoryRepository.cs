@@ -1,4 +1,6 @@
-﻿namespace LMS.DAL;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace LMS.DAL;
 
 public class CategoryRepository : GenericRepository<Category>, ICategoryRepository
 {
@@ -19,5 +21,14 @@ public class CategoryRepository : GenericRepository<Category>, ICategoryReposito
 
     #region Functions
 
+    public async Task<IEnumerable<Category>> GetAllCategoriesWithBooks()
+    {
+        return await _context.Category
+                                .Include(x => x.Books)
+                                .ToListAsync();
+
+    }
     #endregion
+
+
 }

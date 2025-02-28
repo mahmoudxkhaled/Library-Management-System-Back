@@ -1,136 +1,164 @@
 ﻿using LMS.BL.Shared.Models;
 using LMS.DAL;
 using Microsoft.AspNetCore.Http;
+namespace LMS.BL;
 
-namespace LMS.BL
+public class CategoryService : ICategoryService
 {
-    public class CategoryService : ICategoryService
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IHelperService _helperService;
+    private readonly ICurrentUserService _currentUserService;
+
+    public CategoryService(
+        IUnitOfWork unitOfWork,
+        IHelperService helperService,
+        ICurrentUserService currentUserService)
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IHelperService _helperService;
-        private readonly ICurrentUserService _currentUserService;
+        _unitOfWork = unitOfWork;
+        _helperService = helperService;
+        _currentUserService = currentUserService;
 
-        public CategoryService(
-            IUnitOfWork unitOfWork,
-            IHelperService helperService,
-            ICurrentUserService currentUserService)
+    }
+
+    public async Task<ApiResult> GetAllCategoriesAsync()
+    {
+        try
         {
-            _unitOfWork = unitOfWork;
-            _helperService = helperService;
-            _currentUserService = currentUserService;
+            var categories = await _unitOfWork.CategoryRepository.GetAllCategoriesWithBooks();
+            var categoryList = categories.Select(c => new GetCategoryDto
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Description = c.Description,
+                BooksCount = c.Books.Count(),
+                ImageUrl = c.ImageUrl,
 
+            }).ToList();
+
+            return new ApiResult { IsSuccess = true, Data = categoryList };
         }
-
-        public async Task<ApiResult> GetAllCategoriesAsync()
+        catch (Exception ex)
         {
-            try
-            {
-                var categories = await _unitOfWork.CategoryRepository.GetAllAsync();
-                var categoryList = categories.Select(c => new GetCategoryDto
-                {
-                    Id = c.Id,
-                    Name = c.Name,
-                    ImageUrl = c.ImageUrl
-                }).ToList();
-
-                return new ApiResult { IsSuccess = true, Data = categoryList };
-            }
-            catch (Exception ex)
-            {
-                return new ApiResult { IsSuccess = false, Message = ex.Message };
-            }
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
         }
+    }
 
-        public async Task<ApiResult> GetCategoryByIdAsync(string id)
+    public async Task<ApiResult> GetCategoryByIdAsync(string id)
+    {
+        try
         {
-            try
-            {
-                var category = await _unitOfWork.CategoryRepository.GetByIdAsync(id);
-                if (category == null)
-                    return new ApiResult { IsSuccess = false, Message = "Category not found" };
+            var category = await _unitOfWork.CategoryRepository.GetByIdAsync(id);
+            if (category == null)
+                return new ApiResult { IsSuccess = false, Message = "Category not found" };
 
-                return new ApiResult
-                {
-                    IsSuccess = true,
-                    Data = new GetCategoryDto
-                    {
-                        Id = category.Id,
-                        Name = category.Name,
-                        ImageUrl = category.ImageUrl
-                    }
-                };
-            }
-            catch (Exception ex)
+            return new ApiResult
             {
-                return new ApiResult { IsSuccess = false, Message = ex.Message };
-            }
-        }
-
-        public async Task<ApiResult> AddCategoryAsync(AddCategoryDto request, HttpContext httpContext)
-        {
-            try
-            {
-                var category = new Category
+                IsSuccess = true,
+                Data = new GetCategoryDto
                 {
-                    Id = Guid.NewGuid().ToString(),
-                    Name = request.Name,
-                    InsertedUserId = _currentUserService.UserId,
-                    InsertedTime = DateTime.Now,
-                };
-                if (request.ImageUrl is not null)
-                {
-                    category.ImageUrl = await _helperService.SaveFileAsync(request.ImageUrl, "Categories", httpContext);
+                    Id = category.Id,
+                    Name = category.Name,
+                    Description = category.Description,
+                    ImageUrl = category.ImageUrl
                 }
-
-                await _unitOfWork.CategoryRepository.AddAsync(category);
-                await _unitOfWork.SaveChangesAsync();
-                return new ApiResult { IsSuccess = true, Message = "Category created successfully" };
-            }
-            catch (Exception ex)
-            {
-                return new ApiResult { IsSuccess = false, Message = ex.Message };
-            }
+            };
         }
-
-        public async Task<ApiResult> UpdateCategoryAsync(UpdateCategoryDto request, HttpContext httpContext)
+        catch (Exception ex)
         {
-            try
-            {
-                var category = await _unitOfWork.CategoryRepository.GetByIdAsync(request.Id);
-                if (category == null)
-                    return new ApiResult { IsSuccess = false, Message = "Category not found" };
-
-                category.Name = request.Name ?? category.Name;
-                category.ImageUrl = request.ImageUrl is not null ? await _helperService.SaveFileAsync(request.ImageUrl, "Books", httpContext) : category.ImageUrl;
-                category.UpdateTime = DateTime.Now;
-                category.UpdateUserId = _currentUserService.UserId;
-
-
-                _unitOfWork.CategoryRepository.Update(category);
-                await _unitOfWork.SaveChangesAsync();
-                return new ApiResult { IsSuccess = true, Message = "Category updated successfully", Data = category };
-            }
-            catch (Exception ex)
-            {
-                return new ApiResult { IsSuccess = false, Message = ex.Message };
-            }
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
         }
+    }
 
-        public async Task<ApiResult> DeleteCategoryAsync(string id)
+    public async Task<ApiResult> AddCategoryAsync(AddCategoryDto request, HttpContext httpContext)
+    {
+        try
         {
-            try
+            var category = new Category
             {
-                var category = await _unitOfWork.CategoryRepository.GetByIdAsync(id);
-                if (category == null)
-                    return new ApiResult { IsSuccess = false, Message = "Category not found" };
+                Id = Guid.NewGuid().ToString(),
+                Name = request.Name,
+                Description = request.Description,
+                InsertedUserId = _currentUserService.UserId,
+                InsertedTime = DateTime.Now,
+            };
+            if (request.ImageUrl is not null)
+            {
+                category.ImageUrl = await _helperService.SaveFileAsync(request.ImageUrl, "Categories", httpContext);
+            }
 
-                await _unitOfWork.CategoryRepository.DeleteAsync(category, _currentUserService.UserId!);
-                return new ApiResult { IsSuccess = true, Message = "Category marked as deleted" };
-            }
-            catch (Exception ex)
-            {
-                return new ApiResult { IsSuccess = false, Message = ex.Message };
-            }
+            await _unitOfWork.CategoryRepository.AddAsync(category);
+            await _unitOfWork.SaveChangesAsync();
+            return new ApiResult { IsSuccess = true, Message = "Category created successfully" };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
+        }
+    }
+
+    public async Task<ApiResult> UpdateCategoryAsync(UpdateCategoryDto request, HttpContext httpContext)
+    {
+        try
+        {
+            var category = await _unitOfWork.CategoryRepository.GetByIdAsync(request.Id);
+            if (category == null)
+                return new ApiResult { IsSuccess = false, Message = "Category not found" };
+
+            category.Name = request.Name ?? category.Name;
+            category.Description = request.Description ?? category.Description;
+            category.ImageUrl = request.ImageUrl is not null ? await _helperService.SaveFileAsync(request.ImageUrl, "Books", httpContext) : category.ImageUrl;
+            category.UpdateTime = DateTime.Now;
+            category.UpdateUserId = _currentUserService.UserId;
+
+
+            _unitOfWork.CategoryRepository.Update(category);
+            await _unitOfWork.SaveChangesAsync();
+            return new ApiResult { IsSuccess = true, Message = "Category updated successfully", Data = category };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
+        }
+    }
+
+    public async Task<ApiResult> DeleteCategoryAsync(string id)
+    {
+        try
+        {
+            var category = await _unitOfWork.CategoryRepository.GetByIdAsync(id);
+            if (category == null)
+                return new ApiResult { IsSuccess = false, Message = "Category not found" };
+
+            await _unitOfWork.CategoryRepository.DeleteAsync(category, _currentUserService.UserId!);
+            return new ApiResult { IsSuccess = true, Message = "Category marked as deleted" };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
+        }
+    }
+
+    public async Task<ApiResult> ActivateOrDeactivateCategoryAsync(string id)
+    {
+        try
+        {
+
+            var category = await _unitOfWork.CategoryRepository.GetByIdAsync(id);
+            if (category is null)
+                return new ApiResult { IsSuccess = false, Message = "Category not found" };
+
+            category.ActivationTime = DateTime.Now;
+            category.IsActive = !category.IsActive;
+
+
+            _unitOfWork.CategoryRepository.Update(category);
+            var result = await _unitOfWork.SaveChangesAsync();
+            return new ApiResult { IsSuccess = true, Message = $"Category {(category.IsActive ? "activated" : "deactivated")} successfully", };
+
+        }
+        catch (Exception e)
+        {
+            return new ApiResult { IsSuccess = false, Message = e.Message };
         }
     }
 }

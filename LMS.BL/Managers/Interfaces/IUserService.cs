@@ -1,11 +1,10 @@
 ﻿using LMS.BL.Shared.Models;
 
-namespace LMS.BL
+namespace LMS.BL;
+
+public interface IUserService
 {
-    public interface IUserService
-    {
-        Task<ApiResult> GetAllUsersAsync();
-        Task<ApiResult> RegisterUserAsync(UserRegisterDto registerCredientials);
-        Task<ApiResult> LoginAsync(UserLoginDto loginCredientials);
-    }
+    Task<ApiResult> GetAllUsersAsync();
+    Task<ApiResult> RegisterUserAsync(UserRegisterDto registerCredientials);
+    Task<ApiResult> LoginAsync(UserLoginDto loginCredientials);
 }

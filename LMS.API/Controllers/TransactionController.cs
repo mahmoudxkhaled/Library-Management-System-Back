@@ -35,7 +35,7 @@ public class TransactionController : ControllerBase
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpPut("UpdateTransaction/{id}")]
+    [HttpPut("UpdateTransaction")]
     public async Task<IActionResult> UpdateTransaction(UpdateTransactionDto request)
     {
         var result = await _transactionService.UpdateTransactionAsync(request);
