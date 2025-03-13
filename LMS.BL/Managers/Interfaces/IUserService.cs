@@ -13,6 +13,6 @@ namespace LMS.BL
         Task<ApiResult> AddRoleToUserAsync(UserRoleDto updateUserRoleDto);
         Task<ApiResult> RemoveRoleFromUserAsync(UserRoleDto updateUserRoleDto);
         Task<ApiResult> ActivateDeactivateUserAsync(ToggleUserActivationDto updateUserStatusDto);
-
+        Task<ApiResult> AddUserAsync(AddUserDto userDto);
     }
 }

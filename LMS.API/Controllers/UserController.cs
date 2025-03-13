@@ -1,5 +1,6 @@
 ﻿using LMS.BL;
 using LMS.BL.Dtos.User;
+using LMS.BL.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -65,11 +66,20 @@ public class UserController : ControllerBase
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpPost("ActivateDeactivateUserAsync")]
+    [HttpPost("ActivateDeactivateUser")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> ToggleUserActivation([FromBody] ToggleUserActivationDto request)
     {
         var result = await _userService.ActivateDeactivateUserAsync(request);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
+
+    [HttpPost("AddUserWithDefaultPassword")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> AddUser([FromBody] AddUserDto request)
+    {
+        var result = await _userService.AddUserAsync(request);
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
+
 }

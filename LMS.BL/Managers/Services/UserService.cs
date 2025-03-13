@@ -273,4 +273,91 @@ public class UserService : IUserService
         JwtSecurityTokenHandler jwtSecurityTokenHandler = new();
         return (jwtSecurityTokenHandler.WriteToken(jwtSecurity), expires);
     }
+
+    public async Task<ApiResult> AddUserAsync(AddUserDto userDto)
+    {
+        try
+        {
+            if (userDto is null)
+            {
+                return new ApiResult { Message = "Invalid data provided!", IsSuccess = false };
+            }
+
+            // Generate a random password
+            string generatedPassword = GenerateRandomPassword(12);
+
+            User user = new()
+            {
+                Id = Guid.NewGuid().ToString(),
+                Email = userDto.Email.Trim(),
+                FirstName = userDto.FirstName.Trim(),
+                LastName = userDto.LastName.Trim(),
+                UserName = userDto.Email,
+                PhoneNumber = userDto.PhoneNumber,
+                Role = Roles.Member.ToString(),
+                InsertedTime = DateTime.Now,
+                IsActive = true,
+            };
+
+            // Save user in the repository
+            await _unitOfWork.UserRepository.AddAsync(user);
+
+            // Create the user with the generated password
+            var createUserResult = await _manager.CreateAsync(user, generatedPassword);
+            if (!createUserResult.Succeeded)
+            {
+                return new ApiResult
+                {
+                    ErrorList = createUserResult.Errors.Select(x => new ApiError { Key = x.Code, Message = x.Description }).ToList(),
+                    IsSuccess = false
+                };
+            }
+
+            // Assign claims
+            List<Claim> claims = new()
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Email, user.Email.ToString()),
+            new Claim(ClaimTypes.Role, user.Role.ToString()),
+        };
+
+            var claimsResult = await _manager.AddClaimsAsync(user, claims);
+            if (!claimsResult.Succeeded)
+            {
+                return new ApiResult
+                {
+                    ErrorList = claimsResult.Errors.Select(x => new ApiError { Key = x.Code, Message = x.Description }).ToList(),
+                    IsSuccess = false
+                };
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+            return new ApiResult
+            {
+                Message = "User added successfully with a generated password.",
+                IsSuccess = true,
+                Data = new
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Role = user.Role,
+                    PhoneNumber = user.PhoneNumber,
+                    GeneratedPassword = generatedPassword // Include the generated password in response
+                }
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult { Message = ex.Message, IsSuccess = false };
+        }
+    }
+    private string GenerateRandomPassword(int length)
+    {
+        const string validChars = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*?";
+        Random random = new();
+        return new string(Enumerable.Repeat(validChars, length)
+            .Select(s => s[random.Next(s.Length)]).ToArray());
+    }
 }
