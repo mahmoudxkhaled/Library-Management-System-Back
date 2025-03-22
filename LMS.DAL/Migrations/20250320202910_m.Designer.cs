@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMS.DAL.Migrations
 {
     [DbContext(typeof(LMSDbContext))]
-    [Migration("20250228143821_AddDescr")]
-    partial class AddDescr
+    [Migration("20250320202910_m")]
+    partial class m
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,8 +27,11 @@ namespace LMS.DAL.Migrations
 
             modelBuilder.Entity("LMS.DAL.Book", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("ActivationTime")
                         .HasColumnType("datetime2");
@@ -43,9 +46,8 @@ namespace LMS.DAL.Migrations
                     b.Property<int>("AvailableCopies")
                         .HasColumnType("int");
 
-                    b.Property<string>("CategoryId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("DeletedTime")
                         .HasColumnType("datetime2");
@@ -97,8 +99,11 @@ namespace LMS.DAL.Migrations
 
             modelBuilder.Entity("LMS.DAL.Category", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("ActivationTime")
                         .HasColumnType("datetime2");
@@ -144,6 +149,408 @@ namespace LMS.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Category");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Books that contain stories created from the imagination.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Fiction"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Books based on real facts and events.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Non-Fiction"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Books related to scientific principles, experiments, and discoveries.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Science"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Books covering mathematical theories, problems, and equations.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Mathematics"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Books that discuss past events and historical occurrences.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "History"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Description = "Books about the lives of individuals, either famous or historical.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Biography"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Description = "Books considered to have artistic value, including poetry, novels, and drama.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Literature"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Description = "Books that explore fundamental questions about existence, knowledge, and ethics.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Philosophy"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Description = "Books related to human behavior, emotions, and cognitive functions.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Psychology"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Description = "Books that provide advice or strategies for improving life and personal growth.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Self-Help"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Description = "Books that focus on various forms of art, including visual arts, sculpture, and performance.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Art"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Description = "Books that discuss musical theory, history, and performance techniques.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Music"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Description = "Books focused on physical well-being, exercise, and mental health.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Health & Fitness"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Description = "Books providing recipes and cooking techniques.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Cooking"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Description = "Books that explore destinations, cultures, and experiences in different parts of the world.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Travel"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Description = "Books intended for young readers, including stories and educational books.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Children's Books"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Description = "Books containing magical or fantastical elements set in imaginary worlds.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Fantasy"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Description = "Books set in the future or in space, often incorporating advanced technology or extraterrestrial life.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Science Fiction"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Description = "Books centered around solving a crime or uncovering secrets.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Mystery"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Description = "Books designed to keep the reader on edge with suspense and tension.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Thriller"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Description = "Books designed to evoke fear or unease in the reader.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Horror"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Description = "Books containing poems, written in verse.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Poetry"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Description = "Books focused on religious studies, scriptures, and beliefs.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Religion"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Description = "Books that explore personal growth and the search for meaning beyond the material world.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Spirituality"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Description = "Books that explore political theory, history, and analysis.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Politics"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            Description = "Books about the production, distribution, and consumption of goods and services.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Economics"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Description = "Books on management, entrepreneurship, and business strategies.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Business"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Description = "Books covering advancements in technology, including programming, artificial intelligence, and gadgets.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Technology"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            Description = "Books on engineering principles, innovations, and applications.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Engineering"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            Description = "Books about legal studies, statutes, and legal principles.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Law"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            Description = "Books about the art and techniques of photography.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Photography"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            Description = "Books on the design and construction of buildings and other structures.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Architecture"
+                        },
+                        new
+                        {
+                            Id = 33,
+                            Description = "Books about various sports, athletes, and sporting events.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Sports"
+                        },
+                        new
+                        {
+                            Id = 34,
+                            Description = "Books focused on ecology, nature conservation, and environmental science.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Environment"
+                        },
+                        new
+                        {
+                            Id = 35,
+                            Description = "Books about cities, urban planning, and metropolitan life.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Urban Studies"
+                        },
+                        new
+                        {
+                            Id = 36,
+                            Description = "Books related to financial markets, investment strategies, and economic theory.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Economics & Finance"
+                        },
+                        new
+                        {
+                            Id = 37,
+                            Description = "Books offering advice for raising children and family dynamics.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Parenting"
+                        },
+                        new
+                        {
+                            Id = 38,
+                            Description = "Books on educational methods, theories, and teaching practices.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Education"
+                        },
+                        new
+                        {
+                            Id = 39,
+                            Description = "Books consisting of illustrated stories in a comic strip format.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Comic Books"
+                        },
+                        new
+                        {
+                            Id = 40,
+                            Description = "Books that combine illustrations with narrative storytelling, typically in a longer form.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Graphic Novels"
+                        },
+                        new
+                        {
+                            Id = 41,
+                            Description = "Books covering sociology, anthropology, and other social studies disciplines.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Social Sciences"
+                        },
+                        new
+                        {
+                            Id = 42,
+                            Description = "Books related to the scientific study of language and its structure.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Linguistics"
+                        },
+                        new
+                        {
+                            Id = 43,
+                            Description = "Books about physical geography, the study of places and environments.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Geography"
+                        },
+                        new
+                        {
+                            Id = 44,
+                            Description = "Books about space exploration, the universe, stars, and planets.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Space & Astronomy"
+                        },
+                        new
+                        {
+                            Id = 45,
+                            Description = "Books that incorporate mathematical themes or problems in their stories.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Mathematical Fiction"
+                        },
+                        new
+                        {
+                            Id = 46,
+                            Description = "Books about the history and collection of valuable items.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Antiques & Collectibles"
+                        },
+                        new
+                        {
+                            Id = 47,
+                            Description = "Books about various crafts, from knitting to woodworking.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Crafts & Hobbies"
+                        },
+                        new
+                        {
+                            Id = 48,
+                            Description = "Books about planting, cultivating, and maintaining gardens.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Gardening"
+                        },
+                        new
+                        {
+                            Id = 49,
+                            Description = "Books that focus on managing personal wealth, budgeting, and investing.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "Personal Finance"
+                        },
+                        new
+                        {
+                            Id = 50,
+                            Description = "Books that explore real-life criminal cases and investigations.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            Name = "True Crime"
+                        });
                 });
 
             modelBuilder.Entity("LMS.DAL.Feedback", b =>
@@ -159,7 +566,10 @@ namespace LMS.DAL.Migrations
 
                     b.Property<string>("BookId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("BookId1")
+                        .HasColumnType("int");
 
                     b.Property<string>("Comment")
                         .IsRequired()
@@ -198,7 +608,7 @@ namespace LMS.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookId");
+                    b.HasIndex("BookId1");
 
                     b.HasIndex("UserId");
 
@@ -218,7 +628,10 @@ namespace LMS.DAL.Migrations
 
                     b.Property<string>("BookId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("BookId1")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("DeletedTime")
                         .HasColumnType("datetime2");
@@ -263,7 +676,7 @@ namespace LMS.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookId");
+                    b.HasIndex("BookId1");
 
                     b.HasIndex("UserId");
 
@@ -277,14 +690,17 @@ namespace LMS.DAL.Migrations
 
                     b.Property<string>("BookId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("BookId1")
+                        .HasColumnType("int");
 
                     b.Property<int>("BorrowCount")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookId");
+                    b.HasIndex("BookId1");
 
                     b.ToTable("TrendingBooks");
                 });
@@ -547,9 +963,7 @@ namespace LMS.DAL.Migrations
                 {
                     b.HasOne("LMS.DAL.Book", "Book")
                         .WithMany("Feedbacks")
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BookId1");
 
                     b.HasOne("LMS.DAL.User", "User")
                         .WithMany("Feedbacks")
@@ -566,9 +980,7 @@ namespace LMS.DAL.Migrations
                 {
                     b.HasOne("LMS.DAL.Book", "Book")
                         .WithMany("Transactions")
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BookId1");
 
                     b.HasOne("LMS.DAL.User", "User")
                         .WithMany("Transactions")
@@ -585,9 +997,7 @@ namespace LMS.DAL.Migrations
                 {
                     b.HasOne("LMS.DAL.Book", "Book")
                         .WithMany()
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BookId1");
 
                     b.Navigation("Book");
                 });

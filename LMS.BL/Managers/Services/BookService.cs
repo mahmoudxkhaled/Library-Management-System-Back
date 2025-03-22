@@ -1,5 +1,8 @@
-﻿using LMS.BL.Shared.Models;
+﻿using Azure.Core;
+using LMS.BL.Dtos.Book;
+using LMS.BL.Shared.Models;
 using LMS.DAL;
+using LMS.DAL.Data;
 using Microsoft.AspNetCore.Http;
 namespace LMS.BL;
 
@@ -20,7 +23,7 @@ public class BookService : IBookService
 
     }
 
-    public async Task<ApiResult> GetAllBooksAsync()
+    public async Task<ApiResult<List<GetBookDto>>> GetAllBooksAsync()
     {
         try
         {
@@ -38,11 +41,26 @@ public class BookService : IBookService
                 ImageUrl = b.ImageUrl,
             }).ToList();
 
-            return new ApiResult { IsSuccess = true, Data = bookList };
+            return new ApiResult<List<GetBookDto>> { IsSuccess = true, Data = bookList };
         }
         catch (Exception ex)
         {
-            return new ApiResult { IsSuccess = false, Message = ex.Message };
+            return new ApiResult<List<GetBookDto>> { IsSuccess = false, Message = ex.Message };
+        }
+    }
+    public async Task<ApiResult<pagedResult<ReadBookDto>>> GetBooksPaged(int first, int rows, int sort, string Search)
+    {
+        try
+        {
+            pagedResult<ReadBookDto> pagedResultDto= new pagedResult<ReadBookDto>();
+            var pagedResult = await _unitOfWork.BookRepository.GetBooksPaged(first,rows,sort,Search);
+            pagedResultDto.Result = pagedResult.Result.Select( b=>new ReadBookDto() {Id=b.Id,Title=b.Title,ImageUrl=b.ImageUrl,Author=b.Author,AvailableCopies=b.AvailableCopies,CategoryId=b.CategoryId,PublicationYear=b.PublicationYear,TotalCopies=b.TotalCopies }).ToList();
+            pagedResultDto.TotalCount = pagedResult.TotalCount;
+            return new ApiResult<pagedResult<ReadBookDto>> { IsSuccess=true,Data=pagedResultDto };
+        }
+        catch(Exception ex)
+        {
+            return new ApiResult<pagedResult<ReadBookDto>> { IsSuccess = false, Message = ex.Message };
         }
     }
     public async Task<ApiResult> GetBookByIdAsync(string id)
@@ -81,7 +99,6 @@ public class BookService : IBookService
         {
             var book = new Book
             {
-                Id = Guid.NewGuid().ToString(),
                 Title = request.Title,
                 Description = request.Description,
                 Author = request.Author,
@@ -121,7 +138,7 @@ public class BookService : IBookService
             book.PublicationYear = request.PublicationYear;
             book.AvailableCopies = request.AvailableCopies;
             book.TotalCopies = request.TotalCopies;
-            book.CategoryId = request.CategoryId ?? book.CategoryId;
+            book.CategoryId = request.CategoryId;
             book.ImageUrl = request.ImageUrl is not null ? await _helperService.SaveFileAsync(request.ImageUrl, "Books", httpContext) : book.ImageUrl;
             book.UpdateUserId = _currentUserService.UserId;
             book.UpdateTime = DateTime.Now;
