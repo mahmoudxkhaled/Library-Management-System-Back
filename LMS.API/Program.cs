@@ -3,8 +3,10 @@ using LMS.DAL;
 using LMS.DAL.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Net.NetworkInformation;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -132,7 +134,6 @@ using (var scope = app.Services.CreateScope())
     {
         var userManager = services.GetRequiredService<UserManager<User>>();
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-
         // 🔹 Await is used inside an async Task function, so we use RunAsync
         await DbSeeder.SeedRolesAndAdminAsync(userManager, roleManager);
     }
@@ -151,7 +152,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowAll");
 
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions()
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Environment.CurrentDirectory, "Uploads")),
+    RequestPath= "/Uploads"
+}) ;
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

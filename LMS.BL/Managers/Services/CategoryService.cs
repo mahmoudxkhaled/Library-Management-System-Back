@@ -75,7 +75,6 @@ public class CategoryService : ICategoryService
         {
             var category = new Category
             {
-                Id = Guid.NewGuid().ToString(),
                 Name = request.Name,
                 Description = request.Description,
                 InsertedUserId = _currentUserService.UserId,
