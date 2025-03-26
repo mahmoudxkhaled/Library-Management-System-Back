@@ -78,7 +78,7 @@ public class TransactionService : ITransactionService
         {
             var transaction = new Transaction
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = Guid.NewGuid(),
                 UserId = request.UserId,
                 BookId = request.BookId,
                 IssueDate = request.IssueDate,

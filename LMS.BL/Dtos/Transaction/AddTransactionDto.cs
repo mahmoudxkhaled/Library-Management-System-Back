@@ -3,7 +3,7 @@
 public class AddTransactionDto
 {
     public string UserId { get; set; } = null!;
-    public string BookId { get; set; } = null!;
+    public int BookId { get; set; }
     public DateTime IssueDate { get; set; }
     public DateTime DueDate { get; set; }
     public DateTime? ReturnDate { get; set; }

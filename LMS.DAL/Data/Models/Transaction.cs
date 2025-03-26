@@ -1,38 +1,53 @@
-﻿namespace LMS.DAL;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-public class Transaction : ISharedColumns
+namespace LMS.DAL
 {
-    public string Id { get; set; } = null!;
+    public class Transaction : ISharedColumns
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; } = Guid.NewGuid();
 
-    public string UserId { get; set; } = null!;
-    public User? User { get; set; }
+        [Required]
+        public string UserId { get; set; } = string.Empty;
 
-    public string BookId { get; set; } = null!;
-    public Book? Book { get; set; }
+        public User? User { get; set; }
 
-    public DateTime IssueDate { get; set; }
-    public DateTime DueDate { get; set; } // calculated based on number of borrow days
-    public DateTime? ReturnDate { get; set; } // user actually returns the book
-    public string Status { get; set; } = null!;// Issued, Returned, Overdue
-                                               // "Issued" → When the book is borrowed but not returned.
-                                               // "Returned" → When the book is successfully returned.
-                                               // "Overdue" → When the return date has passed, but the book is not yet returned.
+        [Required]
+        public int BookId { get; set; }
 
-    #region Shared Columns
+        public Book? Book { get; set; }
 
-    public DateTime? InsertedTime { get; set; }
-    public string? InsertedUserId { get; set; }
+        public DateTime IssueDate { get; set; }
+        public DateTime DueDate { get; set; } // Calculated based on the number of borrow days.
 
-    public DateTime? UpdateTime { get; set; }
-    public string? UpdateUserId { get; set; }
+        public DateTime? ReturnDate { get; set; } // Actual return date.
 
-    public bool IsActive { get; set; } = true;
-    public string? ActivationUserId { get; set; }
-    public DateTime? ActivationTime { get; set; }
+        [Required]
+        [MaxLength(20)]
+        public string Status { get; set; } = "Issued";
+        // "Issued" → Book is borrowed but not yet returned.
+        // "Returned" → Book has been successfully returned.
+        // "Overdue" → Book is past due and not yet returned.
 
-    public bool IsDeleted { get; set; }
-    public DateTime? DeletedTime { get; set; }
-    public string? DeletedUserId { get; set; }
+        #region Shared Columns
 
-    #endregion
+        public DateTime? InsertedTime { get; set; }
+        public string? InsertedUserId { get; set; }
+
+        public DateTime? UpdateTime { get; set; }
+        public string? UpdateUserId { get; set; }
+
+        public bool IsActive { get; set; } = true;
+        public string? ActivationUserId { get; set; }
+        public DateTime? ActivationTime { get; set; }
+
+        public bool IsDeleted { get; set; }
+        public DateTime? DeletedTime { get; set; }
+        public string? DeletedUserId { get; set; }
+
+        #endregion
+    }
 }
