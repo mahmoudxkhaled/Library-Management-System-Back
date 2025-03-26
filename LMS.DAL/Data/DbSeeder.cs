@@ -7,26 +7,29 @@ namespace LMS.DAL.Data
     {
         public static async Task SeedRolesAndAdminAsync(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
-            string[] roleNames = { "Admin", "Librarian", "Member" };
-
-            // 🔹 Ensure roles exist
-            foreach (var roleName in roleNames)
+            try
             {
-                if (!await roleManager.RoleExistsAsync(roleName))
+
+
+                string[] roleNames = { "Admin", "Librarian", "Member" };
+
+                // 🔹 Ensure roles exist
+                foreach (var roleName in roleNames)
                 {
-                    await roleManager.CreateAsync(new IdentityRole(roleName));
+                    if (!await roleManager.RoleExistsAsync(roleName))
+                    {
+                        await roleManager.CreateAsync(new IdentityRole(roleName));
+                    }
                 }
-            }
 
-            // 🔹 Ensure admin user exists
-            string adminEmail = "admin@lms.com";
-            string adminPassword = "Admin@123"; // 🔴 Change in production
+                // 🔹 Ensure admin user exists
+                string adminEmail = "admin@lms.com";
+                string adminPassword = "Admin@123"; // 🔴 Change in production
 
-            var adminUser = await userManager.FindByEmailAsync(adminEmail);
-            if (adminUser == null)
-            {
-                try
+                var adminUser = await userManager.FindByEmailAsync(adminEmail);
+                if (adminUser == null)
                 {
+
                     var newAdmin = new User
                     {
                         Id = Guid.NewGuid().ToString(),
@@ -65,16 +68,23 @@ namespace LMS.DAL.Data
                     }
 
                     Console.WriteLine("✅ Admin user created successfully.");
+
                 }
-                catch (Exception ex)
+                else
                 {
-                    Console.WriteLine($"❌ Error seeding admin user: {ex.Message}");
+                    Console.WriteLine("ℹ️ Admin user already exists.");
                 }
+
+
+
             }
-            else
+            catch (Exception ex)
+
+
             {
-                Console.WriteLine("ℹ️ Admin user already exists.");
+                Console.WriteLine($"❌ Error seeding admin user: {ex.Message}");
             }
+
         }
     }
 }
