@@ -2,9 +2,9 @@
 
 public class GetFeedbackDto
 {
-    public string Id { get; set; } = null!;
+    public Guid Id { get; set; }
     public string UserId { get; set; } = null!;
-    public string BookId { get; set; } = null!;
+    public int BookId { get; set; }
     public int Rating { get; set; }
     public string Comment { get; set; } = null!;
 }

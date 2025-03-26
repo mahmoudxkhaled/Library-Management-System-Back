@@ -20,7 +20,7 @@ public class FeedbackRepository : GenericRepository<Feedback>, IFeedbackReposito
     #endregion
 
     #region Functions
-    public async Task<IEnumerable<Feedback>> GetAllFeedbacksByBookIdAsync(string bookId)
+    public async Task<IEnumerable<Feedback>> GetAllFeedbacksByBookIdAsync(int bookId)
     {
         return await _context.Feedback
             .Where(f => f.BookId == bookId)

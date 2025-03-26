@@ -2,7 +2,7 @@
 
 public class GetTrendingBookDto
 {
-    public string Id { get; set; } = null!;
-    public string BookId { get; set; } = null!;
+    public Guid Id { get; set; }
+    public int BookId { get; set; }
     public int BorrowCount { get; set; }
 }

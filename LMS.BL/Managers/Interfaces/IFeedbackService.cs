@@ -5,6 +5,6 @@ namespace LMS.BL;
 public interface IFeedbackService
 {
     Task<ApiResult> GetAllFeedbacksAsync();
-    Task<ApiResult> GetAllFeedbacksByBookIdAsync(string bookId);
+    Task<ApiResult> GetAllFeedbacksByBookIdAsync(int bookId);
     Task<ApiResult> AddFeedbackAsync(AddFeedbackDto request);
 }

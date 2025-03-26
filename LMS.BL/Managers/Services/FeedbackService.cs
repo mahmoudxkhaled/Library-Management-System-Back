@@ -33,7 +33,7 @@ public class FeedbackService : IFeedbackService
             return new ApiResult { IsSuccess = false, Message = ex.Message };
         }
     }
-    public async Task<ApiResult> GetAllFeedbacksByBookIdAsync(string bookId)
+    public async Task<ApiResult> GetAllFeedbacksByBookIdAsync(int bookId)
     {
         try
         {
@@ -62,7 +62,7 @@ public class FeedbackService : IFeedbackService
         {
             var feedback = new Feedback
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = Guid.NewGuid(),
                 UserId = request.UserId,
                 BookId = request.BookId,
                 Rating = request.Rating,

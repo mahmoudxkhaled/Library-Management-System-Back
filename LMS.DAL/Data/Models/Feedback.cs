@@ -1,36 +1,48 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace LMS.DAL;
-
-public class Feedback : ISharedColumns
+namespace LMS.DAL
 {
-    public string Id { get; set; } = null!;
-    public string UserId { get; set; } = null!;
-    public User? User { get; set; }
+    public class Feedback : ISharedColumns
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; } = Guid.NewGuid();
 
-    public string BookId { get; set; } = null!;
-    public Book? Book { get; set; }
+        [Required]
+        public string UserId { get; set; } = string.Empty;
 
+        public User? User { get; set; }
 
-    [Range(1, 5)]
-    public int Rating { get; set; }
-    public string Comment { get; set; } = null!;
+        [Required]
+        public int BookId { get; set; }
 
-    #region Shared Columns
+        public Book? Book { get; set; }
 
-    public DateTime? InsertedTime { get; set; }
-    public string? InsertedUserId { get; set; }
+        [Range(1, 5)]
+        public int Rating { get; set; }
 
-    public DateTime? UpdateTime { get; set; }
-    public string? UpdateUserId { get; set; }
+        [Required]
+        [MaxLength(1000)]
+        public string Comment { get; set; } = string.Empty;
 
-    public bool IsActive { get; set; } = true;
-    public string? ActivationUserId { get; set; }
-    public DateTime? ActivationTime { get; set; }
+        #region Shared Columns
 
-    public bool IsDeleted { get; set; }
-    public DateTime? DeletedTime { get; set; }
-    public string? DeletedUserId { get; set; }
+        public DateTime? InsertedTime { get; set; }
+        public string? InsertedUserId { get; set; }
 
-    #endregion
+        public DateTime? UpdateTime { get; set; }
+        public string? UpdateUserId { get; set; }
+
+        public bool IsActive { get; set; } = true;
+        public string? ActivationUserId { get; set; }
+        public DateTime? ActivationTime { get; set; }
+
+        public bool IsDeleted { get; set; }
+        public DateTime? DeletedTime { get; set; }
+        public string? DeletedUserId { get; set; }
+
+        #endregion
+    }
 }

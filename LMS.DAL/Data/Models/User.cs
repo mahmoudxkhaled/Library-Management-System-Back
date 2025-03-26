@@ -1,33 +1,46 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
-namespace LMS.DAL;
-
-public class User : IdentityUser, ISharedColumns
+namespace LMS.DAL
 {
-    public string FirstName { get; set; } = null!;
-    public string LastName { get; set; } = null!;
-    public string? ProfileImageUrl { get; set; }
+    public class User : IdentityUser, ISharedColumns
+    {
+        [Required]
+        [MaxLength(100)]
+        public string FirstName { get; set; } = null!;
 
-    public string Role { get; set; } = null!; // Admin, Librarian, Member
+        [Required]
+        [MaxLength(100)]
+        public string LastName { get; set; } = null!;
 
-    public ICollection<Transaction> Transactions { get; set; } = new HashSet<Transaction>();
-    public ICollection<Feedback> Feedbacks { get; set; } = new HashSet<Feedback>();
+        [Url]
+        public string? ProfileImageUrl { get; set; }
 
-    #region Shared Columns
+        [Required]
+        [MaxLength(50)]
+        public string Role { get; set; } = null!; // Admin, Librarian, Member
 
-    public DateTime? InsertedTime { get; set; }
-    public string? InsertedUserId { get; set; }
+        public ICollection<Transaction> Transactions { get; set; } = new HashSet<Transaction>();
+        public ICollection<Feedback> Feedbacks { get; set; } = new HashSet<Feedback>();
 
-    public DateTime? UpdateTime { get; set; }
-    public string? UpdateUserId { get; set; }
+        #region Shared Columns
 
-    public bool IsActive { get; set; } = true;
-    public string? ActivationUserId { get; set; }
-    public DateTime? ActivationTime { get; set; }
+        public DateTime? InsertedTime { get; set; }
+        public string? InsertedUserId { get; set; }
 
-    public bool IsDeleted { get; set; }
-    public DateTime? DeletedTime { get; set; }
-    public string? DeletedUserId { get; set; }
+        public DateTime? UpdateTime { get; set; }
+        public string? UpdateUserId { get; set; }
 
-    #endregion
+        public bool IsActive { get; set; } = true;
+        public string? ActivationUserId { get; set; }
+        public DateTime? ActivationTime { get; set; }
+
+        public bool IsDeleted { get; set; }
+        public DateTime? DeletedTime { get; set; }
+        public string? DeletedUserId { get; set; }
+
+        #endregion
+    }
 }

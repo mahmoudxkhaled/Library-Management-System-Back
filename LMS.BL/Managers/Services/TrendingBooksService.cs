@@ -21,7 +21,7 @@ public class TrendingBooksService : ITrendingBooksService
                 Id = t.Id,
                 BookId = t.BookId,
                 BorrowCount = t.BorrowCount
-            }).ToList();
+            }).OrderByDescending(i => i.BorrowCount).ToList();
 
             return new ApiResult { IsSuccess = true, Data = trendingList };
         }
@@ -31,7 +31,7 @@ public class TrendingBooksService : ITrendingBooksService
         }
     }
 
-    public async Task<ApiResult> IncrementTrendingBookAsync(string bookId)
+    public async Task<ApiResult> IncrementTrendingBookAsync(int bookId)
     {
         try
         {
@@ -40,7 +40,7 @@ public class TrendingBooksService : ITrendingBooksService
             {
                 trendingBook = new TrendingBook
                 {
-                    Id = Guid.NewGuid().ToString(),
+                    Id = Guid.NewGuid(),
                     BookId = bookId,
                     BorrowCount = 1
                 };

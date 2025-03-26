@@ -34,11 +34,13 @@ namespace LMS.DAL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ActivationUserId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Author")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<int>("AvailableCopies")
                         .HasColumnType("int");
@@ -50,10 +52,11 @@ namespace LMS.DAL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DeletedUserId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Description")
-                        .IsRequired()
+                        .HasMaxLength(5000)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl")
@@ -63,7 +66,8 @@ namespace LMS.DAL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("InsertedUserId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -76,7 +80,8 @@ namespace LMS.DAL.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<int>("TotalCopies")
                         .HasColumnType("int");
@@ -85,7 +90,8 @@ namespace LMS.DAL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdateUserId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -1418,6 +1424,7 @@ namespace LMS.DAL.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
+                        .HasMaxLength(5000)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl")
@@ -1437,7 +1444,8 @@ namespace LMS.DAL.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<DateTime?>("UpdateTime")
                         .HasColumnType("datetime2");
@@ -1854,8 +1862,9 @@ namespace LMS.DAL.Migrations
 
             modelBuilder.Entity("LMS.DAL.Feedback", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("ActivationTime")
                         .HasColumnType("datetime2");
@@ -1863,16 +1872,13 @@ namespace LMS.DAL.Migrations
                     b.Property<string>("ActivationUserId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("BookId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("BookId1")
+                    b.Property<int>("BookId")
                         .HasColumnType("int");
 
                     b.Property<string>("Comment")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<DateTime?>("DeletedTime")
                         .HasColumnType("datetime2");
@@ -1907,7 +1913,7 @@ namespace LMS.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookId1");
+                    b.HasIndex("BookId");
 
                     b.HasIndex("UserId");
 
@@ -1916,8 +1922,9 @@ namespace LMS.DAL.Migrations
 
             modelBuilder.Entity("LMS.DAL.Transaction", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("ActivationTime")
                         .HasColumnType("datetime2");
@@ -1925,11 +1932,7 @@ namespace LMS.DAL.Migrations
                     b.Property<string>("ActivationUserId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("BookId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("BookId1")
+                    b.Property<int>("BookId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("DeletedTime")
@@ -1961,7 +1964,8 @@ namespace LMS.DAL.Migrations
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<DateTime?>("UpdateTime")
                         .HasColumnType("datetime2");
@@ -1975,7 +1979,7 @@ namespace LMS.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookId1");
+                    b.HasIndex("BookId");
 
                     b.HasIndex("UserId");
 
@@ -1984,14 +1988,11 @@ namespace LMS.DAL.Migrations
 
             modelBuilder.Entity("LMS.DAL.TrendingBook", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("BookId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("BookId1")
+                    b.Property<int>("BookId")
                         .HasColumnType("int");
 
                     b.Property<int>("BorrowCount")
@@ -1999,7 +2000,7 @@ namespace LMS.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookId1");
+                    b.HasIndex("BookId");
 
                     b.ToTable("TrendingBooks");
                 });
@@ -2037,7 +2038,8 @@ namespace LMS.DAL.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("InsertedTime")
                         .HasColumnType("datetime2");
@@ -2053,7 +2055,8 @@ namespace LMS.DAL.Migrations
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -2083,7 +2086,8 @@ namespace LMS.DAL.Migrations
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -2262,7 +2266,9 @@ namespace LMS.DAL.Migrations
                 {
                     b.HasOne("LMS.DAL.Book", "Book")
                         .WithMany("Feedbacks")
-                        .HasForeignKey("BookId1");
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("LMS.DAL.User", "User")
                         .WithMany("Feedbacks")
@@ -2279,7 +2285,9 @@ namespace LMS.DAL.Migrations
                 {
                     b.HasOne("LMS.DAL.Book", "Book")
                         .WithMany("Transactions")
-                        .HasForeignKey("BookId1");
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("LMS.DAL.User", "User")
                         .WithMany("Transactions")
@@ -2296,7 +2304,9 @@ namespace LMS.DAL.Migrations
                 {
                     b.HasOne("LMS.DAL.Book", "Book")
                         .WithMany()
-                        .HasForeignKey("BookId1");
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Book");
                 });
