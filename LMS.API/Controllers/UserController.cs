@@ -27,7 +27,7 @@ public class UserController : ControllerBase
 
     [HttpPost("Register")]
     [AllowAnonymous]
-    public async Task<IActionResult> Register([FromForm] UserRegisterDto registerCredentials)
+    public async Task<IActionResult> Register([FromBody] UserRegisterDto registerCredentials)
     {
         var result = await _userService.RegisterUserAsync(registerCredentials);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
