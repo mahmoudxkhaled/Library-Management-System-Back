@@ -35,7 +35,7 @@ public class TrendingBooksService : ITrendingBooksService
     {
         try
         {
-            var trendingBook = await _unitOfWork.TrendingBooksRepository.GetByIdAsync(bookId);
+            var trendingBook = await _unitOfWork.TrendingBooksRepository.GetByBookIdAsync(bookId);
             if (trendingBook == null)
             {
                 trendingBook = new TrendingBook

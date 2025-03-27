@@ -43,7 +43,7 @@ public class CategoryService : ICategoryService
         }
     }
 
-    public async Task<ApiResult> GetCategoryByIdAsync(string id)
+    public async Task<ApiResult> GetCategoryByIdAsync(int id)
     {
         try
         {
@@ -120,7 +120,7 @@ public class CategoryService : ICategoryService
         }
     }
 
-    public async Task<ApiResult> DeleteCategoryAsync(string id)
+    public async Task<ApiResult> DeleteCategoryAsync(int id)
     {
         try
         {
@@ -137,7 +137,7 @@ public class CategoryService : ICategoryService
         }
     }
 
-    public async Task<ApiResult> ActivateOrDeactivateCategoryAsync(string id)
+    public async Task<ApiResult> ActivateOrDeactivateCategoryAsync(int id)
     {
         try
         {

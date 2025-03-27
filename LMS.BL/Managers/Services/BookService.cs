@@ -52,18 +52,18 @@ public class BookService : IBookService
     {
         try
         {
-            pagedResult<ReadBookDto> pagedResultDto= new pagedResult<ReadBookDto>();
-            var pagedResult = await _unitOfWork.BookRepository.GetBooksPaged(first,rows,sort,Search);
-            pagedResultDto.Result = pagedResult.Result.Select( b=>new ReadBookDto() {Id=b.Id,Title=b.Title,ImageUrl=b.ImageUrl,Author=b.Author,AvailableCopies=b.AvailableCopies,CategoryId=b.CategoryId,PublicationYear=b.PublicationYear,TotalCopies=b.TotalCopies }).ToList();
+            pagedResult<ReadBookDto> pagedResultDto = new pagedResult<ReadBookDto>();
+            var pagedResult = await _unitOfWork.BookRepository.GetBooksPaged(first, rows, sort, Search);
+            pagedResultDto.Result = pagedResult.Result.Select(b => new ReadBookDto() { Id = b.Id, Title = b.Title, ImageUrl = b.ImageUrl, Author = b.Author, AvailableCopies = b.AvailableCopies, CategoryId = b.CategoryId, PublicationYear = b.PublicationYear, TotalCopies = b.TotalCopies }).ToList();
             pagedResultDto.TotalCount = pagedResult.TotalCount;
-            return new ApiResult<pagedResult<ReadBookDto>> { IsSuccess=true,Data=pagedResultDto };
+            return new ApiResult<pagedResult<ReadBookDto>> { IsSuccess = true, Data = pagedResultDto };
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             return new ApiResult<pagedResult<ReadBookDto>> { IsSuccess = false, Message = ex.Message };
         }
     }
-    public async Task<ApiResult> GetBookByIdAsync(string id)
+    public async Task<ApiResult> GetBookByIdAsync(int id)
     {
         try
         {
@@ -153,7 +153,7 @@ public class BookService : IBookService
         }
     }
 
-    public async Task<ApiResult> DeleteBookAsync(string bookId)
+    public async Task<ApiResult> DeleteBookAsync(int bookId)
     {
         try
         {
@@ -170,7 +170,7 @@ public class BookService : IBookService
         }
     }
 
-    public async Task<ApiResult> ActivateOrDeactivateBookAsync(string id)
+    public async Task<ApiResult> ActivateOrDeactivateBookAsync(int id)
     {
         try
         {

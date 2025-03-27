@@ -1,4 +1,7 @@
-﻿namespace LMS.DAL;
+﻿
+using Microsoft.EntityFrameworkCore;
+
+namespace LMS.DAL;
 
 public class TrendingBooksRepository : GenericRepository<TrendingBook>, ITrendingBooksRepository
 {
@@ -15,9 +18,16 @@ public class TrendingBooksRepository : GenericRepository<TrendingBook>, ITrendin
         _context = context;
     }
 
+
+
     #endregion
 
     #region Functions
+    public Task<TrendingBook?> GetByBookIdAsync(int bookId)
+    {
+        return _context.TrendingBooks.FirstOrDefaultAsync(b => b.BookId == bookId);
+    }
+
 
     #endregion
 }

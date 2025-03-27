@@ -8,10 +8,10 @@ namespace LMS.BL;
 public interface IBookService
 {
     Task<ApiResult<List<GetBookDto>>> GetAllBooksAsync();
-    Task<ApiResult> GetBookByIdAsync(string id);
+    Task<ApiResult> GetBookByIdAsync(int id);
     Task<ApiResult> AddBookAsync(AddBookDto request, HttpContext httpContext);
     Task<ApiResult> UpdateBookAsync(UpdateBookDto request, HttpContext httpContext);
-    Task<ApiResult> DeleteBookAsync(string id);
-    Task<ApiResult> ActivateOrDeactivateBookAsync(string id);
+    Task<ApiResult> DeleteBookAsync(int id);
+    Task<ApiResult> ActivateOrDeactivateBookAsync(int id);
     Task<ApiResult<pagedResult<ReadBookDto>>> GetBooksPaged(int first, int rows, int sort, string Search);
 }

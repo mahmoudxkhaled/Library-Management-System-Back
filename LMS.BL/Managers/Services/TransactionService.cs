@@ -87,7 +87,7 @@ public class TransactionService : ITransactionService
                 InsertedUserId = _currentUserService.UserId,
                 InsertedTime = DateTime.Now
             };
-            _trendingBooksService.IncrementTrendingBookAsync(request.BookId);
+            await _trendingBooksService.IncrementTrendingBookAsync(request.BookId);
 
             await _unitOfWork.TransactionRepository.AddAsync(transaction);
             await _unitOfWork.SaveChangesAsync();
