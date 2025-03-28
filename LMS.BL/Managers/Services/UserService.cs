@@ -1,4 +1,5 @@
-﻿using LMS.BL.Shared.Models;
+﻿using LMS.BL.Dtos.User;
+using LMS.BL.Shared.Models;
 using LMS.DAL;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -32,7 +33,9 @@ public class UserService : IUserService
         try
         {
             if (registerCredientials is null)
+            {
                 return new ApiResult { Message = "Invalid Date Provided!!!", IsSuccess = false, };
+            }
 
             User user = new()
             {
@@ -51,7 +54,9 @@ public class UserService : IUserService
 
             var createUserResult = await _manager.CreateAsync(user, registerCredientials.Password);
             if (!createUserResult.Succeeded)
+            {
                 return new ApiResult { ErrorList = createUserResult.Errors.Select(x => new ApiError { Key = x.Code, Message = x.Description }).ToList(), IsSuccess = false, };
+            }
 
             List<Claim> claims = new()
             {
@@ -62,7 +67,9 @@ public class UserService : IUserService
 
             var claimsResult = await _manager.AddClaimsAsync(user, claims);
             if (!claimsResult.Succeeded)
+            {
                 return new ApiResult { ErrorList = claimsResult.Errors.Select(x => new ApiError { Key = x.Code, Message = x.Description }).ToList(), IsSuccess = false, };
+            }
 
             await _unitOfWork.SaveChangesAsync();
             return new ApiResult
@@ -90,24 +97,33 @@ public class UserService : IUserService
         try
         {
             if (loginCredentials is null)
+            {
                 return new ApiResult { Message = "invalid credentials!!!", IsSuccess = false, };
+            }
 
             User? _user = await _manager.FindByEmailAsync(loginCredentials.Email);
             if (_user is null)
+            {
                 return new ApiResult { Message = "invalid credentials!!!", IsSuccess = false, };
+            }
 
             if (!_user.IsActive)
+            {
                 return new ApiResult { Message = "User Not Active", IsSuccess = false, };
-
+            }
 
             bool _isValiduser = await _manager.CheckPasswordAsync(_user, loginCredentials.Password);
             if (!_isValiduser)
+            {
                 return new ApiResult { Message = "invalid credentials", IsSuccess = false, };
+            }
 
             // Get claims
             var _claims = await _manager.GetClaimsAsync(_user);
             if (_claims is null || _claims.Count == 0)
+            {
                 return new ApiResult { Message = "invalid credentials", IsSuccess = true, };
+            }
 
             var _token = GenerateUserTokenAsync(_claims);
 
@@ -155,6 +171,91 @@ public class UserService : IUserService
             return new ApiResult { IsSuccess = false, Message = ex.Message };
         }
     }
+    public async Task<ApiResult> GetAllRolesAsync()
+    {
+        try
+        {
+            var roles = Enum.GetNames(typeof(Roles)).ToList();
+            return new ApiResult { IsSuccess = true, Data = roles };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
+        }
+    }
+
+    public async Task<ApiResult> AddRoleToUserAsync(UserRoleDto request)
+    {
+        try
+        {
+            var user = await _manager.FindByIdAsync(request.UserId);
+            if (user == null)
+            {
+                return new ApiResult { IsSuccess = false, Message = "User not found." };
+            }
+
+            var result = await _manager.AddToRoleAsync(user, request.Role);
+            if (!result.Succeeded)
+            {
+                return new ApiResult { IsSuccess = false, ErrorList = result.Errors.Select(e => new ApiError { Key = e.Code, Message = e.Description }).ToList() };
+            }
+
+            return new ApiResult { IsSuccess = true, Message = "Role added successfully." };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
+        }
+    }
+
+    public async Task<ApiResult> RemoveRoleFromUserAsync(UserRoleDto request)
+    {
+        try
+        {
+            var user = await _manager.FindByIdAsync(request.UserId);
+            if (user == null)
+            {
+                return new ApiResult { IsSuccess = false, Message = "User not found." };
+            }
+
+            var result = await _manager.RemoveFromRoleAsync(user, request.Role);
+            if (!result.Succeeded)
+            {
+                return new ApiResult { IsSuccess = false, ErrorList = result.Errors.Select(e => new ApiError { Key = e.Code, Message = e.Description }).ToList() };
+            }
+
+            return new ApiResult { IsSuccess = true, Message = "Role removed successfully." };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
+        }
+    }
+
+    public async Task<ApiResult> ActivateDeactivateUserAsync(ToggleUserActivationDto request)
+    {
+        try
+        {
+            var user = await _manager.FindByIdAsync(request.UserId);
+            if (user == null)
+            {
+                return new ApiResult { IsSuccess = false, Message = "User not found." };
+            }
+
+            user.IsActive = request.IsActive;
+            var result = await _manager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                return new ApiResult { IsSuccess = false, ErrorList = result.Errors.Select(e => new ApiError { Key = e.Code, Message = e.Description }).ToList() };
+            }
+
+            return new ApiResult { IsSuccess = true, Message = $"User {(request.IsActive ? "activated" : "deactivated")} successfully." };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
+        }
+    }
 
     private (string Token, long Expires) GenerateUserTokenAsync(IList<Claim> claims)
     {
@@ -173,5 +274,90 @@ public class UserService : IUserService
         return (jwtSecurityTokenHandler.WriteToken(jwtSecurity), expires);
     }
 
+    public async Task<ApiResult> AddUserAsync(AddUserDto userDto)
+    {
+        try
+        {
+            if (userDto is null)
+            {
+                return new ApiResult { Message = "Invalid data provided!", IsSuccess = false };
+            }
 
+            // Generate a random password
+            string generatedPassword = GenerateRandomPassword(12);
+
+            User user = new()
+            {
+                Id = Guid.NewGuid().ToString(),
+                Email = userDto.Email.Trim(),
+                FirstName = userDto.FirstName.Trim(),
+                LastName = userDto.LastName.Trim(),
+                UserName = userDto.Email,
+                PhoneNumber = userDto.PhoneNumber,
+                Role = Roles.Member.ToString(),
+                InsertedTime = DateTime.Now,
+                IsActive = true,
+            };
+
+            // Save user in the repository
+            await _unitOfWork.UserRepository.AddAsync(user);
+
+            // Create the user with the generated password
+            var createUserResult = await _manager.CreateAsync(user, generatedPassword);
+            if (!createUserResult.Succeeded)
+            {
+                return new ApiResult
+                {
+                    ErrorList = createUserResult.Errors.Select(x => new ApiError { Key = x.Code, Message = x.Description }).ToList(),
+                    IsSuccess = false
+                };
+            }
+
+            // Assign claims
+            List<Claim> claims = new()
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Email, user.Email.ToString()),
+            new Claim(ClaimTypes.Role, user.Role.ToString()),
+        };
+
+            var claimsResult = await _manager.AddClaimsAsync(user, claims);
+            if (!claimsResult.Succeeded)
+            {
+                return new ApiResult
+                {
+                    ErrorList = claimsResult.Errors.Select(x => new ApiError { Key = x.Code, Message = x.Description }).ToList(),
+                    IsSuccess = false
+                };
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+            return new ApiResult
+            {
+                Message = "User added successfully with a generated password.",
+                IsSuccess = true,
+                Data = new
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Role = user.Role,
+                    PhoneNumber = user.PhoneNumber,
+                    GeneratedPassword = generatedPassword // Include the generated password in response
+                }
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult { Message = ex.Message, IsSuccess = false };
+        }
+    }
+    private string GenerateRandomPassword(int length)
+    {
+        const string validChars = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*?";
+        Random random = new();
+        return new string(Enumerable.Repeat(validChars, length)
+            .Select(s => s[random.Next(s.Length)]).ToArray());
+    }
 }

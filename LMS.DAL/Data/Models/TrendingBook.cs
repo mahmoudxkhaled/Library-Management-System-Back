@@ -1,10 +1,18 @@
-﻿namespace LMS.DAL;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace LMS.DAL;
 
 public class TrendingBook
 {
-    public string Id { get; set; } = null!;
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public Guid Id { get; set; }  // Use int for better performance
 
-    public string BookId { get; set; } = null!;
+    [Required]
+    public int BookId { get; set; }
+
+    [ForeignKey(nameof(BookId))]
     public Book? Book { get; set; }
 
     public int BorrowCount { get; set; }

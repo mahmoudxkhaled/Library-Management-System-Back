@@ -1,29 +1,43 @@
-﻿namespace LMS.DAL;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-public class Category : ISharedColumns
+namespace LMS.DAL
 {
-    public string Id { get; set; } = null!;
-    public string Name { get; set; } = null!;
-    public string Description { get; set; } = null!;
-    public string? ImageUrl { get; set; }
-    public ICollection<Book> Books { get; set; } = new HashSet<Book>();
+    public class Category : ISharedColumns
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; } // Auto-incremented primary key
 
+        [Required]
+        [MaxLength(500)]
+        public string Name { get; set; } = string.Empty;
 
-    #region Shared Columns
+        [MaxLength(5000)]
+        public string Description { get; set; } = string.Empty;
 
-    public DateTime? InsertedTime { get; set; }
-    public string? InsertedUserId { get; set; }
+        public string? ImageUrl { get; set; }
 
-    public DateTime? UpdateTime { get; set; }
-    public string? UpdateUserId { get; set; }
+        public ICollection<Book> Books { get; set; } = new HashSet<Book>();
 
-    public bool IsActive { get; set; } = true;
-    public string? ActivationUserId { get; set; }
-    public DateTime? ActivationTime { get; set; }
+        #region Shared Columns
 
-    public bool IsDeleted { get; set; }
-    public DateTime? DeletedTime { get; set; }
-    public string? DeletedUserId { get; set; }
+        public DateTime? InsertedTime { get; set; }
+        public string? InsertedUserId { get; set; }
 
-    #endregion
+        public DateTime? UpdateTime { get; set; }
+        public string? UpdateUserId { get; set; }
+
+        public bool IsActive { get; set; } = true;
+        public string? ActivationUserId { get; set; }
+        public DateTime? ActivationTime { get; set; }
+
+        public bool IsDeleted { get; set; } = false;
+        public DateTime? DeletedTime { get; set; }
+        public string? DeletedUserId { get; set; }
+
+        #endregion
+    }
 }

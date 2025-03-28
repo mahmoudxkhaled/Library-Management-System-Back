@@ -5,5 +5,5 @@ namespace LMS.BL;
 public interface ITrendingBooksService
 {
     Task<ApiResult> GetAllTrendingBooksAsync();
-    Task<ApiResult> IncrementTrendingBookAsync(string bookId);
+    Task<ApiResult> IncrementTrendingBookAsync(int bookId);
 }

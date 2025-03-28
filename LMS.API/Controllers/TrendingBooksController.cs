@@ -22,7 +22,7 @@ public class TrendingBooksController : ControllerBase
     }
 
     [HttpPost("IncrementTrendingBook/{bookId}")]
-    public async Task<IActionResult> IncrementTrendingBook(string bookId)
+    public async Task<IActionResult> IncrementTrendingBook(int bookId)
     {
         var result = await _trendingBooksService.IncrementTrendingBookAsync(bookId);
         return result.IsSuccess ? Ok(result) : BadRequest(result);

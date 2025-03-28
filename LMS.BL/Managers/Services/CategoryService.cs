@@ -43,7 +43,7 @@ public class CategoryService : ICategoryService
         }
     }
 
-    public async Task<ApiResult> GetCategoryByIdAsync(string id)
+    public async Task<ApiResult> GetCategoryByIdAsync(int id)
     {
         try
         {
@@ -75,7 +75,6 @@ public class CategoryService : ICategoryService
         {
             var category = new Category
             {
-                Id = Guid.NewGuid().ToString(),
                 Name = request.Name,
                 Description = request.Description,
                 InsertedUserId = _currentUserService.UserId,
@@ -121,7 +120,7 @@ public class CategoryService : ICategoryService
         }
     }
 
-    public async Task<ApiResult> DeleteCategoryAsync(string id)
+    public async Task<ApiResult> DeleteCategoryAsync(int id)
     {
         try
         {
@@ -138,7 +137,7 @@ public class CategoryService : ICategoryService
         }
     }
 
-    public async Task<ApiResult> ActivateOrDeactivateCategoryAsync(string id)
+    public async Task<ApiResult> ActivateOrDeactivateCategoryAsync(int id)
     {
         try
         {

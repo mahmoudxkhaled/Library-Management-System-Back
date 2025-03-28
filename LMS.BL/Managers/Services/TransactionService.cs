@@ -78,7 +78,7 @@ public class TransactionService : ITransactionService
         {
             var transaction = new Transaction
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = Guid.NewGuid(),
                 UserId = request.UserId,
                 BookId = request.BookId,
                 IssueDate = request.IssueDate,
@@ -87,7 +87,7 @@ public class TransactionService : ITransactionService
                 InsertedUserId = _currentUserService.UserId,
                 InsertedTime = DateTime.Now
             };
-            _trendingBooksService.IncrementTrendingBookAsync(request.BookId);
+            await _trendingBooksService.IncrementTrendingBookAsync(request.BookId);
 
             await _unitOfWork.TransactionRepository.AddAsync(transaction);
             await _unitOfWork.SaveChangesAsync();
