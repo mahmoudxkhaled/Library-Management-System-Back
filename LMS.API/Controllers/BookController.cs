@@ -35,14 +35,13 @@ public class BookController : ControllerBase
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpGet("{first}/{rows}/{sortOrder}/{Search?}")]
-    public async Task<ActionResult> GetBooksPaged(int first, int rows, int sortOrder, string? Search = null)
+    [HttpPost("{first}/{rows}")]
+    public async Task<ActionResult> GetBooksPaged(int first, int rows, BookParams bookParams)
     {
-        ApiResult<pagedResult<ReadBookDto>> Books = await _bookService.GetBooksPaged(first, rows, sortOrder, Search);
+        ApiResult<pagedResult<ReadBookDto>> Books = await _bookService.GetBooksPaged(first, rows,bookParams.sortOrder, bookParams.sortField, bookParams.Search, bookParams.categoryId, bookParams.authorId);
         if (Books.Data != null)
         {
             for (int i = 0; i < Books.Data.Result.Count; i++)
-
             {
                 if (Books.Data.Result[i].ImageUrl != null)
                 {
@@ -52,7 +51,21 @@ public class BookController : ControllerBase
         }
         return Ok(Books);
     }
-
+    [HttpGet("{id}")]
+    public async Task<ActionResult<BookDetailsDto>> getBookDetailsById(int id) 
+    {
+        var result = await _bookService.getBookDetailsById(id);
+        if (result.Data!=null)
+        {
+            if (result.Data.ImageUrl != null)
+             result.Data.ImageUrl = $"{Request.Scheme}://{Request.Host}/{result.Data.ImageUrl}";
+             if(result.Data.AuthorImageUrl!=null)
+                result.Data.AuthorImageUrl = $"{Request.Scheme}://{Request.Host}/{result.Data.AuthorImageUrl}";
+             if (result.Data.CategoryImageUrl != null)
+                result.Data.CategoryImageUrl = $"{Request.Scheme}://{Request.Host}/{result.Data.CategoryImageUrl}";
+        }
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
     [HttpGet("GetBookById/{id}")]
     public async Task<IActionResult> GetBookById(int id)
     {
@@ -61,14 +74,14 @@ public class BookController : ControllerBase
     }
 
     [HttpPost("AddBook")]
-    public async Task<IActionResult> AddBook([FromBody] AddBookDto request)
+    public async Task<IActionResult> AddBook([FromForm] AddBookDto request)
     {
         var result = await _bookService.AddBookAsync(request, HttpContext);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
     [HttpPut("UpdateBook")]
-    public async Task<IActionResult> UpdateBook([FromBody] UpdateBookDto request)
+    public async Task<IActionResult> UpdateBook([FromForm] UpdateBookDto request)
     {
         var result = await _bookService.UpdateBookAsync(request, HttpContext);
         return result.IsSuccess ? Ok(result) : BadRequest(result);

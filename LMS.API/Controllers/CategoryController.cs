@@ -1,4 +1,5 @@
 ﻿using LMS.BL;
+using LMS.BL.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.API.Controllers;
@@ -17,7 +18,17 @@ public class CategoryController : ControllerBase
     [HttpGet("GetAllCategories")]
     public async Task<IActionResult> GetAllCategories()
     {
-        var result = await _categoryService.GetAllCategoriesAsync();
+        ApiResult<List<GetCategoryDto>> result = await _categoryService.GetAllCategoriesAsync();
+        if (result.Data != null)
+        {
+            for (int i = 0; i < result.Data.Count; i++)
+            {
+                if (result.Data[i].ImageUrl != null)
+                {
+                    result.Data[i].ImageUrl = $"{Request.Scheme}://{Request.Host}/{result.Data[i].ImageUrl}";
+                }
+            };
+        }
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
@@ -29,14 +40,14 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost("AddCategory")]
-    public async Task<IActionResult> AddCategory([FromBody] AddCategoryDto request)
+    public async Task<IActionResult> AddCategory([FromForm] AddCategoryDto request)
     {
         var result = await _categoryService.AddCategoryAsync(request, HttpContext);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
     [HttpPut("UpdateCategory")]
-    public async Task<IActionResult> UpdateCategory([FromBody] UpdateCategoryDto request)
+    public async Task<IActionResult> UpdateCategory([FromForm] UpdateCategoryDto request)
     {
         var result = await _categoryService.UpdateCategoryAsync(request, HttpContext);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
