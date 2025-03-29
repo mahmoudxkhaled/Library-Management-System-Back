@@ -5,7 +5,7 @@ namespace LMS.BL;
 
 public interface ICategoryService
 {
-    Task<ApiResult> GetAllCategoriesAsync();
+    Task<ApiResult<List<GetCategoryDto>>> GetAllCategoriesAsync();
     Task<ApiResult> GetCategoryByIdAsync(int id);
     Task<ApiResult> AddCategoryAsync(AddCategoryDto request, HttpContext httpContext);
     Task<ApiResult> UpdateCategoryAsync(UpdateCategoryDto request, HttpContext httpContext);

@@ -4,6 +4,7 @@ using LMS.BL.Shared.Models;
 using LMS.DAL;
 using LMS.DAL.Data;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 namespace LMS.BL;
 
 public class BookService : IBookService
@@ -27,18 +28,19 @@ public class BookService : IBookService
     {
         try
         {
-            var books = await _unitOfWork.BookRepository.GetAllAsync();
+            var books = await _unitOfWork.BookRepository.getAllBooksWithAuthor();
             var bookList = books.Select(b => new GetBookDto
             {
                 Id = b.Id,
                 Title = b.Title,
                 Description = b.Description,
-                Author = b.Author,
+                AuthorName = b.Author.FullName,
                 PublicationYear = b.PublicationYear,
                 AvailableCopies = b.AvailableCopies,
                 TotalCopies = b.TotalCopies,
                 CategoryId = b.CategoryId,
                 ImageUrl = b.ImageUrl,
+                authorId=b.AuthorId
             }).ToList();
 
             return new ApiResult<List<GetBookDto>> { IsSuccess = true, Data = bookList };
@@ -48,13 +50,13 @@ public class BookService : IBookService
             return new ApiResult<List<GetBookDto>> { IsSuccess = false, Message = ex.Message };
         }
     }
-    public async Task<ApiResult<pagedResult<ReadBookDto>>> GetBooksPaged(int first, int rows, int sort, string Search)
+    public async Task<ApiResult<pagedResult<ReadBookDto>>> GetBooksPaged(int first, int rows, int sortOrder, string? sortField, string? Search,int categoryId,int authorId)
     {
         try
         {
             pagedResult<ReadBookDto> pagedResultDto = new pagedResult<ReadBookDto>();
-            var pagedResult = await _unitOfWork.BookRepository.GetBooksPaged(first, rows, sort, Search);
-            pagedResultDto.Result = pagedResult.Result.Select(b => new ReadBookDto() { Id = b.Id, Title = b.Title, ImageUrl = b.ImageUrl, Author = b.Author, AvailableCopies = b.AvailableCopies, CategoryId = b.CategoryId, PublicationYear = b.PublicationYear, TotalCopies = b.TotalCopies }).ToList();
+            var pagedResult = await _unitOfWork.BookRepository.GetBooksPaged(first, rows, sortOrder,sortField, Search,categoryId,authorId);
+            pagedResultDto.Result = pagedResult.Result.Select(b => new ReadBookDto() { Id = b.Id, Title = b.Title,Description=b.Description, ImageUrl = b.ImageUrl,AuthorId=b.Author.Id,AuthorFullName = b.Author.FullName,AuthorImage=b.Author.ImageUrl, AvailableCopies = b.AvailableCopies, CategoryId = b.CategoryId,CategoryName=b.Category.Name, PublicationYear = b.PublicationYear, TotalCopies = b.TotalCopies }).ToList();
             pagedResultDto.TotalCount = pagedResult.TotalCount;
             return new ApiResult<pagedResult<ReadBookDto>> { IsSuccess = true, Data = pagedResultDto };
         }
@@ -63,11 +65,28 @@ public class BookService : IBookService
             return new ApiResult<pagedResult<ReadBookDto>> { IsSuccess = false, Message = ex.Message };
         }
     }
+    public async Task<ApiResult<BookDetailsDto>> getBookDetailsById(int id)
+    {
+        try
+        {
+            var book = await _unitOfWork.BookRepository.getBookDetailsById(id);
+            if(book == null) 
+                return new ApiResult<BookDetailsDto>() { IsSuccess = false, Message = $"Not found any book by this Id {id}" };
+            return new ApiResult<BookDetailsDto>() { IsSuccess = true,Data= new BookDetailsDto() { Title=book.Title,Description=book.Description,ImageUrl=book.ImageUrl,
+                PublicationYear=book.PublicationYear,AvailableCopies=book.AvailableCopies,TotalCopies=book.TotalCopies,AuthorFullName = book.Author.FullName,AuthorDescription=book.Author.Description,AuthorImageUrl=book.Author.ImageUrl,
+            AuthorDateOfBirth=book.Author.DateOfBirth,CategoryName=book.Category.Name,CategoryDescription=book.Category.Description,CategoryImageUrl=book.Category.ImageUrl} };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult<BookDetailsDto>() { IsSuccess=false, Message=ex.Message };
+        }
+        }
+    
     public async Task<ApiResult> GetBookByIdAsync(int id)
     {
         try
         {
-            var book = await _unitOfWork.BookRepository.GetByIdAsync(id);
+            var book = await _unitOfWork.BookRepository.GetBookWithAuthorByIdAsync(id);
             if (book == null)
                 return new ApiResult { IsSuccess = false, Message = "Book not found" };
 
@@ -79,7 +98,7 @@ public class BookService : IBookService
                     Id = book.Id,
                     Title = book.Title,
                     Description = book.Description,
-                    Author = book.Author,
+                    AuthorName = book.Author.FullName,
                     PublicationYear = book.PublicationYear,
                     AvailableCopies = book.AvailableCopies,
                     TotalCopies = book.TotalCopies,
@@ -101,7 +120,7 @@ public class BookService : IBookService
             {
                 Title = request.Title,
                 Description = request.Description,
-                Author = request.Author,
+                AuthorId = request.AuthorId,
                 PublicationYear = request.PublicationYear,
                 AvailableCopies = request.AvailableCopies,
                 TotalCopies = request.TotalCopies,
@@ -134,7 +153,7 @@ public class BookService : IBookService
 
             book.Title = request.Title ?? book.Title;
             book.Description = request.Description ?? book.Description;
-            book.Author = request.Author ?? book.Author;
+            book.AuthorId = request.AuthorId;
             book.PublicationYear = request.PublicationYear;
             book.AvailableCopies = request.AvailableCopies;
             book.TotalCopies = request.TotalCopies;
