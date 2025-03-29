@@ -105,7 +105,7 @@ public class CategoryService : ICategoryService
 
             category.Name = request.Name ?? category.Name;
             category.Description = request.Description ?? category.Description;
-            category.ImageUrl = request.ImageUrl is not null ? await _helperService.SaveFileAsync(request.ImageUrl, "Books", httpContext) : category.ImageUrl;
+            category.ImageUrl = request.ImageUrl is not null ? await _helperService.SaveFileAsync(request.ImageUrl, "Categories", httpContext) : category.ImageUrl;
             category.UpdateTime = DateTime.Now;
             category.UpdateUserId = _currentUserService.UserId;
 
