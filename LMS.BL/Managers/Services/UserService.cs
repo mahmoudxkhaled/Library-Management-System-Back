@@ -39,7 +39,6 @@ public class UserService : IUserService
 
             User user = new()
             {
-                Id = Guid.NewGuid().ToString(),
                 Email = registerCredientials.Email.Trim(),
                 FirstName = registerCredientials.FirstName.Trim(),
                 LastName = registerCredientials.LastName.Trim(),
@@ -288,7 +287,6 @@ public class UserService : IUserService
 
             User user = new()
             {
-                Id = Guid.NewGuid().ToString(),
                 Email = userDto.Email.Trim(),
                 FirstName = userDto.FirstName.Trim(),
                 LastName = userDto.LastName.Trim(),

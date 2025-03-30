@@ -2,7 +2,7 @@
 public class GetTransactionDto
 {
     public Guid Id { get; set; }
-    public string UserId { get; set; } = null!;
+    public int UserId { get; set; }  
     public int BookId { get; set; }
     public DateTime IssueDate { get; set; }
     public DateTime DueDate { get; set; }

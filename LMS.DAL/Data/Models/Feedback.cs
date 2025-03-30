@@ -11,7 +11,7 @@ namespace LMS.DAL
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
-        public string UserId { get; set; } = string.Empty;
+        public int UserId { get; set; }  
 
         public User? User { get; set; }
 
