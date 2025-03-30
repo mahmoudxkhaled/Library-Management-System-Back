@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Identity;
 
 namespace LMS.DAL
 {
-    public class User : IdentityUser, ISharedColumns
+    public class User : IdentityUser<int>, ISharedColumns
     {
+
         [Required]
         [MaxLength(100)]
         public string FirstName { get; set; } = null!;

@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using LMS.DAL.Data.Models;
+using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
 namespace LMS.DAL.Data
 {
     public static class DbSeeder
     {
-        public static async Task SeedRolesAndAdminAsync(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        public static async Task SeedRolesAndAdminAsync(UserManager<User> userManager, RoleManager<Role> roleManager)
         {
             try
             {
@@ -18,7 +19,7 @@ namespace LMS.DAL.Data
                 {
                     if (!await roleManager.RoleExistsAsync(roleName))
                     {
-                        await roleManager.CreateAsync(new IdentityRole(roleName));
+                        await roleManager.CreateAsync(new Role(roleName));
                     }
                 }
 
@@ -32,7 +33,6 @@ namespace LMS.DAL.Data
 
                     var newAdmin = new User
                     {
-                        Id = Guid.NewGuid().ToString(),
                         Email = adminEmail.Trim(),
                         FirstName = "Admin",
                         LastName = "User",

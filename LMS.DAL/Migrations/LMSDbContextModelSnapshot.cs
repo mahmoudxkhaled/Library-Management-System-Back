@@ -107,6 +107,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 10,
                             CategoryId = 1,
                             Description = "A novel about the American dream and the Jazz Age.",
+                            ImageUrl = "Uploads/Books/240a09b8-7452-4cda-99e4-48627bfc2ba6_20250330_001414.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 1925,
@@ -120,6 +121,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 8,
                             CategoryId = 1,
                             Description = "A novel about racial injustice in the Deep South.",
+                            ImageUrl = "Uploads/Books/bbc43e3c-beff-4517-a107-e3ad3b7c3fbb_20250330_002428.png",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 1960,
@@ -133,6 +135,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 12,
                             CategoryId = 2,
                             Description = "A sweeping history of humanity from ancient times to the present.",
+                            ImageUrl = "Uploads/Books/ec03a3c1-b718-407b-9465-f8e867353021_20250330_000242.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2011,
@@ -146,6 +149,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 5,
                             CategoryId = 3,
                             Description = "A memoir about a woman who grows up in a survivalist family and eventually escapes for an education.",
+                            ImageUrl = "Uploads/Books/0ff5c317-7915-4ee3-954f-4ebd7608d428_20250329_235320.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2018,
@@ -159,6 +163,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 15,
                             CategoryId = 4,
                             Description = "A landmark book by physicist Stephen Hawking about the origins and nature of the universe.",
+                            ImageUrl = "Uploads/Books/2f7ebca3-e6c4-4c0b-aeac-ff396a023c49_20250329_234906.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 1988,
@@ -172,6 +177,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 8,
                             CategoryId = 2,
                             Description = "A seminal work on evolutionary biology, focusing on the gene-centered view of evolution.",
+                            ImageUrl = "Uploads/Books/1ecaf167-5c32-4f68-8c43-57b97dec2a3e_20250330_002042.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 1976,
@@ -185,6 +191,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 6,
                             CategoryId = 4,
                             Description = "A book about the beauty and wonder of mathematics and its applications.",
+                            ImageUrl = "Uploads/Books/eaeefb94-29ae-486b-baba-078d7ca17429_20250330_001647.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2014,
@@ -198,6 +205,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 7,
                             CategoryId = 5,
                             Description = "A novella exploring the nature of dimensions and our perception of reality.",
+                            ImageUrl = "Uploads/Books/e8b354e3-7ce0-4824-a92d-6cd434ef30cb_20250329_235623.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 1884,
@@ -211,6 +219,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 5,
                             CategoryId = 6,
                             Description = "The diary of Anne Frank, chronicling her life in hiding during the Holocaust.",
+                            ImageUrl = "Uploads/Books/169f079a-cfff-4d87-8f84-5a873a895504_20250330_001103.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 1947,
@@ -224,6 +233,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 12,
                             CategoryId = 2,
                             Description = "A history of the world from the perspective of the Silk Roads trade routes.",
+                            ImageUrl = "Uploads/Books/c508f639-13fb-425e-8e56-508c3fc2ba6b_20250330_002117.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2015,
@@ -237,6 +247,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 10,
                             CategoryId = 7,
                             Description = "A biography of the Apple co-founder, written by Walter Isaacson.",
+                            ImageUrl = "Uploads/Books/b5d07a17-b507-4aca-ae02-67407a95e307_20250330_000437.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2011,
@@ -250,6 +261,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 8,
                             CategoryId = 6,
                             Description = "The life story of the influential civil rights leader, as told to journalist Alex Haley.",
+                            ImageUrl = "Uploads/Books/5fd61fc7-4a57-4cec-bc1e-153df1b8d08b_20250330_000750.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 1965,
@@ -263,6 +275,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 6,
                             CategoryId = 1,
                             Description = "Herman Melville's classic novel about the obsessive quest to capture the white whale.",
+                            ImageUrl = "Uploads/Books/7186fad6-481e-4b35-8730-bb5b38fe44d0_20250330_000006.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 1851,
@@ -276,6 +289,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 10,
                             CategoryId = 1,
                             Description = "Jane Austen's timeless romantic novel set in the British Regency era.",
+                            ImageUrl = "Uploads/Books/5b2c0142-74e5-4317-a9fb-dacaa00f2610_20250330_000111.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 1813,
@@ -315,6 +329,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 10,
                             CategoryId = 3,
                             Description = "A groundbreaking book on human decision-making and cognitive biases by Nobel laureate Daniel Kahneman.",
+                            ImageUrl = "Uploads/Books/ddfb6c14-a1f1-4685-a835-16afd6354aac_20250330_002323.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2011,
@@ -328,6 +343,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 9,
                             CategoryId = 3,
                             Description = "A book exploring the science of habit formation and how it impacts our daily lives.",
+                            ImageUrl = "Uploads/Books/c70e070d-1a1f-499c-9b66-9373873efd4d_20250330_001755.png",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2012,
@@ -341,6 +357,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 10,
                             CategoryId = 3,
                             Description = "James Clear's guide to breaking bad habits and building good ones through small, consistent changes.",
+                            ImageUrl = "Uploads/Books/cdb6b6a0-dfc6-4f79-b81f-d53cbd47f797_20250329_234920.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2018,
@@ -354,6 +371,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 14,
                             CategoryId = 3,
                             Description = "Stephen R. Covey's classic book on personal and professional effectiveness.",
+                            ImageUrl = "Uploads/Books/2d209324-e47a-4a72-b249-c27a8fd9b447_20250330_000600.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 1989,
@@ -367,6 +385,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 8,
                             CategoryId = 5,
                             Description = "An accessible introduction to the history of art by renowned art historian E.H. Gombrich.",
+                            ImageUrl = "Uploads/Books/f0e19d8b-bc7a-4630-9f96-0cb3b943bcab_20250330_002206.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 1950,
@@ -380,6 +399,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 6,
                             CategoryId = 5,
                             Description = "A groundbreaking book on visual culture and how we perceive art, written by John Berger.",
+                            ImageUrl = "Uploads/Books/b1f5b2da-1307-47ba-8ea1-fdbe780bd088_20250330_002539.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 1972,
@@ -393,6 +413,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 7,
                             CategoryId = 4,
                             Description = "A history of 20th-century classical music by music critic Alex Ross.",
+                            ImageUrl = "Uploads/Books/7147db03-a13b-4773-bfd3-d80fe01c4743_20250330_001923.png",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2007,
@@ -406,6 +427,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 8,
                             CategoryId = 4,
                             Description = "David Byrne’s exploration of music, its history, and its cultural impact.",
+                            ImageUrl = "Uploads/Books/00e82a7d-5452-4a08-b4a0-a75eb692656c_20250329_235723.png",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2012,
@@ -419,6 +441,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 10,
                             CategoryId = 3,
                             Description = "Bessel van der Kolk’s exploration of trauma and its effect on the brain and body.",
+                            ImageUrl = "Uploads/Books/d7f01374-6dff-4ea2-8d22-afd607cbdc11_20250330_000838.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2014,
@@ -432,6 +455,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 6,
                             CategoryId = 2,
                             Description = "A book about the science of running and the story of a remote tribe of ultra-runners.",
+                            ImageUrl = "Uploads/Books/f845f829-8491-4d04-8358-0d9064c7ec90_20250329_235131.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2009,
@@ -445,6 +469,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 7,
                             CategoryId = 8,
                             Description = "Irma S. Rombauer’s classic cookbook that has become an American institution.",
+                            ImageUrl = "Uploads/Books/c3902039-c0cb-4827-93c2-e523bfbca2e8_20250330_001629.png",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 1931,
@@ -458,6 +483,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 6,
                             CategoryId = 14,
                             Description = "A guide to understanding the fundamental elements of cooking by Samin Nosrat.",
+                            ImageUrl = "Uploads/Books/34a1babd-4c98-4060-83e1-4a5ba9710042_20250330_000128.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2017,
@@ -471,6 +497,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 8,
                             CategoryId = 8,
                             Description = "Anthony Bourdain’s behind-the-scenes look at the culinary world.",
+                            ImageUrl = "Uploads/Books/a26c1840-336e-4111-a9b6-1992fda7e5ca_20250329_235800.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2000,
@@ -484,6 +511,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 10,
                             CategoryId = 8,
                             Description = "Michael Pollan’s exploration of where our food comes from and its environmental impact.",
+                            ImageUrl = "Uploads/Books/3f907f78-cd85-443b-82a3-d2663bbf74cd_20250330_001723.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2006,
@@ -497,6 +525,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 7,
                             CategoryId = 7,
                             Description = "Stephen King's memoir and guide to writing.",
+                            ImageUrl = "Uploads/Books/317c1742-37a7-439c-9b23-00d0a708f7c8_20250330_000039.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2000,
@@ -510,6 +539,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 6,
                             CategoryId = 7,
                             Description = "Anne Lamott's insightful and humorous take on writing and life.",
+                            ImageUrl = "Uploads/Books/2b87c9ee-4b19-40aa-ba32-8e45a76d4a88_20250329_235032.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 1994,
@@ -523,6 +553,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 12,
                             CategoryId = 7,
                             Description = "A concise guide to the principles of good writing, by William Strunk Jr. and E.B. White.",
+                            ImageUrl = "Uploads/Books/3d3e4b70-925b-42e4-98ef-42a94c5ae486_20250330_001224.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 1959,
@@ -536,6 +567,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 8,
                             CategoryId = 7,
                             Description = "Steven Pressfield’s book on overcoming resistance to creative work.",
+                            ImageUrl = "Uploads/Books/2a7a7859-0f63-4643-8c93-a8e9951fda2d_20250330_002241.png",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2002,
@@ -549,6 +581,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 15,
                             CategoryId = 1,
                             Description = "Paulo Coelho's philosophical novel about pursuing your dreams and finding your destiny.",
+                            ImageUrl = "Uploads/Books/ac5dceb7-753b-4064-9f6e-6cc45176ffb2_20250330_000713.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 1988,
@@ -562,6 +595,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 10,
                             CategoryId = 1,
                             Description = "George Orwell's dystopian novel about totalitarianism, surveillance, and the power of propaganda.",
+                            ImageUrl = "Uploads/Books/46ce4b1e-404e-4aac-8b35-856c527a26b4_20250329_234649.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 1949,
@@ -575,6 +609,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 8,
                             CategoryId = 1,
                             Description = "Aldous Huxley's novel exploring a future society controlled by technology and conformity.",
+                            ImageUrl = "Uploads/Books/2f0c9609-566c-4fda-b9b9-cd9fead1e986_20250329_235216.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 1932,
@@ -588,6 +623,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 9,
                             CategoryId = 1,
                             Description = "Ray Bradbury's classic novel about a dystopian society where books are banned.",
+                            ImageUrl = "Uploads/Books/c77cc79e-9e1b-4d65-8c9d-4ba5a67c9c95_20250329_235349.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 1953,
@@ -601,6 +637,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 12,
                             CategoryId = 1,
                             Description = "J.D. Salinger's novel about teenage rebellion and disillusionment.",
+                            ImageUrl = "Uploads/Books/e5ba1036-fa70-4fb2-b647-b4897e63962f_20250330_000909.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 1951,
@@ -614,6 +651,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 10,
                             CategoryId = 1,
                             Description = "Margaret Atwood’s dystopian novel about gender oppression and the loss of personal freedom.",
+                            ImageUrl = "Uploads/Books/23782e39-0ede-4324-b69f-63f70e9785c4_20250330_001449.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 1985,
@@ -627,6 +665,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 7,
                             CategoryId = 1,
                             Description = "Cormac McCarthy's post-apocalyptic novel about a father and son struggling to survive.",
+                            ImageUrl = "Uploads/Books/7d195219-1d98-477a-9b98-d30bae0b3464_20250330_002011.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2006,
@@ -640,6 +679,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 8,
                             CategoryId = 1,
                             Description = "Kate Atkinson's novel about a woman who lives multiple lives in different timelines.",
+                            ImageUrl = "Uploads/Books/4b8da56f-7688-4d5b-b07e-d9853db96d1b_20250329_235845.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2013,
@@ -653,6 +693,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 9,
                             CategoryId = 1,
                             Description = "Rick Yancey's thrilling novel about an alien invasion and the fight for survival.",
+                            ImageUrl = "Uploads/Books/52825395-52a2-4bea-9ee4-67a28f2c38b2_20250330_000508.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2013,
@@ -666,6 +707,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 12,
                             CategoryId = 1,
                             Description = "Suzanne Collins' dystopian novel about a televised fight to the death.",
+                            ImageUrl = "Uploads/Books/c14ad657-c986-44c1-ae6b-2bacc1b2b577_20250330_001551.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2008,
@@ -679,6 +721,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 10,
                             CategoryId = 1,
                             Description = "Veronica Roth's novel set in a dystopian society divided into factions based on virtues.",
+                            ImageUrl = "Uploads/Books/eea4aa7e-c852-46ca-9320-c2413be5836a_20250329_235249.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2011,
@@ -692,6 +735,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 8,
                             CategoryId = 1,
                             Description = "Paula Hawkins' psychological thriller about a woman who gets involved in a missing person's case.",
+                            ImageUrl = "Uploads/Books/75eaa5a8-101b-4649-b94a-cc975b6b71d3_20250330_001300.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2015,
@@ -705,6 +749,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 9,
                             CategoryId = 1,
                             Description = "Gillian Flynn's mystery novel about a marriage gone wrong and the disappearance of a wife.",
+                            ImageUrl = "Uploads/Books/37e1b6dd-3596-460b-a5ea-75ab35e76de2_20250329_235640.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2012,
@@ -718,6 +763,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 7,
                             CategoryId = 1,
                             Description = "Gillian Flynn’s psychological thriller about a journalist returning to her hometown to investigate a series of murders.",
+                            ImageUrl = "Uploads/Books/93e160f6-53a0-43c6-b70e-b5bf34a40d1d_20250330_000313.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2006,
@@ -731,6 +777,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 12,
                             CategoryId = 1,
                             Description = "Liane Moriarty's novel about the secrets and lies in a tight-knit community.",
+                            ImageUrl = "Uploads/Books/472104fd-a07c-4b6d-833a-f1980ade7088_20250329_234953.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2014,
@@ -744,6 +791,7 @@ namespace LMS.DAL.Migrations
                             AvailableCopies = 10,
                             CategoryId = 1,
                             Description = "Stieg Larsson's crime thriller about a journalist and a hacker uncovering corruption in Sweden.",
+                            ImageUrl = "Uploads/Books/16ccf3cf-cda1-465f-9c2e-ddd95c7e86da_20250330_001343.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2005,
@@ -812,6 +860,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 1,
                             Description = "Books that contain stories created from the imagination.",
+                            ImageUrl = "Uploads/Books/6393e19e-6166-4db4-a076-976352f7e20d_20250330_002637.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Fiction"
@@ -820,6 +869,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 2,
                             Description = "Books based on real facts and events.",
+                            ImageUrl = "Uploads/Books/2ec27bb0-5430-41d6-9e10-db55a5ea961c_20250330_002741.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Non-Fiction"
@@ -828,6 +878,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 3,
                             Description = "Books related to scientific principles, experiments, and discoveries.",
+                            ImageUrl = "Uploads/Books/c5fc5bee-ea8c-40a9-99c2-936cfa5d041d_20250330_002809.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Science"
@@ -836,6 +887,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 4,
                             Description = "Books covering mathematical theories, problems, and equations.",
+                            ImageUrl = "Uploads/Books/35ce256b-5c7d-4436-9fe6-b0a1b6797224_20250330_003015.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Mathematics"
@@ -844,6 +896,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 5,
                             Description = "Books that discuss past events and historical occurrences.",
+                            ImageUrl = "Uploads/Books/19a4642e-b144-44d2-b37e-8773f4e9a52b_20250330_003044.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "History"
@@ -852,6 +905,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 6,
                             Description = "Books about the lives of individuals, either famous or historical.",
+                            ImageUrl = "Uploads/Books/8ed4d4a2-6ade-4eba-a3ee-c9760a2757d9_20250330_003206.png",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Biography"
@@ -860,6 +914,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 7,
                             Description = "Books considered to have artistic value, including poetry, novels, and drama.",
+                            ImageUrl = "Uploads/Books/acbae6c0-0c0d-44c3-8f99-4ff327c81005_20250330_003245.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Literature"
@@ -868,6 +923,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 8,
                             Description = "Books that explore fundamental questions about existence, knowledge, and ethics.",
+                            ImageUrl = "Uploads/Books/5de8b2ec-4651-4b86-a50c-0352b2ceba84_20250330_003310.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Philosophy"
@@ -876,6 +932,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 9,
                             Description = "Books related to human behavior, emotions, and cognitive functions.",
+                            ImageUrl = "Uploads/Books/a079349e-4d11-4521-b07e-8d315b13527f_20250330_003502.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Psychology"
@@ -884,6 +941,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 10,
                             Description = "Books that provide advice or strategies for improving life and personal growth.",
+                            ImageUrl = "Uploads/Books/f967b576-dd73-48ec-9162-950caa88d10a_20250330_003606.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Self-Help"
@@ -892,6 +950,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 11,
                             Description = "Books that focus on various forms of art, including visual arts, sculpture, and performance.",
+                            ImageUrl = "Uploads/Books/f8237660-039b-4459-bba6-4394d70adad4_20250330_003642.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Art"
@@ -900,6 +959,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 12,
                             Description = "Books that discuss musical theory, history, and performance techniques.",
+                            ImageUrl = "Uploads/Books/fb89b2db-af67-44f2-835c-22c0e349d131_20250330_003722.png",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Music"
@@ -908,6 +968,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 13,
                             Description = "Books focused on physical well-being, exercise, and mental health.",
+                            ImageUrl = "Uploads/Books/6bda1890-8333-4bc8-b11e-afad13fa8249_20250330_003809.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Health & Fitness"
@@ -916,6 +977,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 14,
                             Description = "Books providing recipes and cooking techniques.",
+                            ImageUrl = "Uploads/Books/ee60663d-c0fd-4a74-874a-2c70733e0f9a_20250330_003916.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Cooking"
@@ -924,6 +986,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 15,
                             Description = "Books that explore destinations, cultures, and experiences in different parts of the world.",
+                            ImageUrl = "Uploads/Books/ddde898a-001c-406b-a022-d739209c07a4_20250330_004002.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Travel"
@@ -932,6 +995,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 16,
                             Description = "Books intended for young readers, including stories and educational books.",
+                            ImageUrl = "Uploads/Books/c6b34e07-de1d-44ee-8d45-390ae71affbb_20250330_004115.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Children's Books"
@@ -940,6 +1004,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 17,
                             Description = "Books containing magical or fantastical elements set in imaginary worlds.",
+                            ImageUrl = "Uploads/Books/7f59fdf5-ead6-45c2-9a2b-e6b591880d3e_20250330_004149.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Fantasy"
@@ -948,6 +1013,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 18,
                             Description = "Books set in the future or in space, often incorporating advanced technology or extraterrestrial life.",
+                            ImageUrl = "Uploads/Books/c75396e8-8da4-4ba1-b644-7a6c6b64e1ce_20250330_004229.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Science Fiction"
@@ -956,6 +1022,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 19,
                             Description = "Books centered around solving a crime or uncovering secrets.",
+                            ImageUrl = "Uploads/Books/4375faff-2083-449b-a270-67b515001c28_20250330_004256.png",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Mystery"
@@ -964,6 +1031,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 20,
                             Description = "Books designed to keep the reader on edge with suspense and tension.",
+                            ImageUrl = "Uploads/Books/cc4b5787-7574-45b2-8d71-06dd0658d491_20250330_004355.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Thriller"
@@ -1588,6 +1656,36 @@ namespace LMS.DAL.Migrations
                         });
                 });
 
+            modelBuilder.Entity("LMS.DAL.Data.Models.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
+                });
+
             modelBuilder.Entity("LMS.DAL.Feedback", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1635,9 +1733,8 @@ namespace LMS.DAL.Migrations
                     b.Property<string>("UpdateUserId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -1701,9 +1798,8 @@ namespace LMS.DAL.Migrations
                     b.Property<string>("UpdateUserId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -1735,8 +1831,11 @@ namespace LMS.DAL.Migrations
 
             modelBuilder.Entity("LMS.DAL.User", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -1846,34 +1945,7 @@ namespace LMS.DAL.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
-
-                    b.ToTable("AspNetRoles", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1887,9 +1959,8 @@ namespace LMS.DAL.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -1898,7 +1969,7 @@ namespace LMS.DAL.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1912,9 +1983,8 @@ namespace LMS.DAL.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -1923,7 +1993,7 @@ namespace LMS.DAL.Migrations
                     b.ToTable("AspNetUserClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -1934,9 +2004,8 @@ namespace LMS.DAL.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -1945,13 +2014,13 @@ namespace LMS.DAL.Migrations
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -1960,10 +2029,10 @@ namespace LMS.DAL.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -2047,16 +2116,16 @@ namespace LMS.DAL.Migrations
                     b.Navigation("Book");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("LMS.DAL.Data.Models.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
                     b.HasOne("LMS.DAL.User", null)
                         .WithMany()
@@ -2065,7 +2134,7 @@ namespace LMS.DAL.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
                     b.HasOne("LMS.DAL.User", null)
                         .WithMany()
@@ -2074,9 +2143,9 @@ namespace LMS.DAL.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("LMS.DAL.Data.Models.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2089,7 +2158,7 @@ namespace LMS.DAL.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
                     b.HasOne("LMS.DAL.User", null)
                         .WithMany()

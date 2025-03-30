@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace LMS.DAL;
 
-public class LMSDbContext : IdentityDbContext<User>
+public class LMSDbContext : IdentityDbContext<User, Role, int>
 {
     #region Constructors
 
@@ -13,6 +13,7 @@ public class LMSDbContext : IdentityDbContext<User>
     {
 
     }
+
     #endregion
 
     #region Entities
