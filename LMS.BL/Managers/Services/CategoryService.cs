@@ -20,7 +20,7 @@ public class CategoryService : ICategoryService
 
     }
 
-    public async Task<ApiResult> GetAllCategoriesAsync()
+    public async Task<ApiResult<List<GetCategoryDto>>> GetAllCategoriesAsync()
     {
         try
         {
@@ -35,11 +35,11 @@ public class CategoryService : ICategoryService
 
             }).ToList();
 
-            return new ApiResult { IsSuccess = true, Data = categoryList };
+            return new ApiResult<List<GetCategoryDto>> { IsSuccess = true, Data = categoryList };
         }
         catch (Exception ex)
         {
-            return new ApiResult { IsSuccess = false, Message = ex.Message };
+            return new ApiResult<List<GetCategoryDto>> { IsSuccess = false, Message = ex.Message };
         }
     }
 
@@ -105,7 +105,7 @@ public class CategoryService : ICategoryService
 
             category.Name = request.Name ?? category.Name;
             category.Description = request.Description ?? category.Description;
-            category.ImageUrl = request.ImageUrl is not null ? await _helperService.SaveFileAsync(request.ImageUrl, "Books", httpContext) : category.ImageUrl;
+            category.ImageUrl = request.ImageUrl is not null ? await _helperService.SaveFileAsync(request.ImageUrl, "Categories", httpContext) : category.ImageUrl;
             category.UpdateTime = DateTime.Now;
             category.UpdateUserId = _currentUserService.UserId;
 

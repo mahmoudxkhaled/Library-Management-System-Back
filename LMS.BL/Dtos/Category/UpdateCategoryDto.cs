@@ -4,7 +4,7 @@ namespace LMS.BL;
 
 public class UpdateCategoryDto
 {
-    public string Id { get; set; } = null!;
+    public int Id { get; set; }
     public string Name { get; set; } = null!;
     public string Description { get; set; } = null!;
     public IFormFile? ImageUrl { get; set; }
