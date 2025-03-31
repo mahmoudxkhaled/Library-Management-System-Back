@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using LMS.BL;
+﻿using LMS.BL;
 using LMS.BL.Dtos.Book;
 using LMS.BL.Shared.Models;
 using LMS.DAL.Data;
@@ -61,14 +60,14 @@ public class BookController : ControllerBase
     }
 
     [HttpPost("AddBook")]
-    public async Task<IActionResult> AddBook([FromBody] AddBookDto request)
+    public async Task<IActionResult> AddBook([FromForm] AddBookDto request)
     {
         var result = await _bookService.AddBookAsync(request, HttpContext);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
     [HttpPut("UpdateBook")]
-    public async Task<IActionResult> UpdateBook([FromBody] UpdateBookDto request)
+    public async Task<IActionResult> UpdateBook([FromForm] UpdateBookDto request)
     {
         var result = await _bookService.UpdateBookAsync(request, HttpContext);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
