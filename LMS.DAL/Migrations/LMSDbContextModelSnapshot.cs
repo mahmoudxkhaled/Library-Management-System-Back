@@ -37,10 +37,8 @@ namespace LMS.DAL.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("Author")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("int");
 
                     b.Property<int>("AvailableCopies")
                         .HasColumnType("int");
@@ -95,6 +93,8 @@ namespace LMS.DAL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AuthorId");
+
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Book");
@@ -103,10 +103,11 @@ namespace LMS.DAL.Migrations
                         new
                         {
                             Id = 1,
-                            Author = "F. Scott Fitzgerald",
+                            AuthorId = 1,
                             AvailableCopies = 10,
                             CategoryId = 1,
                             Description = "A novel about the American dream and the Jazz Age.",
+                            ImageUrl = "Uploads/Books/240a09b8-7452-4cda-99e4-48627bfc2ba6_20250330_001414.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 1925,
@@ -116,10 +117,11 @@ namespace LMS.DAL.Migrations
                         new
                         {
                             Id = 2,
-                            Author = "Harper Lee",
+                            AuthorId = 2,
                             AvailableCopies = 8,
                             CategoryId = 1,
                             Description = "A novel about racial injustice in the Deep South.",
+                            ImageUrl = "Uploads/Books/bbc43e3c-beff-4517-a107-e3ad3b7c3fbb_20250330_002428.png",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 1960,
@@ -129,10 +131,11 @@ namespace LMS.DAL.Migrations
                         new
                         {
                             Id = 3,
-                            Author = "Yuval Noah Harari",
-                            AvailableCopies = 15,
+                            AuthorId = 3,
+                            AvailableCopies = 12,
                             CategoryId = 2,
-                            Description = "A compelling history of humankind from the Stone Age to the modern age.",
+                            Description = "A sweeping history of humanity from ancient times to the present.",
+                            ImageUrl = "Uploads/Books/ec03a3c1-b718-407b-9465-f8e867353021_20250330_000242.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2011,
@@ -142,205 +145,219 @@ namespace LMS.DAL.Migrations
                         new
                         {
                             Id = 4,
-                            Author = "Tara Westover",
-                            AvailableCopies = 12,
-                            CategoryId = 2,
-                            Description = "A memoir about a woman who grows up in a survivalist family and escapes to pursue an education.",
+                            AuthorId = 4,
+                            AvailableCopies = 5,
+                            CategoryId = 3,
+                            Description = "A memoir about a woman who grows up in a survivalist family and eventually escapes for an education.",
+                            ImageUrl = "Uploads/Books/0ff5c317-7915-4ee3-954f-4ebd7608d428_20250329_235320.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2018,
                             Title = "Educated",
-                            TotalCopies = 15
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Author = "Stephen Hawking",
-                            AvailableCopies = 10,
-                            CategoryId = 3,
-                            Description = "A groundbreaking work on cosmology and the universe.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1988,
-                            Title = "A Brief History of Time",
-                            TotalCopies = 12
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Author = "Richard Dawkins",
-                            AvailableCopies = 8,
-                            CategoryId = 3,
-                            Description = "A scientific book explaining evolution through the lens of gene-centered natural selection.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1976,
-                            Title = "The Selfish Gene",
-                            TotalCopies = 10
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Author = "Steven Strogatz",
-                            AvailableCopies = 6,
-                            CategoryId = 4,
-                            Description = "A journey into the wonders of math, explaining mathematical concepts through engaging stories.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 2012,
-                            Title = "The Joy of x",
-                            TotalCopies = 10
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Author = "Edwin A. Abbott",
-                            AvailableCopies = 5,
-                            CategoryId = 4,
-                            Description = "A satire about a two-dimensional world that explores dimensions and geometric shapes.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1884,
-                            Title = "Flatland",
-                            TotalCopies = 8
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Author = "Anne Frank",
-                            AvailableCopies = 7,
-                            CategoryId = 5,
-                            Description = "The famous wartime diary of a Jewish girl hiding from the Nazis.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1947,
-                            Title = "The Diary of a Young Girl",
-                            TotalCopies = 10
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Author = "Peter Frankopan",
-                            AvailableCopies = 9,
-                            CategoryId = 5,
-                            Description = "A history of the world seen through the lens of the Silk Roads, the ancient trade routes that connected East and West.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 2015,
-                            Title = "The Silk Roads",
-                            TotalCopies = 12
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Author = "Walter Isaacson",
-                            AvailableCopies = 5,
-                            CategoryId = 6,
-                            Description = "A biography of the Apple founder Steve Jobs, exploring his complex personality and genius.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 2011,
-                            Title = "Steve Jobs",
-                            TotalCopies = 8
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Author = "Malcolm X and Alex Haley",
-                            AvailableCopies = 7,
-                            CategoryId = 6,
-                            Description = "The autobiography of civil rights leader Malcolm X, detailing his life and transformation.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1965,
-                            Title = "The Autobiography of Malcolm X",
-                            TotalCopies = 10
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Author = "Herman Melville",
-                            AvailableCopies = 4,
-                            CategoryId = 7,
-                            Description = "A classic American novel about a captain’s obsession with hunting a white whale.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1851,
-                            Title = "Moby-Dick",
-                            TotalCopies = 6
-                        },
-                        new
-                        {
-                            Id = 14,
-                            Author = "Jane Austen",
-                            AvailableCopies = 6,
-                            CategoryId = 7,
-                            Description = "A novel about love, marriage, and society in 19th century England.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1813,
-                            Title = "Pride and Prejudice",
-                            TotalCopies = 8
-                        },
-                        new
-                        {
-                            Id = 15,
-                            Author = "Marcus Aurelius",
-                            AvailableCopies = 5,
-                            CategoryId = 8,
-                            Description = "The personal reflections of the Roman Emperor Marcus Aurelius on philosophy and leadership.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 180,
-                            Title = "Meditations",
                             TotalCopies = 7
                         },
                         new
                         {
-                            Id = 16,
-                            Author = "Plato",
-                            AvailableCopies = 4,
-                            CategoryId = 8,
-                            Description = "A philosophical work that outlines the theory of justice and the ideal state.",
+                            Id = 5,
+                            AuthorId = 5,
+                            AvailableCopies = 15,
+                            CategoryId = 4,
+                            Description = "A landmark book by physicist Stephen Hawking about the origins and nature of the universe.",
+                            ImageUrl = "Uploads/Books/2f7ebca3-e6c4-4c0b-aeac-ff396a023c49_20250329_234906.jpeg",
                             IsActive = true,
                             IsDeleted = false,
-                            PublicationYear = -380,
-                            Title = "The Republic",
-                            TotalCopies = 6
+                            PublicationYear = 1988,
+                            Title = "A Brief History of Time",
+                            TotalCopies = 25
                         },
                         new
                         {
-                            Id = 17,
-                            Author = "Daniel Kahneman",
+                            Id = 6,
+                            AuthorId = 6,
                             AvailableCopies = 8,
-                            CategoryId = 9,
-                            Description = "A look at the two systems of thought: the fast and intuitive, and the slow and deliberate.",
+                            CategoryId = 2,
+                            Description = "A seminal work on evolutionary biology, focusing on the gene-centered view of evolution.",
+                            ImageUrl = "Uploads/Books/1ecaf167-5c32-4f68-8c43-57b97dec2a3e_20250330_002042.jpeg",
                             IsActive = true,
                             IsDeleted = false,
-                            PublicationYear = 2011,
-                            Title = "Thinking, Fast and Slow",
+                            PublicationYear = 1976,
+                            Title = "The Selfish Gene",
+                            TotalCopies = 12
+                        },
+                        new
+                        {
+                            Id = 7,
+                            AuthorId = 7,
+                            AvailableCopies = 6,
+                            CategoryId = 4,
+                            Description = "A book about the beauty and wonder of mathematics and its applications.",
+                            ImageUrl = "Uploads/Books/eaeefb94-29ae-486b-baba-078d7ca17429_20250330_001647.jpeg",
+                            IsActive = true,
+                            IsDeleted = false,
+                            PublicationYear = 2014,
+                            Title = "The Joy of x",
+                            TotalCopies = 9
+                        },
+                        new
+                        {
+                            Id = 8,
+                            AuthorId = 8,
+                            AvailableCopies = 7,
+                            CategoryId = 5,
+                            Description = "A novella exploring the nature of dimensions and our perception of reality.",
+                            ImageUrl = "Uploads/Books/e8b354e3-7ce0-4824-a92d-6cd434ef30cb_20250329_235623.jpeg",
+                            IsActive = true,
+                            IsDeleted = false,
+                            PublicationYear = 1884,
+                            Title = "Flatland: A Romance of Many Dimensions",
                             TotalCopies = 10
                         },
                         new
                         {
-                            Id = 18,
-                            Author = "Charles Duhigg",
-                            AvailableCopies = 6,
-                            CategoryId = 9,
-                            Description = "An exploration of the science behind why habits exist and how they can be changed.",
+                            Id = 9,
+                            AuthorId = 9,
+                            AvailableCopies = 5,
+                            CategoryId = 6,
+                            Description = "The diary of Anne Frank, chronicling her life in hiding during the Holocaust.",
+                            ImageUrl = "Uploads/Books/169f079a-cfff-4d87-8f84-5a873a895504_20250330_001103.jpeg",
                             IsActive = true,
                             IsDeleted = false,
-                            PublicationYear = 2012,
-                            Title = "The Power of Habit",
+                            PublicationYear = 1947,
+                            Title = "The Diary of a Young Girl",
                             TotalCopies = 8
                         },
                         new
                         {
-                            Id = 19,
-                            Author = "James Clear",
+                            Id = 10,
+                            AuthorId = 10,
                             AvailableCopies = 12,
-                            CategoryId = 10,
-                            Description = "A practical guide to building good habits and breaking bad ones.",
+                            CategoryId = 2,
+                            Description = "A history of the world from the perspective of the Silk Roads trade routes.",
+                            ImageUrl = "Uploads/Books/c508f639-13fb-425e-8e56-508c3fc2ba6b_20250330_002117.jpeg",
+                            IsActive = true,
+                            IsDeleted = false,
+                            PublicationYear = 2015,
+                            Title = "The Silk Roads",
+                            TotalCopies = 18
+                        },
+                        new
+                        {
+                            Id = 11,
+                            AuthorId = 11,
+                            AvailableCopies = 10,
+                            CategoryId = 7,
+                            Description = "A biography of the Apple co-founder, written by Walter Isaacson.",
+                            ImageUrl = "Uploads/Books/b5d07a17-b507-4aca-ae02-67407a95e307_20250330_000437.jpeg",
+                            IsActive = true,
+                            IsDeleted = false,
+                            PublicationYear = 2011,
+                            Title = "Steve Jobs",
+                            TotalCopies = 15
+                        },
+                        new
+                        {
+                            Id = 12,
+                            AuthorId = 12,
+                            AvailableCopies = 8,
+                            CategoryId = 6,
+                            Description = "The life story of the influential civil rights leader, as told to journalist Alex Haley.",
+                            ImageUrl = "Uploads/Books/5fd61fc7-4a57-4cec-bc1e-153df1b8d08b_20250330_000750.jpeg",
+                            IsActive = true,
+                            IsDeleted = false,
+                            PublicationYear = 1965,
+                            Title = "The Autobiography of Malcolm X",
+                            TotalCopies = 12
+                        },
+                        new
+                        {
+                            Id = 13,
+                            AuthorId = 13,
+                            AvailableCopies = 6,
+                            CategoryId = 1,
+                            Description = "Herman Melville's classic novel about the obsessive quest to capture the white whale.",
+                            ImageUrl = "Uploads/Books/7186fad6-481e-4b35-8730-bb5b38fe44d0_20250330_000006.jpeg",
+                            IsActive = true,
+                            IsDeleted = false,
+                            PublicationYear = 1851,
+                            Title = "Moby-Dick",
+                            TotalCopies = 10
+                        },
+                        new
+                        {
+                            Id = 14,
+                            AuthorId = 14,
+                            AvailableCopies = 10,
+                            CategoryId = 1,
+                            Description = "Jane Austen's timeless romantic novel set in the British Regency era.",
+                            ImageUrl = "Uploads/Books/5b2c0142-74e5-4317-a9fb-dacaa00f2610_20250330_000111.jpeg",
+                            IsActive = true,
+                            IsDeleted = false,
+                            PublicationYear = 1813,
+                            Title = "Pride and Prejudice",
+                            TotalCopies = 14
+                        },
+                        new
+                        {
+                            Id = 15,
+                            AuthorId = 15,
+                            AvailableCopies = 7,
+                            CategoryId = 4,
+                            Description = "The personal writings of the Roman Emperor Marcus Aurelius on Stoic philosophy.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            PublicationYear = 180,
+                            Title = "Meditations",
+                            TotalCopies = 10
+                        },
+                        new
+                        {
+                            Id = 16,
+                            AuthorId = 16,
+                            AvailableCopies = 8,
+                            CategoryId = 5,
+                            Description = "Plato's philosophical dialogue about justice, the ideal state, and the nature of the human soul.",
+                            IsActive = true,
+                            IsDeleted = false,
+                            PublicationYear = -380,
+                            Title = "The Republic",
+                            TotalCopies = 11
+                        },
+                        new
+                        {
+                            Id = 17,
+                            AuthorId = 17,
+                            AvailableCopies = 10,
+                            CategoryId = 3,
+                            Description = "A groundbreaking book on human decision-making and cognitive biases by Nobel laureate Daniel Kahneman.",
+                            ImageUrl = "Uploads/Books/ddfb6c14-a1f1-4685-a835-16afd6354aac_20250330_002323.jpeg",
+                            IsActive = true,
+                            IsDeleted = false,
+                            PublicationYear = 2011,
+                            Title = "Thinking, Fast and Slow",
+                            TotalCopies = 15
+                        },
+                        new
+                        {
+                            Id = 18,
+                            AuthorId = 18,
+                            AvailableCopies = 9,
+                            CategoryId = 3,
+                            Description = "A book exploring the science of habit formation and how it impacts our daily lives.",
+                            ImageUrl = "Uploads/Books/c70e070d-1a1f-499c-9b66-9373873efd4d_20250330_001755.png",
+                            IsActive = true,
+                            IsDeleted = false,
+                            PublicationYear = 2012,
+                            Title = "The Power of Habit",
+                            TotalCopies = 14
+                        },
+                        new
+                        {
+                            Id = 19,
+                            AuthorId = 19,
+                            AvailableCopies = 10,
+                            CategoryId = 3,
+                            Description = "James Clear's guide to breaking bad habits and building good ones through small, consistent changes.",
+                            ImageUrl = "Uploads/Books/cdb6b6a0-dfc6-4f79-b81f-d53cbd47f797_20250329_234920.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2018,
@@ -350,114 +367,123 @@ namespace LMS.DAL.Migrations
                         new
                         {
                             Id = 20,
-                            Author = "Stephen R. Covey",
-                            AvailableCopies = 9,
-                            CategoryId = 10,
-                            Description = "A guide to personal effectiveness and achieving your goals.",
+                            AuthorId = 20,
+                            AvailableCopies = 14,
+                            CategoryId = 3,
+                            Description = "Stephen R. Covey's classic book on personal and professional effectiveness.",
+                            ImageUrl = "Uploads/Books/2d209324-e47a-4a72-b249-c27a8fd9b447_20250330_000600.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 1989,
                             Title = "The 7 Habits of Highly Effective People",
-                            TotalCopies = 12
+                            TotalCopies = 20
                         },
                         new
                         {
                             Id = 21,
-                            Author = "E.H. Gombrich",
-                            AvailableCopies = 6,
-                            CategoryId = 11,
-                            Description = "An introduction to the world of art, explaining the development of art from ancient times to the modern era.",
+                            AuthorId = 21,
+                            AvailableCopies = 8,
+                            CategoryId = 5,
+                            Description = "An accessible introduction to the history of art by renowned art historian E.H. Gombrich.",
+                            ImageUrl = "Uploads/Books/f0e19d8b-bc7a-4630-9f96-0cb3b943bcab_20250330_002206.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 1950,
                             Title = "The Story of Art",
-                            TotalCopies = 8
+                            TotalCopies = 12
                         },
                         new
                         {
                             Id = 22,
-                            Author = "John Berger",
-                            AvailableCopies = 5,
-                            CategoryId = 11,
-                            Description = "An exploration of how we see and interpret art, challenging conventional views.",
+                            AuthorId = 22,
+                            AvailableCopies = 6,
+                            CategoryId = 5,
+                            Description = "A groundbreaking book on visual culture and how we perceive art, written by John Berger.",
+                            ImageUrl = "Uploads/Books/b1f5b2da-1307-47ba-8ea1-fdbe780bd088_20250330_002539.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 1972,
                             Title = "Ways of Seeing",
-                            TotalCopies = 7
+                            TotalCopies = 9
                         },
                         new
                         {
                             Id = 23,
-                            Author = "Alex Ross",
-                            AvailableCopies = 4,
-                            CategoryId = 12,
-                            Description = "A history of 20th-century music and its evolution, from the world wars to the present day.",
+                            AuthorId = 23,
+                            AvailableCopies = 7,
+                            CategoryId = 4,
+                            Description = "A history of 20th-century classical music by music critic Alex Ross.",
+                            ImageUrl = "Uploads/Books/7147db03-a13b-4773-bfd3-d80fe01c4743_20250330_001923.png",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2007,
                             Title = "The Rest Is Noise",
-                            TotalCopies = 6
-                        },
-                        new
-                        {
-                            Id = 24,
-                            Author = "David Byrne",
-                            AvailableCopies = 5,
-                            CategoryId = 12,
-                            Description = "A book that explains the science, culture, and impact of music.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 2012,
-                            Title = "How Music Works",
-                            TotalCopies = 7
-                        },
-                        new
-                        {
-                            Id = 25,
-                            Author = "Bessel van der Kolk",
-                            AvailableCopies = 7,
-                            CategoryId = 13,
-                            Description = "A book about trauma and how it affects the body and brain.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 2014,
-                            Title = "The Body Keeps the Score",
                             TotalCopies = 10
                         },
                         new
                         {
-                            Id = 26,
-                            Author = "Christopher McDougall",
+                            Id = 24,
+                            AuthorId = 24,
                             AvailableCopies = 8,
-                            CategoryId = 13,
-                            Description = "A fascinating look at the world of ultramarathon running.",
+                            CategoryId = 4,
+                            Description = "David Byrne’s exploration of music, its history, and its cultural impact.",
+                            ImageUrl = "Uploads/Books/00e82a7d-5452-4a08-b4a0-a75eb692656c_20250329_235723.png",
+                            IsActive = true,
+                            IsDeleted = false,
+                            PublicationYear = 2012,
+                            Title = "How Music Works",
+                            TotalCopies = 12
+                        },
+                        new
+                        {
+                            Id = 25,
+                            AuthorId = 25,
+                            AvailableCopies = 10,
+                            CategoryId = 3,
+                            Description = "Bessel van der Kolk’s exploration of trauma and its effect on the brain and body.",
+                            ImageUrl = "Uploads/Books/d7f01374-6dff-4ea2-8d22-afd607cbdc11_20250330_000838.jpeg",
+                            IsActive = true,
+                            IsDeleted = false,
+                            PublicationYear = 2014,
+                            Title = "The Body Keeps the Score",
+                            TotalCopies = 15
+                        },
+                        new
+                        {
+                            Id = 26,
+                            AuthorId = 26,
+                            AvailableCopies = 6,
+                            CategoryId = 2,
+                            Description = "A book about the science of running and the story of a remote tribe of ultra-runners.",
+                            ImageUrl = "Uploads/Books/f845f829-8491-4d04-8358-0d9064c7ec90_20250329_235131.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2009,
                             Title = "Born to Run",
-                            TotalCopies = 12
+                            TotalCopies = 10
                         },
                         new
                         {
                             Id = 27,
-                            Author = "Irma S. Rombauer",
-                            AvailableCopies = 10,
-                            CategoryId = 14,
-                            Description = "A classic cookbook that covers a wide range of recipes and cooking techniques.",
+                            AuthorId = 27,
+                            AvailableCopies = 7,
+                            CategoryId = 8,
+                            Description = "Irma S. Rombauer’s classic cookbook that has become an American institution.",
+                            ImageUrl = "Uploads/Books/c3902039-c0cb-4827-93c2-e523bfbca2e8_20250330_001629.png",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 1931,
                             Title = "The Joy of Cooking",
-                            TotalCopies = 12
+                            TotalCopies = 11
                         },
                         new
                         {
                             Id = 28,
-                            Author = "Samin Nosrat",
+                            AuthorId = 28,
                             AvailableCopies = 6,
                             CategoryId = 14,
-                            Description = "A cookbook that teaches the fundamentals of cooking through four essential elements.",
+                            Description = "A guide to understanding the fundamental elements of cooking by Samin Nosrat.",
+                            ImageUrl = "Uploads/Books/34a1babd-4c98-4060-83e1-4a5ba9710042_20250330_000128.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2017,
@@ -467,938 +493,310 @@ namespace LMS.DAL.Migrations
                         new
                         {
                             Id = 29,
-                            Author = "Jon Krakauer",
-                            AvailableCopies = 5,
-                            CategoryId = 15,
-                            Description = "The true story of a young man who ventured into the Alaskan wilderness.",
+                            AuthorId = 29,
+                            AvailableCopies = 8,
+                            CategoryId = 8,
+                            Description = "Anthony Bourdain’s behind-the-scenes look at the culinary world.",
+                            ImageUrl = "Uploads/Books/a26c1840-336e-4111-a9b6-1992fda7e5ca_20250329_235800.jpeg",
                             IsActive = true,
                             IsDeleted = false,
-                            PublicationYear = 1996,
-                            Title = "Into the Wild",
-                            TotalCopies = 8
+                            PublicationYear = 2000,
+                            Title = "Kitchen Confidential",
+                            TotalCopies = 12
                         },
                         new
                         {
                             Id = 30,
-                            Author = "Eric Weiner",
-                            AvailableCopies = 7,
-                            CategoryId = 15,
-                            Description = "A travel memoir that seeks to discover the happiest places on Earth.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 2008,
-                            Title = "The Geography of Bliss",
-                            TotalCopies = 10
-                        },
-                        new
-                        {
-                            Id = 31,
-                            Author = "J.K. Rowling",
+                            AuthorId = 30,
                             AvailableCopies = 10,
-                            CategoryId = 16,
-                            Description = "The first book in the Harry Potter series, where a young wizard discovers his magical heritage.",
+                            CategoryId = 8,
+                            Description = "Michael Pollan’s exploration of where our food comes from and its environmental impact.",
+                            ImageUrl = "Uploads/Books/3f907f78-cd85-443b-82a3-d2663bbf74cd_20250330_001723.jpeg",
                             IsActive = true,
                             IsDeleted = false,
-                            PublicationYear = 1997,
-                            Title = "Harry Potter and the Sorcerer's Stone",
+                            PublicationYear = 2006,
+                            Title = "The Omnivore's Dilemma",
                             TotalCopies = 15
                         },
                         new
                         {
-                            Id = 32,
-                            Author = "Maurice Sendak",
-                            AvailableCopies = 5,
-                            CategoryId = 16,
-                            Description = "A classic children's picture book about a boy who sails to an island of wild creatures.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1963,
-                            Title = "Where the Wild Things Are",
-                            TotalCopies = 7
-                        },
-                        new
-                        {
-                            Id = 33,
-                            Author = "J.R.R. Tolkien",
+                            Id = 31,
+                            AuthorId = 31,
                             AvailableCopies = 7,
-                            CategoryId = 17,
-                            Description = "A classic fantasy novel that follows Bilbo Baggins on an epic adventure.",
+                            CategoryId = 7,
+                            Description = "Stephen King's memoir and guide to writing.",
+                            ImageUrl = "Uploads/Books/317c1742-37a7-439c-9b23-00d0a708f7c8_20250330_000039.jpeg",
                             IsActive = true,
                             IsDeleted = false,
-                            PublicationYear = 1937,
-                            Title = "The Hobbit",
+                            PublicationYear = 2000,
+                            Title = "On Writing",
                             TotalCopies = 10
                         },
                         new
                         {
-                            Id = 34,
-                            Author = "Patrick Rothfuss",
-                            AvailableCopies = 5,
-                            CategoryId = 17,
-                            Description = "The first book in the Kingkiller Chronicle, a story of magic, music, and adventure.",
+                            Id = 32,
+                            AuthorId = 32,
+                            AvailableCopies = 6,
+                            CategoryId = 7,
+                            Description = "Anne Lamott's insightful and humorous take on writing and life.",
+                            ImageUrl = "Uploads/Books/2b87c9ee-4b19-40aa-ba32-8e45a76d4a88_20250329_235032.jpeg",
                             IsActive = true,
                             IsDeleted = false,
-                            PublicationYear = 2007,
-                            Title = "The Name of the Wind",
-                            TotalCopies = 8
+                            PublicationYear = 1994,
+                            Title = "Bird by Bird",
+                            TotalCopies = 9
+                        },
+                        new
+                        {
+                            Id = 33,
+                            AuthorId = 33,
+                            AvailableCopies = 12,
+                            CategoryId = 7,
+                            Description = "A concise guide to the principles of good writing, by William Strunk Jr. and E.B. White.",
+                            ImageUrl = "Uploads/Books/3d3e4b70-925b-42e4-98ef-42a94c5ae486_20250330_001224.jpeg",
+                            IsActive = true,
+                            IsDeleted = false,
+                            PublicationYear = 1959,
+                            Title = "The Elements of Style",
+                            TotalCopies = 18
+                        },
+                        new
+                        {
+                            Id = 34,
+                            AuthorId = 34,
+                            AvailableCopies = 8,
+                            CategoryId = 7,
+                            Description = "Steven Pressfield’s book on overcoming resistance to creative work.",
+                            ImageUrl = "Uploads/Books/2a7a7859-0f63-4643-8c93-a8e9951fda2d_20250330_002241.png",
+                            IsActive = true,
+                            IsDeleted = false,
+                            PublicationYear = 2002,
+                            Title = "The War of Art",
+                            TotalCopies = 12
                         },
                         new
                         {
                             Id = 35,
-                            Author = "Frank Herbert",
-                            AvailableCopies = 6,
-                            CategoryId = 18,
-                            Description = "A science fiction epic set in a distant future on a desert planet.",
+                            AuthorId = 35,
+                            AvailableCopies = 15,
+                            CategoryId = 1,
+                            Description = "Paulo Coelho's philosophical novel about pursuing your dreams and finding your destiny.",
+                            ImageUrl = "Uploads/Books/ac5dceb7-753b-4064-9f6e-6cc45176ffb2_20250330_000713.jpeg",
                             IsActive = true,
                             IsDeleted = false,
-                            PublicationYear = 1965,
-                            Title = "Dune",
-                            TotalCopies = 8
+                            PublicationYear = 1988,
+                            Title = "The Alchemist",
+                            TotalCopies = 20
                         },
                         new
                         {
                             Id = 36,
-                            Author = "William Gibson",
-                            AvailableCopies = 4,
-                            CategoryId = 18,
-                            Description = "A cyberpunk classic that helped define the genre and the concept of cyberspace.",
+                            AuthorId = 36,
+                            AvailableCopies = 10,
+                            CategoryId = 1,
+                            Description = "George Orwell's dystopian novel about totalitarianism, surveillance, and the power of propaganda.",
+                            ImageUrl = "Uploads/Books/46ce4b1e-404e-4aac-8b35-856c527a26b4_20250329_234649.jpeg",
                             IsActive = true,
                             IsDeleted = false,
-                            PublicationYear = 1984,
-                            Title = "Neuromancer",
-                            TotalCopies = 6
+                            PublicationYear = 1949,
+                            Title = "1984",
+                            TotalCopies = 14
                         },
                         new
                         {
                             Id = 37,
-                            Author = "Stieg Larsson",
-                            AvailableCopies = 9,
-                            CategoryId = 19,
-                            Description = "A gripping mystery about a journalist and a hacker investigating a missing person's case.",
+                            AuthorId = 37,
+                            AvailableCopies = 8,
+                            CategoryId = 1,
+                            Description = "Aldous Huxley's novel exploring a future society controlled by technology and conformity.",
+                            ImageUrl = "Uploads/Books/2f0c9609-566c-4fda-b9b9-cd9fead1e986_20250329_235216.jpeg",
                             IsActive = true,
                             IsDeleted = false,
-                            PublicationYear = 2005,
-                            Title = "The Girl with the Dragon Tattoo",
+                            PublicationYear = 1932,
+                            Title = "Brave New World",
                             TotalCopies = 12
                         },
                         new
                         {
                             Id = 38,
-                            Author = "Gillian Flynn",
-                            AvailableCopies = 8,
-                            CategoryId = 19,
-                            Description = "A psychological thriller about the disappearance of a woman and the secrets it uncovers.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 2012,
-                            Title = "Gone Girl",
-                            TotalCopies = 10
-                        },
-                        new
-                        {
-                            Id = 39,
-                            Author = "Alex Michaelides",
-                            AvailableCopies = 7,
-                            CategoryId = 20,
-                            Description = "A psychological thriller about a woman who shoots her husband and then stops speaking.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 2019,
-                            Title = "The Silent Patient",
-                            TotalCopies = 10
-                        },
-                        new
-                        {
-                            Id = 40,
-                            Author = "Paula Hawkins",
-                            AvailableCopies = 6,
-                            CategoryId = 20,
-                            Description = "A psychological thriller about a woman who becomes involved in a missing person case after witnessing something suspicious on a train.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 2015,
-                            Title = "The Girl on the Train",
-                            TotalCopies = 8
-                        },
-                        new
-                        {
-                            Id = 41,
-                            Author = "Ray Bradbury",
-                            AvailableCopies = 7,
-                            CategoryId = 21,
-                            Description = "A dystopian novel about a future society where books are banned and burned.",
+                            AuthorId = 38,
+                            AvailableCopies = 9,
+                            CategoryId = 1,
+                            Description = "Ray Bradbury's classic novel about a dystopian society where books are banned.",
+                            ImageUrl = "Uploads/Books/c77cc79e-9e1b-4d65-8c9d-4ba5a67c9c95_20250329_235349.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 1953,
                             Title = "Fahrenheit 451",
+                            TotalCopies = 14
+                        },
+                        new
+                        {
+                            Id = 39,
+                            AuthorId = 39,
+                            AvailableCopies = 12,
+                            CategoryId = 1,
+                            Description = "J.D. Salinger's novel about teenage rebellion and disillusionment.",
+                            ImageUrl = "Uploads/Books/e5ba1036-fa70-4fb2-b647-b4897e63962f_20250330_000909.jpeg",
+                            IsActive = true,
+                            IsDeleted = false,
+                            PublicationYear = 1951,
+                            Title = "The Catcher in the Rye",
+                            TotalCopies = 18
+                        },
+                        new
+                        {
+                            Id = 40,
+                            AuthorId = 40,
+                            AvailableCopies = 10,
+                            CategoryId = 1,
+                            Description = "Margaret Atwood’s dystopian novel about gender oppression and the loss of personal freedom.",
+                            ImageUrl = "Uploads/Books/23782e39-0ede-4324-b69f-63f70e9785c4_20250330_001449.jpeg",
+                            IsActive = true,
+                            IsDeleted = false,
+                            PublicationYear = 1985,
+                            Title = "The Handmaid's Tale",
+                            TotalCopies = 15
+                        },
+                        new
+                        {
+                            Id = 41,
+                            AuthorId = 41,
+                            AvailableCopies = 7,
+                            CategoryId = 1,
+                            Description = "Cormac McCarthy's post-apocalyptic novel about a father and son struggling to survive.",
+                            ImageUrl = "Uploads/Books/7d195219-1d98-477a-9b98-d30bae0b3464_20250330_002011.jpeg",
+                            IsActive = true,
+                            IsDeleted = false,
+                            PublicationYear = 2006,
+                            Title = "The Road",
                             TotalCopies = 10
                         },
                         new
                         {
                             Id = 42,
-                            Author = "George Orwell",
-                            AvailableCopies = 6,
-                            CategoryId = 21,
-                            Description = "A novel about a totalitarian regime that uses surveillance and mind control.",
+                            AuthorId = 42,
+                            AvailableCopies = 8,
+                            CategoryId = 1,
+                            Description = "Kate Atkinson's novel about a woman who lives multiple lives in different timelines.",
+                            ImageUrl = "Uploads/Books/4b8da56f-7688-4d5b-b07e-d9853db96d1b_20250329_235845.jpeg",
                             IsActive = true,
                             IsDeleted = false,
-                            PublicationYear = 1949,
-                            Title = "1984",
-                            TotalCopies = 8
+                            PublicationYear = 2013,
+                            Title = "Life After Life",
+                            TotalCopies = 12
                         },
                         new
                         {
                             Id = 43,
-                            Author = "Aldous Huxley",
-                            AvailableCopies = 8,
-                            CategoryId = 22,
-                            Description = "A novel about a utopian society that sacrifices individual freedom for comfort and stability.",
+                            AuthorId = 43,
+                            AvailableCopies = 9,
+                            CategoryId = 1,
+                            Description = "Rick Yancey's thrilling novel about an alien invasion and the fight for survival.",
+                            ImageUrl = "Uploads/Books/52825395-52a2-4bea-9ee4-67a28f2c38b2_20250330_000508.jpeg",
                             IsActive = true,
                             IsDeleted = false,
-                            PublicationYear = 1932,
-                            Title = "Brave New World",
-                            TotalCopies = 10
+                            PublicationYear = 2013,
+                            Title = "The 5th Wave",
+                            TotalCopies = 14
                         },
                         new
                         {
                             Id = 44,
-                            Author = "Margaret Atwood",
-                            AvailableCopies = 5,
-                            CategoryId = 22,
-                            Description = "A dystopian novel about a society that controls women’s reproductive rights.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1985,
-                            Title = "The Handmaid's Tale",
-                            TotalCopies = 8
-                        },
-                        new
-                        {
-                            Id = 45,
-                            Author = "J.D. Salinger",
-                            AvailableCopies = 7,
-                            CategoryId = 7,
-                            Description = "A novel about a teenage boy's rebellion against society and his quest for meaning.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1951,
-                            Title = "The Catcher in the Rye",
-                            TotalCopies = 10
-                        },
-                        new
-                        {
-                            Id = 46,
-                            Author = "S.E. Hinton",
-                            AvailableCopies = 6,
-                            CategoryId = 7,
-                            Description = "A coming-of-age story about a group of teenagers in a divided society.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1967,
-                            Title = "The Outsiders",
-                            TotalCopies = 8
-                        },
-                        new
-                        {
-                            Id = 47,
-                            Author = "Oscar Wilde",
-                            AvailableCopies = 4,
-                            CategoryId = 7,
-                            Description = "A novel about a man whose portrait ages while he remains youthful, as he lives a life of hedonism and sin.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1890,
-                            Title = "The Picture of Dorian Gray",
-                            TotalCopies = 6
-                        },
-                        new
-                        {
-                            Id = 48,
-                            Author = "Mary Shelley",
-                            AvailableCopies = 5,
-                            CategoryId = 7,
-                            Description = "The classic tale of a scientist who creates a living being, with disastrous consequences.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1818,
-                            Title = "Frankenstein",
-                            TotalCopies = 7
-                        },
-                        new
-                        {
-                            Id = 49,
-                            Author = "Bram Stoker",
-                            AvailableCopies = 4,
-                            CategoryId = 7,
-                            Description = "The gothic horror novel about the infamous vampire Count Dracula.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1897,
-                            Title = "Dracula",
-                            TotalCopies = 6
-                        },
-                        new
-                        {
-                            Id = 50,
-                            Author = "Fyodor Dostoevsky",
-                            AvailableCopies = 6,
-                            CategoryId = 7,
-                            Description = "A psychological novel about guilt and redemption, focusing on a man who commits murder.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1866,
-                            Title = "Crime and Punishment",
-                            TotalCopies = 8
-                        },
-                        new
-                        {
-                            Id = 51,
-                            Author = "Leo Tolstoy",
-                            AvailableCopies = 5,
-                            CategoryId = 7,
-                            Description = "A historical novel that follows the lives of several aristocratic families during the Napoleonic Wars.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1869,
-                            Title = "War and Peace",
-                            TotalCopies = 7
-                        },
-                        new
-                        {
-                            Id = 52,
-                            Author = "Leo Tolstoy",
-                            AvailableCopies = 6,
-                            CategoryId = 7,
-                            Description = "A tragic novel about love, family, and society in 19th-century Russia.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1877,
-                            Title = "Anna Karenina",
-                            TotalCopies = 8
-                        },
-                        new
-                        {
-                            Id = 53,
-                            Author = "Fyodor Dostoevsky",
-                            AvailableCopies = 4,
-                            CategoryId = 7,
-                            Description = "A philosophical novel that explores themes of faith, doubt, and morality through the lives of three brothers.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1880,
-                            Title = "The Brothers Karamazov",
-                            TotalCopies = 6
-                        },
-                        new
-                        {
-                            Id = 54,
-                            Author = "Homer",
-                            AvailableCopies = 5,
-                            CategoryId = 8,
-                            Description = "An ancient Greek epic poem about Odysseus's long journey home after the Trojan War.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = -800,
-                            Title = "The Odyssey",
-                            TotalCopies = 7
-                        },
-                        new
-                        {
-                            Id = 55,
-                            Author = "Homer",
-                            AvailableCopies = 6,
-                            CategoryId = 8,
-                            Description = "An epic poem about the events during the Trojan War, focusing on the hero Achilles.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = -750,
-                            Title = "The Iliad",
-                            TotalCopies = 8
-                        },
-                        new
-                        {
-                            Id = 56,
-                            Author = "Sun Tzu",
-                            AvailableCopies = 7,
-                            CategoryId = 9,
-                            Description = "An ancient Chinese treatise on military strategy and tactics.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = -500,
-                            Title = "The Art of War",
-                            TotalCopies = 10
-                        },
-                        new
-                        {
-                            Id = 57,
-                            Author = "Niccolò Machiavelli",
-                            AvailableCopies = 6,
-                            CategoryId = 9,
-                            Description = "A political treatise about power and leadership, offering advice to rulers.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1532,
-                            Title = "The Prince",
-                            TotalCopies = 8
-                        },
-                        new
-                        {
-                            Id = 58,
-                            Author = "Robert Greene",
-                            AvailableCopies = 8,
-                            CategoryId = 10,
-                            Description = "A guide to gaining and maintaining power, based on historical examples.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1998,
-                            Title = "The 48 Laws of Power",
-                            TotalCopies = 10
-                        },
-                        new
-                        {
-                            Id = 59,
-                            Author = "Dale Carnegie",
-                            AvailableCopies = 9,
-                            CategoryId = 10,
-                            Description = "A timeless self-help book on building relationships and influencing others.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1936,
-                            Title = "How to Win Friends and Influence People",
-                            TotalCopies = 12
-                        },
-                        new
-                        {
-                            Id = 60,
-                            Author = "Eric Ries",
-                            AvailableCopies = 6,
-                            CategoryId = 10,
-                            Description = "A guide for entrepreneurs on how to create successful startups by using lean principles.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 2011,
-                            Title = "The Lean Startup",
-                            TotalCopies = 8
-                        },
-                        new
-                        {
-                            Id = 61,
-                            Author = "Mark Manson",
-                            AvailableCopies = 7,
-                            CategoryId = 10,
-                            Description = "A self-help book that teaches readers to focus on what really matters in life.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 2016,
-                            Title = "The Subtle Art of Not Giving a F*ck",
-                            TotalCopies = 10
-                        },
-                        new
-                        {
-                            Id = 62,
-                            Author = "Viktor Frankl",
-                            AvailableCopies = 8,
-                            CategoryId = 10,
-                            Description = "A psychiatrist's account of his experiences in Nazi concentration camps and his exploration of finding meaning in life.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1946,
-                            Title = "Man's Search for Meaning",
-                            TotalCopies = 12
-                        },
-                        new
-                        {
-                            Id = 63,
-                            Author = "H. W. Janson",
-                            AvailableCopies = 6,
-                            CategoryId = 11,
-                            Description = "A comprehensive history of art from ancient times to the modern era.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1962,
-                            Title = "The History of Art",
-                            TotalCopies = 8
-                        },
-                        new
-                        {
-                            Id = 64,
-                            Author = "R. Buckminster Fuller",
-                            AvailableCopies = 5,
-                            CategoryId = 11,
-                            Description = "A book that explores the geometrical principles behind art, design, and architecture.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1975,
-                            Title = "The Painter's Secret Geometry",
-                            TotalCopies = 7
-                        },
-                        new
-                        {
-                            Id = 65,
-                            Author = "Julia Cameron",
-                            AvailableCopies = 6,
-                            CategoryId = 11,
-                            Description = "A guide to creative recovery and artistic self-expression.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1992,
-                            Title = "The Artist's Way",
-                            TotalCopies = 8
-                        },
-                        new
-                        {
-                            Id = 66,
-                            Author = "Friedrich Nietzsche",
-                            AvailableCopies = 7,
-                            CategoryId = 8,
-                            Description = "A philosophical work exploring the nature of Greek tragedy and the dichotomy between Apollonian and Dionysian forces.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1872,
-                            Title = "The Birth of Tragedy",
-                            TotalCopies = 10
-                        },
-                        new
-                        {
-                            Id = 67,
-                            Author = "Howard Lindsay",
-                            AvailableCopies = 5,
-                            CategoryId = 12,
-                            Description = "A musical that tells the story of the von Trapp family and their escape from Nazi Austria.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1959,
-                            Title = "The Sound of Music",
-                            TotalCopies = 7
-                        },
-                        new
-                        {
-                            Id = 68,
-                            Author = "Ludwig van Beethoven",
-                            AvailableCopies = 6,
-                            CategoryId = 12,
-                            Description = "A collection of letters written by Beethoven, offering insights into his life and work.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1985,
-                            Title = "Beethoven's Letters",
-                            TotalCopies = 8
-                        },
-                        new
-                        {
-                            Id = 69,
-                            Author = "Gerald Klickstein",
-                            AvailableCopies = 7,
-                            CategoryId = 12,
-                            Description = "A guide to practicing, performing, and maintaining a successful musical career.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 2009,
-                            Title = "The Musician's Way",
-                            TotalCopies = 10
-                        },
-                        new
-                        {
-                            Id = 70,
-                            Author = "Kristin McClellan",
-                            AvailableCopies = 5,
-                            CategoryId = 12,
-                            Description = "A book that explores the therapeutic benefits of music and its use in healing.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 2016,
-                            Title = "The Healing Power of Music",
-                            TotalCopies = 8
-                        },
-                        new
-                        {
-                            Id = 71,
-                            Author = "Christopher McDougall",
-                            AvailableCopies = 6,
-                            CategoryId = 13,
-                            Description = "A fascinating look at the world of ultramarathon running.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 2009,
-                            Title = "Born to Run",
-                            TotalCopies = 8
-                        },
-                        new
-                        {
-                            Id = 72,
-                            Author = "Nicholas Romanov",
-                            AvailableCopies = 7,
-                            CategoryId = 13,
-                            Description = "A book on the science of running, focusing on proper technique to avoid injury.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 2012,
-                            Title = "The Running Revolution",
-                            TotalCopies = 10
-                        },
-                        new
-                        {
-                            Id = 73,
-                            Author = "David Epstein",
-                            AvailableCopies = 5,
-                            CategoryId = 13,
-                            Description = "An exploration of the genetic and environmental factors that contribute to athletic success.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 2013,
-                            Title = "The Sports Gene",
-                            TotalCopies = 7
-                        },
-                        new
-                        {
-                            Id = 74,
-                            Author = "Steven Pressfield",
-                            AvailableCopies = 6,
-                            CategoryId = 14,
-                            Description = "A guide to overcoming creative resistance and achieving artistic success.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 2002,
-                            Title = "The War of Art",
-                            TotalCopies = 8
-                        },
-                        new
-                        {
-                            Id = 75,
-                            Author = "Michael Pollan",
-                            AvailableCopies = 7,
-                            CategoryId = 14,
-                            Description = "A book about cooking, exploring the science and art of food preparation.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 2013,
-                            Title = "Cooked",
-                            TotalCopies = 10
-                        },
-                        new
-                        {
-                            Id = 76,
-                            Author = "Peter Barham",
-                            AvailableCopies = 6,
-                            CategoryId = 14,
-                            Description = "A book that explains the scientific principles behind cooking techniques.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 2001,
-                            Title = "The Science of Cooking",
-                            TotalCopies = 8
-                        },
-                        new
-                        {
-                            Id = 77,
-                            Author = "Sarah Kieffer",
-                            AvailableCopies = 8,
-                            CategoryId = 14,
-                            Description = "A baking book filled with delicious recipes and baking tips.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 2017,
-                            Title = "The Joy of Baking",
-                            TotalCopies = 10
-                        },
-                        new
-                        {
-                            Id = 78,
-                            Author = "Jon Krakauer",
-                            AvailableCopies = 9,
-                            CategoryId = 15,
-                            Description = "A personal account of a disastrous expedition to Mount Everest.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1997,
-                            Title = "Into Thin Air",
-                            TotalCopies = 12
-                        },
-                        new
-                        {
-                            Id = 79,
-                            Author = "Bruce Chatwin",
-                            AvailableCopies = 6,
-                            CategoryId = 15,
-                            Description = "A travelogue about the author's journey through the wild and remote region of Patagonia.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1977,
-                            Title = "In Patagonia",
-                            TotalCopies = 8
-                        },
-                        new
-                        {
-                            Id = 80,
-                            Author = "Bill Bryson",
-                            AvailableCopies = 7,
-                            CategoryId = 15,
-                            Description = "A humorous account of the author's attempt to hike the Appalachian Trail.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1998,
-                            Title = "A Walk in the Woods",
-                            TotalCopies = 10
-                        },
-                        new
-                        {
-                            Id = 81,
-                            Author = "Frances Hodgson Burnett",
-                            AvailableCopies = 8,
-                            CategoryId = 16,
-                            Description = "A beloved children's novel about a young girl who discovers a magical garden.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1911,
-                            Title = "The Secret Garden",
-                            TotalCopies = 10
-                        },
-                        new
-                        {
-                            Id = 82,
-                            Author = "Lewis Carroll",
-                            AvailableCopies = 5,
-                            CategoryId = 16,
-                            Description = "A whimsical story of a young girl who falls into a fantastical world.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1865,
-                            Title = "Alice's Adventures in Wonderland",
-                            TotalCopies = 7
-                        },
-                        new
-                        {
-                            Id = 83,
-                            Author = "C.S. Lewis",
-                            AvailableCopies = 6,
-                            CategoryId = 16,
-                            Description = "The first book in The Chronicles of Narnia series, where four siblings enter a magical world through a wardrobe.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1950,
-                            Title = "The Lion, the Witch and the Wardrobe",
-                            TotalCopies = 8
-                        },
-                        new
-                        {
-                            Id = 84,
-                            Author = "Kenneth Grahame",
-                            AvailableCopies = 7,
-                            CategoryId = 16,
-                            Description = "A children's novel about the adventures of Mole, Rat, Badger, and Toad in the English countryside.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1908,
-                            Title = "The Wind in the Willows",
-                            TotalCopies = 10
-                        },
-                        new
-                        {
-                            Id = 85,
-                            Author = "E.B. White",
-                            AvailableCopies = 9,
-                            CategoryId = 16,
-                            Description = "A touching story about a pig named Wilbur and his friendship with a spider named Charlotte.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1952,
-                            Title = "Charlotte's Web",
-                            TotalCopies = 12
-                        },
-                        new
-                        {
-                            Id = 86,
-                            Author = "J.R.R. Tolkien",
-                            AvailableCopies = 10,
-                            CategoryId = 17,
-                            Description = "The classic fantasy novel about the adventures of Bilbo Baggins.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1937,
-                            Title = "The Hobbit",
-                            TotalCopies = 12
-                        },
-                        new
-                        {
-                            Id = 87,
-                            Author = "J.R.R. Tolkien",
-                            AvailableCopies = 5,
-                            CategoryId = 17,
-                            Description = "The first book in The Lord of the Rings series, about the journey to destroy a powerful ring.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1954,
-                            Title = "The Fellowship of the Ring",
-                            TotalCopies = 7
-                        },
-                        new
-                        {
-                            Id = 88,
-                            Author = "J.R.R. Tolkien",
-                            AvailableCopies = 6,
-                            CategoryId = 17,
-                            Description = "The second book in The Lord of the Rings series, continuing the journey to destroy the One Ring.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1954,
-                            Title = "The Two Towers",
-                            TotalCopies = 8
-                        },
-                        new
-                        {
-                            Id = 89,
-                            Author = "J.R.R. Tolkien",
-                            AvailableCopies = 7,
-                            CategoryId = 17,
-                            Description = "The final book in The Lord of the Rings series, concluding the epic quest to defeat Sauron.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1955,
-                            Title = "The Return of the King",
-                            TotalCopies = 10
-                        },
-                        new
-                        {
-                            Id = 90,
-                            Author = "J.R.R. Tolkien",
-                            AvailableCopies = 8,
-                            CategoryId = 17,
-                            Description = "A prequel to The Lord of the Rings series, telling the story of Bilbo's adventure.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1937,
-                            Title = "The Hobbit: An Unexpected Journey",
-                            TotalCopies = 10
-                        },
-                        new
-                        {
-                            Id = 91,
-                            Author = "Margaret Atwood",
-                            AvailableCopies = 9,
-                            CategoryId = 22,
-                            Description = "A dystopian novel set in a totalitarian society that controls women's rights and freedoms.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1985,
-                            Title = "The Handmaid's Tale",
-                            TotalCopies = 12
-                        },
-                        new
-                        {
-                            Id = 92,
-                            Author = "George Orwell",
-                            AvailableCopies = 6,
-                            CategoryId = 21,
-                            Description = "A dystopian novel about a totalitarian regime where surveillance is constant and free thought is restricted.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1949,
-                            Title = "1984",
-                            TotalCopies = 8
-                        },
-                        new
-                        {
-                            Id = 93,
-                            Author = "Aldous Huxley",
-                            AvailableCopies = 8,
-                            CategoryId = 22,
-                            Description = "A vision of a future society where happiness is achieved through artificial means, and individualism is sacrificed.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1932,
-                            Title = "Brave New World",
-                            TotalCopies = 10
-                        },
-                        new
-                        {
-                            Id = 94,
-                            Author = "Suzanne Collins",
-                            AvailableCopies = 7,
-                            CategoryId = 22,
-                            Description = "A dystopian novel set in a world where children are chosen to fight in a televised gladiatorial contest.",
+                            AuthorId = 44,
+                            AvailableCopies = 12,
+                            CategoryId = 1,
+                            Description = "Suzanne Collins' dystopian novel about a televised fight to the death.",
+                            ImageUrl = "Uploads/Books/c14ad657-c986-44c1-ae6b-2bacc1b2b577_20250330_001551.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2008,
                             Title = "The Hunger Games",
-                            TotalCopies = 10
+                            TotalCopies = 18
                         },
                         new
                         {
-                            Id = 95,
-                            Author = "Lois Lowry",
-                            AvailableCopies = 6,
-                            CategoryId = 22,
-                            Description = "A dystopian novel about a boy who begins to question the nature of his world after being chosen as the Receiver of Memory.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1993,
-                            Title = "The Giver",
-                            TotalCopies = 8
-                        },
-                        new
-                        {
-                            Id = 96,
-                            Author = "Cormac McCarthy",
-                            AvailableCopies = 5,
-                            CategoryId = 22,
-                            Description = "A post-apocalyptic novel about a father and son struggling to survive in a bleak, desolate world.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 2006,
-                            Title = "The Road",
-                            TotalCopies = 7
-                        },
-                        new
-                        {
-                            Id = 97,
-                            Author = "Ray Bradbury",
-                            AvailableCopies = 8,
-                            CategoryId = 21,
-                            Description = "A futuristic novel where books are banned, and firemen burn any that are found.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 1953,
-                            Title = "Fahrenheit 451",
-                            TotalCopies = 10
-                        },
-                        new
-                        {
-                            Id = 98,
-                            Author = "James Dashner",
-                            AvailableCopies = 7,
-                            CategoryId = 22,
-                            Description = "A dystopian novel about a group of teens trapped in a maze with no memory of how they got there.",
-                            IsActive = true,
-                            IsDeleted = false,
-                            PublicationYear = 2009,
-                            Title = "The Maze Runner",
-                            TotalCopies = 10
-                        },
-                        new
-                        {
-                            Id = 99,
-                            Author = "Veronica Roth",
-                            AvailableCopies = 6,
-                            CategoryId = 22,
-                            Description = "A young adult dystopian novel set in a society where people are divided into factions based on their virtues.",
+                            Id = 45,
+                            AuthorId = 45,
+                            AvailableCopies = 10,
+                            CategoryId = 1,
+                            Description = "Veronica Roth's novel set in a dystopian society divided into factions based on virtues.",
+                            ImageUrl = "Uploads/Books/eea4aa7e-c852-46ca-9320-c2413be5836a_20250329_235249.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             PublicationYear = 2011,
                             Title = "Divergent",
-                            TotalCopies = 8
+                            TotalCopies = 15
                         },
                         new
                         {
-                            Id = 100,
-                            Author = "Jeanne DuPrau",
-                            AvailableCopies = 7,
-                            CategoryId = 22,
-                            Description = "A post-apocalyptic novel about a city running out of power and the young people trying to escape.",
+                            Id = 46,
+                            AuthorId = 46,
+                            AvailableCopies = 8,
+                            CategoryId = 1,
+                            Description = "Paula Hawkins' psychological thriller about a woman who gets involved in a missing person's case.",
+                            ImageUrl = "Uploads/Books/75eaa5a8-101b-4649-b94a-cc975b6b71d3_20250330_001300.jpeg",
                             IsActive = true,
                             IsDeleted = false,
-                            PublicationYear = 2003,
-                            Title = "The City of Ember",
+                            PublicationYear = 2015,
+                            Title = "The Girl on the Train",
+                            TotalCopies = 12
+                        },
+                        new
+                        {
+                            Id = 47,
+                            AuthorId = 47,
+                            AvailableCopies = 9,
+                            CategoryId = 1,
+                            Description = "Gillian Flynn's mystery novel about a marriage gone wrong and the disappearance of a wife.",
+                            ImageUrl = "Uploads/Books/37e1b6dd-3596-460b-a5ea-75ab35e76de2_20250329_235640.jpeg",
+                            IsActive = true,
+                            IsDeleted = false,
+                            PublicationYear = 2012,
+                            Title = "Gone Girl",
+                            TotalCopies = 14
+                        },
+                        new
+                        {
+                            Id = 48,
+                            AuthorId = 48,
+                            AvailableCopies = 7,
+                            CategoryId = 1,
+                            Description = "Gillian Flynn’s psychological thriller about a journalist returning to her hometown to investigate a series of murders.",
+                            ImageUrl = "Uploads/Books/93e160f6-53a0-43c6-b70e-b5bf34a40d1d_20250330_000313.jpeg",
+                            IsActive = true,
+                            IsDeleted = false,
+                            PublicationYear = 2006,
+                            Title = "Sharp Objects",
                             TotalCopies = 10
+                        },
+                        new
+                        {
+                            Id = 49,
+                            AuthorId = 49,
+                            AvailableCopies = 12,
+                            CategoryId = 1,
+                            Description = "Liane Moriarty's novel about the secrets and lies in a tight-knit community.",
+                            ImageUrl = "Uploads/Books/472104fd-a07c-4b6d-833a-f1980ade7088_20250329_234953.jpeg",
+                            IsActive = true,
+                            IsDeleted = false,
+                            PublicationYear = 2014,
+                            Title = "Big Little Lies",
+                            TotalCopies = 18
+                        },
+                        new
+                        {
+                            Id = 50,
+                            AuthorId = 50,
+                            AvailableCopies = 10,
+                            CategoryId = 1,
+                            Description = "Stieg Larsson's crime thriller about a journalist and a hacker uncovering corruption in Sweden.",
+                            ImageUrl = "Uploads/Books/16ccf3cf-cda1-465f-9c2e-ddd95c7e86da_20250330_001343.jpeg",
+                            IsActive = true,
+                            IsDeleted = false,
+                            PublicationYear = 2005,
+                            Title = "The Girl with the Dragon Tattoo",
+                            TotalCopies = 15
                         });
                 });
 
@@ -1462,6 +860,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 1,
                             Description = "Books that contain stories created from the imagination.",
+                            ImageUrl = "Uploads/Books/6393e19e-6166-4db4-a076-976352f7e20d_20250330_002637.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Fiction"
@@ -1470,6 +869,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 2,
                             Description = "Books based on real facts and events.",
+                            ImageUrl = "Uploads/Books/2ec27bb0-5430-41d6-9e10-db55a5ea961c_20250330_002741.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Non-Fiction"
@@ -1478,6 +878,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 3,
                             Description = "Books related to scientific principles, experiments, and discoveries.",
+                            ImageUrl = "Uploads/Books/c5fc5bee-ea8c-40a9-99c2-936cfa5d041d_20250330_002809.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Science"
@@ -1486,6 +887,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 4,
                             Description = "Books covering mathematical theories, problems, and equations.",
+                            ImageUrl = "Uploads/Books/35ce256b-5c7d-4436-9fe6-b0a1b6797224_20250330_003015.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Mathematics"
@@ -1494,6 +896,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 5,
                             Description = "Books that discuss past events and historical occurrences.",
+                            ImageUrl = "Uploads/Books/19a4642e-b144-44d2-b37e-8773f4e9a52b_20250330_003044.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "History"
@@ -1502,6 +905,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 6,
                             Description = "Books about the lives of individuals, either famous or historical.",
+                            ImageUrl = "Uploads/Books/8ed4d4a2-6ade-4eba-a3ee-c9760a2757d9_20250330_003206.png",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Biography"
@@ -1510,6 +914,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 7,
                             Description = "Books considered to have artistic value, including poetry, novels, and drama.",
+                            ImageUrl = "Uploads/Books/acbae6c0-0c0d-44c3-8f99-4ff327c81005_20250330_003245.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Literature"
@@ -1518,6 +923,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 8,
                             Description = "Books that explore fundamental questions about existence, knowledge, and ethics.",
+                            ImageUrl = "Uploads/Books/5de8b2ec-4651-4b86-a50c-0352b2ceba84_20250330_003310.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Philosophy"
@@ -1526,6 +932,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 9,
                             Description = "Books related to human behavior, emotions, and cognitive functions.",
+                            ImageUrl = "Uploads/Books/a079349e-4d11-4521-b07e-8d315b13527f_20250330_003502.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Psychology"
@@ -1534,6 +941,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 10,
                             Description = "Books that provide advice or strategies for improving life and personal growth.",
+                            ImageUrl = "Uploads/Books/f967b576-dd73-48ec-9162-950caa88d10a_20250330_003606.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Self-Help"
@@ -1542,6 +950,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 11,
                             Description = "Books that focus on various forms of art, including visual arts, sculpture, and performance.",
+                            ImageUrl = "Uploads/Books/f8237660-039b-4459-bba6-4394d70adad4_20250330_003642.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Art"
@@ -1550,6 +959,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 12,
                             Description = "Books that discuss musical theory, history, and performance techniques.",
+                            ImageUrl = "Uploads/Books/fb89b2db-af67-44f2-835c-22c0e349d131_20250330_003722.png",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Music"
@@ -1558,6 +968,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 13,
                             Description = "Books focused on physical well-being, exercise, and mental health.",
+                            ImageUrl = "Uploads/Books/6bda1890-8333-4bc8-b11e-afad13fa8249_20250330_003809.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Health & Fitness"
@@ -1566,6 +977,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 14,
                             Description = "Books providing recipes and cooking techniques.",
+                            ImageUrl = "Uploads/Books/ee60663d-c0fd-4a74-874a-2c70733e0f9a_20250330_003916.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Cooking"
@@ -1574,6 +986,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 15,
                             Description = "Books that explore destinations, cultures, and experiences in different parts of the world.",
+                            ImageUrl = "Uploads/Books/ddde898a-001c-406b-a022-d739209c07a4_20250330_004002.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Travel"
@@ -1582,6 +995,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 16,
                             Description = "Books intended for young readers, including stories and educational books.",
+                            ImageUrl = "Uploads/Books/c6b34e07-de1d-44ee-8d45-390ae71affbb_20250330_004115.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Children's Books"
@@ -1590,6 +1004,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 17,
                             Description = "Books containing magical or fantastical elements set in imaginary worlds.",
+                            ImageUrl = "Uploads/Books/7f59fdf5-ead6-45c2-9a2b-e6b591880d3e_20250330_004149.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Fantasy"
@@ -1598,6 +1013,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 18,
                             Description = "Books set in the future or in space, often incorporating advanced technology or extraterrestrial life.",
+                            ImageUrl = "Uploads/Books/c75396e8-8da4-4ba1-b644-7a6c6b64e1ce_20250330_004229.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Science Fiction"
@@ -1606,6 +1022,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 19,
                             Description = "Books centered around solving a crime or uncovering secrets.",
+                            ImageUrl = "Uploads/Books/4375faff-2083-449b-a270-67b515001c28_20250330_004256.png",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Mystery"
@@ -1614,6 +1031,7 @@ namespace LMS.DAL.Migrations
                         {
                             Id = 20,
                             Description = "Books designed to keep the reader on edge with suspense and tension.",
+                            ImageUrl = "Uploads/Books/cc4b5787-7574-45b2-8d71-06dd0658d491_20250330_004355.jpeg",
                             IsActive = true,
                             IsDeleted = false,
                             Name = "Thriller"
@@ -1860,6 +1278,414 @@ namespace LMS.DAL.Migrations
                         });
                 });
 
+            modelBuilder.Entity("LMS.DAL.Data.Models.Author", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateOnly>("DateOfBirth")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Authors");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DateOfBirth = new DateOnly(1896, 9, 1),
+                            Description = "American novelist, best known for 'The Great Gatsby.'",
+                            FullName = "F. Scott Fitzgerald"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            DateOfBirth = new DateOnly(1926, 4, 20),
+                            Description = "American author of 'To Kill a Mockingbird.'",
+                            FullName = "Harper Lee"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            DateOfBirth = new DateOnly(1976, 2, 24),
+                            Description = "Israeli historian and author of 'Sapiens.'",
+                            FullName = "Yuval Noah Harari"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            DateOfBirth = new DateOnly(1986, 9, 27),
+                            Description = "American memoirist, known for 'Educated.'",
+                            FullName = "Tara Westover"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            DateOfBirth = new DateOnly(1942, 1, 8),
+                            Description = "English theoretical physicist, known for 'A Brief History of Time.'",
+                            FullName = "Stephen Hawking"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            DateOfBirth = new DateOnly(1941, 3, 26),
+                            Description = "English evolutionary biologist, author of 'The Selfish Gene.'",
+                            FullName = "Richard Dawkins"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            DateOfBirth = new DateOnly(1959, 5, 13),
+                            Description = "American mathematician, author of 'The Joy of x.'",
+                            FullName = "Steven Strogatz"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            DateOfBirth = new DateOnly(1838, 12, 20),
+                            Description = "English schoolmaster and theologian, known for 'Flatland.'",
+                            FullName = "Edwin A. Abbott"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            DateOfBirth = new DateOnly(1929, 6, 12),
+                            Description = "Jewish diarist, known for 'The Diary of a Young Girl.'",
+                            FullName = "Anne Frank"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            DateOfBirth = new DateOnly(1971, 8, 10),
+                            Description = "British historian, author of 'The Silk Roads.'",
+                            FullName = "Peter Frankopan"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            DateOfBirth = new DateOnly(1952, 5, 20),
+                            Description = "American author and biographer, known for 'Steve Jobs.'",
+                            FullName = "Walter Isaacson"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            DateOfBirth = new DateOnly(1925, 5, 19),
+                            Description = "African American civil rights leader, co-author of 'The Autobiography of Malcolm X.'",
+                            FullName = "Malcolm X"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            DateOfBirth = new DateOnly(1819, 8, 1),
+                            Description = "American author, known for 'Moby-Dick.'",
+                            FullName = "Herman Melville"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            DateOfBirth = new DateOnly(1775, 12, 16),
+                            Description = "English novelist, best known for 'Pride and Prejudice.'",
+                            FullName = "Jane Austen"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            DateOfBirth = new DateOnly(121, 4, 26),
+                            Description = "Roman Emperor, known for 'Meditations.'",
+                            FullName = "Marcus Aurelius"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            DateOfBirth = new DateOnly(427, 5, 21),
+                            Description = "Ancient Greek philosopher, author of 'The Republic.'",
+                            FullName = "Plato"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            DateOfBirth = new DateOnly(1934, 3, 5),
+                            Description = "Israeli-American psychologist, author of 'Thinking, Fast and Slow.'",
+                            FullName = "Daniel Kahneman"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            DateOfBirth = new DateOnly(1974, 4, 27),
+                            Description = "American journalist, author of 'The Power of Habit.'",
+                            FullName = "Charles Duhigg"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            DateOfBirth = new DateOnly(1986, 7, 22),
+                            Description = "Author of 'Atomic Habits.'",
+                            FullName = "James Clear"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            DateOfBirth = new DateOnly(1932, 10, 24),
+                            Description = "American educator, author of 'The 7 Habits of Highly Effective People.'",
+                            FullName = "Stephen R. Covey"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            DateOfBirth = new DateOnly(1909, 3, 20),
+                            Description = "Austrian-born British art historian, known for 'The Story of Art.'",
+                            FullName = "E.H. Gombrich"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            DateOfBirth = new DateOnly(1926, 11, 5),
+                            Description = "British art critic and theorist, author of 'Ways of Seeing.'",
+                            FullName = "John Berger"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            DateOfBirth = new DateOnly(1968, 11, 10),
+                            Description = "American music critic, author of 'The Rest Is Noise.'",
+                            FullName = "Alex Ross"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            DateOfBirth = new DateOnly(1952, 5, 14),
+                            Description = "American musician and author of 'How Music Works.'",
+                            FullName = "David Byrne"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            DateOfBirth = new DateOnly(1943, 7, 5),
+                            Description = "Dutch-American psychiatrist, author of 'The Body Keeps the Score.'",
+                            FullName = "Bessel van der Kolk"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            DateOfBirth = new DateOnly(1962, 6, 10),
+                            Description = "American author, known for 'Born to Run.'",
+                            FullName = "Christopher McDougall"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            DateOfBirth = new DateOnly(1877, 3, 15),
+                            Description = "American author, known for 'The Joy of Cooking.'",
+                            FullName = "Irma S. Rombauer"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            DateOfBirth = new DateOnly(1979, 11, 7),
+                            Description = "American chef and author of 'Salt, Fat, Acid, Heat.'",
+                            FullName = "Samin Nosrat"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            DateOfBirth = new DateOnly(1954, 4, 12),
+                            Description = "American author, known for 'Into the Wild.'",
+                            FullName = "Jon Krakauer"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            DateOfBirth = new DateOnly(1962, 10, 26),
+                            Description = "American author, known for 'The Geography of Bliss.'",
+                            FullName = "Eric Weiner"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            DateOfBirth = new DateOnly(1965, 7, 20),
+                            Description = "British author, known for the 'Harry Potter' series.",
+                            FullName = "J.K. Rowling"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            DateOfBirth = new DateOnly(1928, 6, 10),
+                            Description = "American author of children's books, known for 'Where the Wild Things Are.'",
+                            FullName = "Maurice Sendak"
+                        },
+                        new
+                        {
+                            Id = 33,
+                            DateOfBirth = new DateOnly(1892, 1, 3),
+                            Description = "English author, known for 'The Hobbit.'",
+                            FullName = "J.R.R. Tolkien"
+                        },
+                        new
+                        {
+                            Id = 34,
+                            DateOfBirth = new DateOnly(1973, 6, 6),
+                            Description = "American author, known for 'The Name of the Wind.'",
+                            FullName = "Patrick Rothfuss"
+                        },
+                        new
+                        {
+                            Id = 35,
+                            DateOfBirth = new DateOnly(1920, 10, 8),
+                            Description = "American science fiction author, known for 'Dune.'",
+                            FullName = "Frank Herbert"
+                        },
+                        new
+                        {
+                            Id = 36,
+                            DateOfBirth = new DateOnly(1948, 3, 17),
+                            Description = "American-Canadian author, known for 'Neuromancer.'",
+                            FullName = "William Gibson"
+                        },
+                        new
+                        {
+                            Id = 37,
+                            DateOfBirth = new DateOnly(1954, 8, 15),
+                            Description = "Swedish author, known for 'The Girl with the Dragon Tattoo.'",
+                            FullName = "Stieg Larsson"
+                        },
+                        new
+                        {
+                            Id = 38,
+                            DateOfBirth = new DateOnly(1971, 2, 24),
+                            Description = "American author, known for 'Gone Girl.'",
+                            FullName = "Gillian Flynn"
+                        },
+                        new
+                        {
+                            Id = 39,
+                            DateOfBirth = new DateOnly(1968, 11, 22),
+                            Description = "Cypriot-British author, known for 'The Silent Patient.'",
+                            FullName = "Alex Michaelides"
+                        },
+                        new
+                        {
+                            Id = 40,
+                            DateOfBirth = new DateOnly(1972, 8, 26),
+                            Description = "British author, known for 'The Girl on the Train.'",
+                            FullName = "Paula Hawkins"
+                        },
+                        new
+                        {
+                            Id = 41,
+                            DateOfBirth = new DateOnly(1920, 8, 22),
+                            Description = "American author, known for 'Fahrenheit 451.'",
+                            FullName = "Ray Bradbury"
+                        },
+                        new
+                        {
+                            Id = 42,
+                            DateOfBirth = new DateOnly(1903, 6, 25),
+                            Description = "British author, known for '1984.'",
+                            FullName = "George Orwell"
+                        },
+                        new
+                        {
+                            Id = 43,
+                            DateOfBirth = new DateOnly(1894, 7, 26),
+                            Description = "English author, known for 'Brave New World.'",
+                            FullName = "Aldous Huxley"
+                        },
+                        new
+                        {
+                            Id = 44,
+                            DateOfBirth = new DateOnly(1939, 11, 18),
+                            Description = "Canadian author, known for 'The Handmaid's Tale.'",
+                            FullName = "Margaret Atwood"
+                        },
+                        new
+                        {
+                            Id = 45,
+                            DateOfBirth = new DateOnly(1919, 1, 1),
+                            Description = "American author, known for 'The Catcher in the Rye.'",
+                            FullName = "J.D. Salinger"
+                        },
+                        new
+                        {
+                            Id = 46,
+                            DateOfBirth = new DateOnly(1950, 7, 22),
+                            Description = "American author, known for 'The Outsiders.'",
+                            FullName = "S.E. Hinton"
+                        },
+                        new
+                        {
+                            Id = 47,
+                            DateOfBirth = new DateOnly(1854, 10, 16),
+                            Description = "Irish author, known for 'The Picture of Dorian Gray.'",
+                            FullName = "Oscar Wilde"
+                        },
+                        new
+                        {
+                            Id = 48,
+                            DateOfBirth = new DateOnly(1797, 8, 20),
+                            Description = "English author, known for 'Frankenstein.'",
+                            FullName = "Mary Shelley"
+                        },
+                        new
+                        {
+                            Id = 49,
+                            DateOfBirth = new DateOnly(1847, 11, 8),
+                            Description = "Irish author, known for 'Dracula.'",
+                            FullName = "Bram Stoker"
+                        },
+                        new
+                        {
+                            Id = 50,
+                            DateOfBirth = new DateOnly(1821, 11, 11),
+                            Description = "Russian author, known for 'Crime and Punishment.'",
+                            FullName = "Fyodor Dostoevsky"
+                        });
+                });
+
+            modelBuilder.Entity("LMS.DAL.Data.Models.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
+                });
+
             modelBuilder.Entity("LMS.DAL.Feedback", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1907,9 +1733,8 @@ namespace LMS.DAL.Migrations
                     b.Property<string>("UpdateUserId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -1973,9 +1798,8 @@ namespace LMS.DAL.Migrations
                     b.Property<string>("UpdateUserId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -2007,8 +1831,11 @@ namespace LMS.DAL.Migrations
 
             modelBuilder.Entity("LMS.DAL.User", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -2118,34 +1945,7 @@ namespace LMS.DAL.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
-
-                    b.ToTable("AspNetRoles", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -2159,9 +1959,8 @@ namespace LMS.DAL.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -2170,7 +1969,7 @@ namespace LMS.DAL.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -2184,9 +1983,8 @@ namespace LMS.DAL.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -2195,7 +1993,7 @@ namespace LMS.DAL.Migrations
                     b.ToTable("AspNetUserClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -2206,9 +2004,8 @@ namespace LMS.DAL.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -2217,13 +2014,13 @@ namespace LMS.DAL.Migrations
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -2232,10 +2029,10 @@ namespace LMS.DAL.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -2253,11 +2050,19 @@ namespace LMS.DAL.Migrations
 
             modelBuilder.Entity("LMS.DAL.Book", b =>
                 {
+                    b.HasOne("LMS.DAL.Data.Models.Author", "Author")
+                        .WithMany("Books")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("LMS.DAL.Category", "Category")
                         .WithMany("Books")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Author");
 
                     b.Navigation("Category");
                 });
@@ -2311,16 +2116,16 @@ namespace LMS.DAL.Migrations
                     b.Navigation("Book");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("LMS.DAL.Data.Models.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
                     b.HasOne("LMS.DAL.User", null)
                         .WithMany()
@@ -2329,7 +2134,7 @@ namespace LMS.DAL.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
                     b.HasOne("LMS.DAL.User", null)
                         .WithMany()
@@ -2338,9 +2143,9 @@ namespace LMS.DAL.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("LMS.DAL.Data.Models.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2353,7 +2158,7 @@ namespace LMS.DAL.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
                     b.HasOne("LMS.DAL.User", null)
                         .WithMany()
@@ -2370,6 +2175,11 @@ namespace LMS.DAL.Migrations
                 });
 
             modelBuilder.Entity("LMS.DAL.Category", b =>
+                {
+                    b.Navigation("Books");
+                });
+
+            modelBuilder.Entity("LMS.DAL.Data.Models.Author", b =>
                 {
                     b.Navigation("Books");
                 });

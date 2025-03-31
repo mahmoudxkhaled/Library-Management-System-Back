@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LMS.DAL.Data.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,8 +17,7 @@ namespace LMS.DAL
         public string Title { get; set; } = null!;
 
         [Required]
-        [MaxLength(500)]
-        public string Author { get; set; } = null!;
+        public int AuthorId { get; set; }
         [Url]
         public string? ImageUrl { get; set; }
         [MaxLength(5000)]
@@ -36,7 +36,8 @@ namespace LMS.DAL
         public int CategoryId { get; set; } // Changed to match the schema (Guid)
 
         [ForeignKey(nameof(CategoryId))]
-        public Category? Category { get; set; }
+        public Category Category { get; set; }
+        public Author Author { get; set; }
 
         public ICollection<Transaction> Transactions { get; set; } = new HashSet<Transaction>();
         public ICollection<Feedback> Feedbacks { get; set; } = new HashSet<Feedback>();

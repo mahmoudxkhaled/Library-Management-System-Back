@@ -1,6 +1,7 @@
 ﻿using LMS.BL;
 using LMS.DAL;
 using LMS.DAL.Data;
+using LMS.DAL.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -75,9 +76,9 @@ builder.Services.AddCors(options =>
 
 
 
-#region Identity
+#region Identity 
 
-builder.Services.AddIdentity<User, IdentityRole>(options =>
+builder.Services.AddIdentity<User, Role>(options =>
 {
     options.User.RequireUniqueEmail = true;
     options.Password.RequireNonAlphanumeric = false;
@@ -89,6 +90,9 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
 })
 .AddEntityFrameworkStores<LMSDbContext>()
 .AddDefaultTokenProviders();
+
+
+
 
 #endregion
 
@@ -133,7 +137,7 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var userManager = services.GetRequiredService<UserManager<User>>();
-        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+        var roleManager = services.GetRequiredService<RoleManager<Role>>();
         // 🔹 Await is used inside an async Task function, so we use RunAsync
         await DbSeeder.SeedRolesAndAdminAsync(userManager, roleManager);
     }
@@ -155,8 +159,8 @@ app.UseCors("AllowAll");
 app.UseStaticFiles(new StaticFileOptions()
 {
     FileProvider = new PhysicalFileProvider(Path.Combine(Environment.CurrentDirectory, "Uploads")),
-    RequestPath= "/Uploads"
-}) ;
+    RequestPath = "/Uploads"
+});
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
