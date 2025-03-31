@@ -4,6 +4,7 @@ using LMS.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMS.DAL.Migrations
 {
     [DbContext(typeof(LMSDbContext))]
-    partial class LMSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250331154237_updatefeedback")]
+    partial class updatefeedback
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1686,67 +1689,6 @@ namespace LMS.DAL.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("LMS.DAL.Feedback", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("ActivationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ActivationUserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("BookId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Comment")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<DateTime?>("DeletedTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DeletedUserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("InsertedTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("InsertedUserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdateUserId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BookId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Feedback");
-                });
-
             modelBuilder.Entity("LMS.DAL.Transaction", b =>
                 {
                     b.Property<Guid>("Id")
@@ -2069,25 +2011,6 @@ namespace LMS.DAL.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("LMS.DAL.Feedback", b =>
-                {
-                    b.HasOne("LMS.DAL.Book", "Book")
-                        .WithMany("Feedbacks")
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LMS.DAL.User", "User")
-                        .WithMany("Feedbacks")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Book");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("LMS.DAL.Transaction", b =>
                 {
                     b.HasOne("LMS.DAL.Book", "Book")
@@ -2171,8 +2094,6 @@ namespace LMS.DAL.Migrations
 
             modelBuilder.Entity("LMS.DAL.Book", b =>
                 {
-                    b.Navigation("Feedbacks");
-
                     b.Navigation("Transactions");
                 });
 
@@ -2188,8 +2109,6 @@ namespace LMS.DAL.Migrations
 
             modelBuilder.Entity("LMS.DAL.User", b =>
                 {
-                    b.Navigation("Feedbacks");
-
                     b.Navigation("Transactions");
                 });
 #pragma warning restore 612, 618

@@ -20,6 +20,12 @@ public class FeedbackController : ControllerBase
         var result = await _feedbackService.GetAllFeedbacksAsync();
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
+    [HttpGet("GetAllFeedbacksByBookId/{bookId}")]
+    public async Task<IActionResult> GetAllFeedbacksByBookId(int bookId)
+    {
+        var result = await _feedbackService.GetAllFeedbacksByBookIdAsync(bookId);
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
 
     [HttpPost("AddFeedback")]
     public async Task<IActionResult> AddFeedback(AddFeedbackDto request)

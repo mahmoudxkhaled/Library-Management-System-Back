@@ -42,6 +42,8 @@ public class FeedbackService : IFeedbackService
             {
                 Id = f.Id,
                 UserId = f.UserId,
+                UserFirstName = f.User?.FirstName ?? "Unknown",
+                UserLastName = f.User?.LastName ?? "User",
                 BookId = f.BookId,
                 Rating = f.Rating,
                 Comment = f.Comment
@@ -49,7 +51,7 @@ public class FeedbackService : IFeedbackService
 
             return feedbackList.Any()
                 ? new ApiResult { IsSuccess = true, Data = feedbackList }
-                : new ApiResult { IsSuccess = false, Message = "No feedbacks found for this book" };
+                : new ApiResult { IsSuccess = true, Message = "No feedbacks found for this book" };
         }
         catch (Exception ex)
         {
@@ -62,7 +64,6 @@ public class FeedbackService : IFeedbackService
         {
             var feedback = new Feedback
             {
-                Id = Guid.NewGuid(),
                 UserId = request.UserId,
                 BookId = request.BookId,
                 Rating = request.Rating,

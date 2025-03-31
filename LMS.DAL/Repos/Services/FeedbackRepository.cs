@@ -23,6 +23,7 @@ public class FeedbackRepository : GenericRepository<Feedback>, IFeedbackReposito
     public async Task<IEnumerable<Feedback>> GetAllFeedbacksByBookIdAsync(int bookId)
     {
         return await _context.Feedback
+            .Include(f => f.User)
             .Where(f => f.BookId == bookId)
             .ToListAsync();
     }

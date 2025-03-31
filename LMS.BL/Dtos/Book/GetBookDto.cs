@@ -11,5 +11,6 @@ public class GetBookDto
     public int PublicationYear { get; set; }
     public int AvailableCopies { get; set; }
     public int TotalCopies { get; set; }
-    public int CategoryId { get; set; } 
+    public int CategoryId { get; set; }
+    public string CategoryName { get; set; }
 }

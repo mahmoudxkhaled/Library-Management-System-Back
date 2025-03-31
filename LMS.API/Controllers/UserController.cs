@@ -1,6 +1,5 @@
 ﻿using LMS.BL;
 using LMS.BL.Dtos.User;
-using LMS.BL.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

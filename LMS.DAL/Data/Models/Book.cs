@@ -1,6 +1,4 @@
 ﻿using LMS.DAL.Data.Models;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -22,6 +20,8 @@ namespace LMS.DAL
         public string? ImageUrl { get; set; }
         [MaxLength(5000)]
         public string? Description { get; set; }
+
+        //public string? LongDescription { get; set; }
 
         [Required]
         public int PublicationYear { get; set; }

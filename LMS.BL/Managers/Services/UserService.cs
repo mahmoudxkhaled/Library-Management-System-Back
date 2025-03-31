@@ -159,6 +159,7 @@ public class UserService : IUserService
                 LastName = u.LastName,
                 Email = u.Email,
                 Role = u.Role,
+                IsActive = u.IsActive,
                 PhoneNumber = u.PhoneNumber,
                 ProfileImageUrl = u.ProfileImageUrl
             }).ToList();

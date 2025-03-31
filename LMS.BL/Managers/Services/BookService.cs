@@ -1,10 +1,8 @@
-﻿using Azure.Core;
-using LMS.BL.Dtos.Book;
+﻿using LMS.BL.Dtos.Book;
 using LMS.BL.Shared.Models;
 using LMS.DAL;
 using LMS.DAL.Data;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 namespace LMS.BL;
 
 public class BookService : IBookService
@@ -40,7 +38,7 @@ public class BookService : IBookService
                 TotalCopies = b.TotalCopies,
                 CategoryId = b.CategoryId,
                 ImageUrl = b.ImageUrl,
-                authorId=b.AuthorId
+                authorId = b.AuthorId
             }).ToList();
 
             return new ApiResult<List<GetBookDto>> { IsSuccess = true, Data = bookList };
@@ -50,13 +48,13 @@ public class BookService : IBookService
             return new ApiResult<List<GetBookDto>> { IsSuccess = false, Message = ex.Message };
         }
     }
-    public async Task<ApiResult<pagedResult<ReadBookDto>>> GetBooksPaged(int first, int rows, int sortOrder, string? sortField, string? Search,int categoryId,int authorId)
+    public async Task<ApiResult<pagedResult<ReadBookDto>>> GetBooksPaged(int first, int rows, int sortOrder, string? sortField, string? Search, int categoryId, int authorId)
     {
         try
         {
             pagedResult<ReadBookDto> pagedResultDto = new pagedResult<ReadBookDto>();
-            var pagedResult = await _unitOfWork.BookRepository.GetBooksPaged(first, rows, sortOrder,sortField, Search,categoryId,authorId);
-            pagedResultDto.Result = pagedResult.Result.Select(b => new ReadBookDto() { Id = b.Id, Title = b.Title,Description=b.Description, ImageUrl = b.ImageUrl,AuthorId=b.Author.Id,AuthorFullName = b.Author.FullName,AuthorImage=b.Author.ImageUrl, AvailableCopies = b.AvailableCopies, CategoryId = b.CategoryId,CategoryName=b.Category.Name, PublicationYear = b.PublicationYear, TotalCopies = b.TotalCopies }).ToList();
+            var pagedResult = await _unitOfWork.BookRepository.GetBooksPaged(first, rows, sortOrder, sortField, Search, categoryId, authorId);
+            pagedResultDto.Result = pagedResult.Result.Select(b => new ReadBookDto() { Id = b.Id, Title = b.Title, Description = b.Description, CoverImageUrl = b.ImageUrl, AuthorId = b.Author.Id, AuthorFullName = b.Author.FullName, AuthorImage = b.Author.ImageUrl, AvailableCopies = b.AvailableCopies, CategoryId = b.CategoryId, CategoryName = b.Category.Name, PublicationYear = b.PublicationYear, TotalCopies = b.TotalCopies }).ToList();
             pagedResultDto.TotalCount = pagedResult.TotalCount;
             return new ApiResult<pagedResult<ReadBookDto>> { IsSuccess = true, Data = pagedResultDto };
         }
@@ -70,18 +68,35 @@ public class BookService : IBookService
         try
         {
             var book = await _unitOfWork.BookRepository.getBookDetailsById(id);
-            if(book == null) 
+            if (book == null)
                 return new ApiResult<BookDetailsDto>() { IsSuccess = false, Message = $"Not found any book by this Id {id}" };
-            return new ApiResult<BookDetailsDto>() { IsSuccess = true,Data= new BookDetailsDto() { Title=book.Title,Description=book.Description,ImageUrl=book.ImageUrl,
-                PublicationYear=book.PublicationYear,AvailableCopies=book.AvailableCopies,TotalCopies=book.TotalCopies,AuthorFullName = book.Author.FullName,AuthorDescription=book.Author.Description,AuthorImageUrl=book.Author.ImageUrl,
-            AuthorDateOfBirth=book.Author.DateOfBirth,CategoryName=book.Category.Name,CategoryDescription=book.Category.Description,CategoryImageUrl=book.Category.ImageUrl} };
+            return new ApiResult<BookDetailsDto>()
+            {
+                IsSuccess = true,
+                Data = new BookDetailsDto()
+                {
+                    Title = book.Title,
+                    Description = book.Description,
+                    ImageUrl = book.ImageUrl,
+                    PublicationYear = book.PublicationYear,
+                    AvailableCopies = book.AvailableCopies,
+                    TotalCopies = book.TotalCopies,
+                    AuthorFullName = book.Author.FullName,
+                    AuthorDescription = book.Author.Description,
+                    AuthorImageUrl = book.Author.ImageUrl,
+                    AuthorDateOfBirth = book.Author.DateOfBirth,
+                    CategoryName = book.Category.Name,
+                    CategoryDescription = book.Category.Description,
+                    CategoryImageUrl = book.Category.ImageUrl
+                }
+            };
         }
         catch (Exception ex)
         {
-            return new ApiResult<BookDetailsDto>() { IsSuccess=false, Message=ex.Message };
+            return new ApiResult<BookDetailsDto>() { IsSuccess = false, Message = ex.Message };
         }
-        }
-    
+    }
+
     public async Task<ApiResult> GetBookByIdAsync(int id)
     {
         try
@@ -210,6 +225,44 @@ public class BookService : IBookService
         catch (Exception e)
         {
             return new ApiResult { IsSuccess = false, Message = e.Message };
+        }
+    }
+
+    public async Task<ApiResult<List<GetBookDto>>> GetBooksByCategoryExceptBookAsync(int bookId)
+    {
+        try
+        {
+            var books = await _unitOfWork.BookRepository.GetBooksByCategoryExceptBookAsync(bookId);
+
+            var bookList = books.Select(b => new GetBookDto
+            {
+                Id = b.Id,
+                Title = b.Title,
+                Description = b.Description,
+                AuthorName = b.Author.FullName,
+                PublicationYear = b.PublicationYear,
+                AvailableCopies = b.AvailableCopies,
+                TotalCopies = b.TotalCopies,
+                CategoryId = b.CategoryId,
+                CategoryName = b.Category.Name ?? "No Category",
+                ImageUrl = b.ImageUrl,
+                authorId = b.AuthorId
+            }).ToList();
+
+            return new ApiResult<List<GetBookDto>>
+            {
+                IsSuccess = true,
+                Data = bookList,
+                Message = bookList.Any() ? "Related books found" : "No related books found in this category"
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult<List<GetBookDto>>
+            {
+                IsSuccess = false,
+                Message = $"Error retrieving books: {ex.Message}"
+            };
         }
     }
 }
