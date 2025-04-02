@@ -1,5 +1,7 @@
 ﻿using LMS.BL.Dtos.Author;
 using LMS.BL.Shared.Models;
+using LMS.DAL.Data;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +13,12 @@ namespace LMS.BL.Managers.Interfaces
     public interface IAuthorService
     {
         Task<IEnumerable<ReadAuthorDto>> GetAllAuthors();
+        Task<pagedResult<GetAuthorDto>> GetAllAuthors(int first,int rows,AuthorParams authorParams);
+        Task<int> DeleteAuthorById(int id, string userId);
+        Task<bool> checkAuthorHasBook(int id);
+        Task<ReadAuthorDto?> GetAuthorById(int id);
+        Task<ApiResult> ActivateOrDeactivateAuthor(int id);
+        Task<ApiResult> CreateAuthor(CreateAuthorDto createAuthorDto,HttpContext httpContext, string UserId);
+        Task<ApiResult> UpdateAuthor(UpdateAuthorDto updateAuthorDto, HttpContext httpContext, string UserId);
     }
 }

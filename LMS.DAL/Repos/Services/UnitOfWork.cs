@@ -1,4 +1,6 @@
-﻿namespace LMS.DAL;
+﻿using LMS.DAL.Repos.Interfaces;
+
+namespace LMS.DAL;
 
 public class UnitOfWork : IUnitOfWork
 {
@@ -12,8 +14,9 @@ public class UnitOfWork : IUnitOfWork
     public ITransactionRepository TransactionRepository { get; }
     public ITrendingBooksRepository TrendingBooksRepository { get; }
     public IUserRepository UserRepository { get; }
+    public IAuthorRepository AuthorRepository { get; }
     #endregion
- 
+
 
 
     #region Constructors
@@ -26,7 +29,7 @@ public class UnitOfWork : IUnitOfWork
         , ITransactionRepository transactionRepository
         , ITrendingBooksRepository trendingBooksRepository
         , IUserRepository userRepository
-
+        ,IAuthorRepository authorRepository
                 )
     {
         _context = context;
@@ -36,7 +39,7 @@ public class UnitOfWork : IUnitOfWork
         TransactionRepository = transactionRepository;
         TrendingBooksRepository = trendingBooksRepository;
         UserRepository = userRepository;
-
+        AuthorRepository = authorRepository;    
     }
     #endregion
 
