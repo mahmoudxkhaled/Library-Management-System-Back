@@ -1,6 +1,8 @@
-﻿using LMS.DAL.Data.Models;
+﻿using LMS.DAL.Data;
+using LMS.DAL.Data.Models;
 using LMS.DAL.Repos.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,16 +25,69 @@ namespace LMS.DAL.Repos.Services
         {
             _context = context;
         }
-
         #endregion
 
         #region Functions
+        public async Task<bool> checkAuthorHasBook(int id)
+        {
+            var hasBooks = await _context.Book.FirstOrDefaultAsync(b=>b.AuthorId==id);
+            if(hasBooks !=null)
+                return true;
+            return false;
+        }
         public async Task<IEnumerable<Author>> GetAllAuthors()
         {
-           return await _context.Authors.Select(a => new Author {Id= a.Id,FullName=a.FullName}).ToListAsync();
+           return await _context.Authors.Where(a=>a.IsActive).Select(a => new Author {Id= a.Id,FullName=a.FullName}).ToListAsync();
         }
-
-
+        public async Task<pagedResult<Author>> GetAllAuthors(int first, int rows, int sortOrder=1, string? sortField=null, string? search = null, bool? isActive = null)
+        {
+            pagedResult<Author> pagedResult = new pagedResult<Author>();
+            var query = _context.Authors.AsQueryable();
+            if(!search.IsNullOrEmpty())
+            {
+                query = query.Where(a=> a.FullName.Contains(search) || (a.Description!=null && a.Description.Contains(search)));
+                pagedResult.TotalCount = query.Count();
+            }
+            if (!sortField.IsNullOrEmpty())
+            {
+                switch (sortField)
+                {
+                    case "FullName":
+                        {
+                            query = sortOrder == 1 ? query.OrderBy(a => a.FullName) : query.OrderByDescending(a => a.Description);
+                            break;
+                        }
+                       
+                    case "InsertedTime":
+                        {
+                            query = sortOrder == 1 ? query.OrderBy(a => a.InsertedTime) : query.OrderByDescending(a => a.InsertedTime);
+                            break;
+                        }
+                       
+                    case "DateOfBirth":
+                        {
+                            query = sortOrder == 1 ? query.OrderBy(a => a.DateOfBirth) : query.OrderByDescending(a => a.DateOfBirth);
+                            break;
+                        }
+                }
+            }
+            if (sortOrder > 0 && sortField.IsNullOrEmpty())
+                {
+                query = sortOrder == 1 ? query.OrderBy(a => a.FullName) : query.OrderByDescending(a => a.FullName);
+                }
+            if(isActive !=null )
+            {
+                query = query.Where(a => a.IsActive == isActive);
+                pagedResult.TotalCount = _context.Authors.Count(a=>a.IsActive==isActive);
+            }
+            if((isActive==null) && search.IsNullOrEmpty())
+                {
+                 pagedResult.TotalCount = _context.Authors.Count();
+                }
+            pagedResult.Result=await query.Skip(first).Take(rows).ToListAsync();
+            return pagedResult;
+        }
+ 
 
 
 

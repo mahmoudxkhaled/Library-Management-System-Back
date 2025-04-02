@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LMS.DAL.Data.Models
 {
-    public class Author
+    public class Author:ISharedColumns
     {
         public int Id { get; set; }
         public string FullName { get; set; } = null!;
@@ -14,6 +14,15 @@ namespace LMS.DAL.Data.Models
         public DateOnly DateOfBirth { get; set; }
         public string? ImageUrl { get; set; }   
         public ICollection<Book> Books { get; set; } = new HashSet<Book>();
-
+        public DateTime?InsertedTime { get; set; }
+        public string? InsertedUserId { get; set; }
+        public bool IsActive { get; set; }
+        public DateTime? ActivationTime { get; set; }
+        public string? ActivationUserId { get; set; }
+        public DateTime?UpdateTime { get; set; }
+        public string?UpdateUserId { get; set; }
+        public bool IsDeleted { get; set; }
+        public DateTime? DeletedTime { get; set; }
+        public string? DeletedUserId { get; set; }
     }
 }
