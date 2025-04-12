@@ -359,4 +359,13 @@ public class UserService : IUserService
         return new string(Enumerable.Repeat(validChars, length)
             .Select(s => s[random.Next(s.Length)]).ToArray());
     }
+    public async Task<ApiResult> GetUserById(int id)
+    {
+        var user= await _unitOfWork.UserRepository.GetByIdAsync(id);    
+        if(user == null) 
+        {
+            return new ApiResult { IsSuccess=false,Message=$"not found user by id {id}"};
+        }
+        return new ApiResult { IsSuccess=true,Data=new UserDetailsDto { Id=user.Id,FirstName=user.FirstName,LastName=user.LastName,UserName=user.UserName,Email=user.Email,PhoneNumber=user.PhoneNumber,ProfileImageUrl=user.ProfileImageUrl} };
+    }
 }
