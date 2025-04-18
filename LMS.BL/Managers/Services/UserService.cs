@@ -1,6 +1,7 @@
 ﻿using LMS.BL.Dtos.User;
 using LMS.BL.Shared.Models;
 using LMS.DAL;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -15,17 +16,19 @@ public class UserService : IUserService
     private readonly IEncryptionService _encryptionService;
     private readonly IConfiguration _configuration;
     private readonly UserManager<User> _manager;
-
+    private readonly IHelperService _helperService;
     public UserService(
         IUnitOfWork unitOfWork,
         IEncryptionService encryptionService,
         IConfiguration configuration,
-         UserManager<User> manager)
+         UserManager<User> manager,
+         IHelperService helperService)
     {
         _unitOfWork = unitOfWork;
         _encryptionService = encryptionService;
         _configuration = configuration;
         _manager = manager;
+        _helperService = helperService;
     }
 
     public async Task<ApiResult> RegisterUserAsync(UserRegisterDto registerCredientials)
@@ -367,5 +370,22 @@ public class UserService : IUserService
             return new ApiResult { IsSuccess=false,Message=$"not found user by id {id}"};
         }
         return new ApiResult { IsSuccess=true,Data=new UserDetailsDto { Id=user.Id,FirstName=user.FirstName,LastName=user.LastName,UserName=user.UserName,Email=user.Email,PhoneNumber=user.PhoneNumber,ProfileImageUrl=user.ProfileImageUrl} };
+    }
+    public async Task<ApiResult> updateUserProfile(UpdateUserProfileDto updateUserProfile,HttpContext httpContext)
+    {
+        var user = await _unitOfWork.UserRepository.GetByIdAsync(updateUserProfile.Id);
+        if (user == null) return new ApiResult {IsSuccess = true }; 
+        user.FirstName= updateUserProfile.FirstName;    
+        user.LastName= updateUserProfile.LastName;
+        user.UserName= updateUserProfile.UserName;
+        user.Email= updateUserProfile.Email;
+        user.PhoneNumber= updateUserProfile.PhoneNumber;
+        if (updateUserProfile.ProfileImageUrl != null) 
+        {
+            user.ProfileImageUrl = await _helperService.SaveFileAsync(updateUserProfile.ProfileImageUrl, "Users", httpContext);
+        }
+        _unitOfWork.UserRepository.Update(user);
+        await _unitOfWork.SaveChangesAsync();
+        return new ApiResult { IsSuccess=true };
     }
 }

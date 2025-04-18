@@ -1,5 +1,6 @@
 ﻿using LMS.BL.Dtos.User;
 using LMS.BL.Shared.Models;
+using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 
 namespace LMS.BL
@@ -15,5 +16,6 @@ namespace LMS.BL
         Task<ApiResult> ActivateDeactivateUserAsync(ToggleUserActivationDto updateUserStatusDto);
         Task<ApiResult> AddUserAsync(AddUserDto userDto);
         Task<ApiResult> GetUserById(int id);
+        Task<ApiResult> updateUserProfile(UpdateUserProfileDto updateUserProfile,HttpContext httpContext);
     }
 }

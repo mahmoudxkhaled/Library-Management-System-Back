@@ -111,5 +111,17 @@ public class UserController : ControllerBase
         }
         return BadRequest();
     }
+    [HttpPut]
+    [Authorize]
+    public async Task<ActionResult> updateUserProfile(UpdateUserProfileDto updateUserProfile)
+    {
+         var result = await _userService.GetUserById(updateUserProfile.Id);
+        if(result.IsSuccess) 
+        {
+           await _userService.updateUserProfile(updateUserProfile,HttpContext);
+        }
+            return result.IsSuccess ? Ok(result) : BadRequest(result);
+        
+    }
 
 }
