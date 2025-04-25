@@ -9,4 +9,6 @@ public class TokenDto
     public string? UserImageUrl { get; set; }
     public string Token { get; set; } = null!;
     public long ExpiresIn { get; set; }
+
+    public string Role { get; set; } = null!;
 }

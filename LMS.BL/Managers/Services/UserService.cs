@@ -136,6 +136,7 @@ public class UserService : IUserService
                 Data = new TokenDto
                 {
                     UserId = _user.Id,
+                    Role = _user.Role,
                     Email = _user.Email!,
                     FirstName = _user.FirstName,
                     LastName = _user.LastName,
