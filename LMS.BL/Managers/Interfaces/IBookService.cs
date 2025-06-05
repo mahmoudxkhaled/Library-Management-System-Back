@@ -15,5 +15,5 @@ public interface IBookService
     Task<ApiResult> DeleteBookAsync(int id);
     Task<ApiResult> ActivateOrDeactivateBookAsync(int id);
     Task<ApiResult<List<GetBookDto>>> GetBooksByCategoryExceptBookAsync(int bookId);
-    Task<ApiResult<pagedResult<ReadBookDto>>> GetBooksPaged(int first, int rows, int sortOrder, string? sortField, string? Search, int categoryId, int authorId);
+    Task<ApiResult<pagedResult<ReadBookDto>>> GetBooksPaged(int first, int rows, int sortOrder, string? sortField, string? Search, int? categoryId, int? authorId);
 }

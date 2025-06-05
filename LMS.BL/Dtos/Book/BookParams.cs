@@ -9,6 +9,6 @@ namespace LMS.BL.Dtos.Book
 {
     public record BookParams
     
-        (int sortOrder=1, string? sortField = null, string? Search = null,  int authorId = 0,int categoryId = 0);
+        (int sortOrder=1, string? sortField = null, string? Search = null,  int? authorId=null,int? categoryId=null);
     
 }

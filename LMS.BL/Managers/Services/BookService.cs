@@ -48,7 +48,7 @@ public class BookService : IBookService
             return new ApiResult<List<GetBookDto>> { IsSuccess = false, Message = ex.Message };
         }
     }
-    public async Task<ApiResult<pagedResult<ReadBookDto>>> GetBooksPaged(int first, int rows, int sortOrder, string? sortField, string? Search, int categoryId, int authorId)
+    public async Task<ApiResult<pagedResult<ReadBookDto>>> GetBooksPaged(int first, int rows, int sortOrder, string? sortField, string? Search, int? categoryId, int? authorId)
     {
         try
         {

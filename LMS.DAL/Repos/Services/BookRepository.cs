@@ -23,7 +23,7 @@ public class BookRepository : GenericRepository<Book>, IBookRepository
     #endregion
 
     #region Functions
-    public async Task<pagedResult<Book>> GetBooksPaged(int first, int rows, int sortOrder = 1, string? sortField = null, string? Search = null, int categoryId = 0, int authorId = 0)
+    public async Task<pagedResult<Book>> GetBooksPaged(int first, int rows, int sortOrder = 1, string? sortField = null, string? Search = null, int? categoryId = null, int? authorId = null)
     {
         pagedResult<Book> pagedResult = new pagedResult<Book>();
         var query = _context.Book.Include(b => b.Author).Include(b => b.Category).AsQueryable();
@@ -46,11 +46,11 @@ public class BookRepository : GenericRepository<Book>, IBookRepository
                     }
             }
         }
-        if (categoryId != 0)
+        if (categoryId!=null)
         {
             query = query.Where(b => b.CategoryId == categoryId);
         }
-        if (authorId != 0)
+        if (authorId != null)
         {
             query = query.Where(b => b.AuthorId == authorId);
         }
