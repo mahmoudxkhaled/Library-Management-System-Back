@@ -21,13 +21,13 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
 
     #region Functions
 
-    public async Task<IEnumerable<T>> GetAllAsync()
+    public virtual async Task<IEnumerable<T>> GetAllAsync()
     {
         return await _context.Set<T>()
                              .AsNoTracking()
                              .ToListAsync();
     }
-    public async Task<T?> GetByIdAsync(object id)
+    public virtual async Task<T?> GetByIdAsync(object id)
     {
         return await _context.Set<T>()
                              .FindAsync(id);
@@ -44,14 +44,20 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         var deletedUserIdProp = type.GetProperty("DeletedUserId");
 
         if (isDeletedProp != null)
+        {
             isDeletedProp.SetValue(entity, true);
+        }
 
         if (deletedTimeProp != null)
+        {
             deletedTimeProp.SetValue(entity, DateTime.Now);
+        }
 
         if (userId == null) { userId = "UnKnown"; };
         if (deletedUserIdProp != null)
+        {
             deletedUserIdProp.SetValue(entity, userId);
+        }
 
         _context.Set<T>().Update(entity);
         await _context.SaveChangesAsync();

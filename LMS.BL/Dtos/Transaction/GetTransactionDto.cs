@@ -4,6 +4,8 @@ public class GetTransactionDto
     public Guid Id { get; set; }
     public int UserId { get; set; }  
     public int BookId { get; set; }
+    public string UserFullName { get; set; } = null!;
+    public string BookName { get; set; } = null!;
     public DateTime IssueDate { get; set; }
     public DateTime DueDate { get; set; }
     public DateTime? ReturnDate { get; set; }

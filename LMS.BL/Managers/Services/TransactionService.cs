@@ -32,7 +32,10 @@ public class TransactionService : ITransactionService
                 IssueDate = t.IssueDate,
                 DueDate = t.DueDate,
                 ReturnDate = t.ReturnDate,
-                Status = t.Status
+                Status = t.Status,
+                UserFullName = $"{t.User?.FirstName} {t.User?.LastName}",
+                BookName = t.Book?.Title ?? "Unknown Book",
+
             }).ToList();
 
             return new ApiResult { IsSuccess = true, Data = transactionList };
@@ -49,7 +52,9 @@ public class TransactionService : ITransactionService
         {
             var transaction = await _unitOfWork.TransactionRepository.GetByIdAsync(id);
             if (transaction == null)
+            {
                 return new ApiResult { IsSuccess = false, Message = "Transaction not found" };
+            }
 
             return new ApiResult
             {
@@ -62,7 +67,10 @@ public class TransactionService : ITransactionService
                     IssueDate = transaction.IssueDate,
                     DueDate = transaction.DueDate,
                     ReturnDate = transaction.ReturnDate,
-                    Status = transaction.Status
+                    Status = transaction.Status,
+                    UserFullName = $"{transaction.User?.FirstName} {transaction.User?.LastName}",
+                    BookName = transaction.Book?.Title ?? "Unknown Book",
+
                 }
             };
         }
@@ -85,7 +93,8 @@ public class TransactionService : ITransactionService
                 DueDate = request.DueDate,
                 Status = TransactionStatus.Issued.ToString(),
                 InsertedUserId = _currentUserService.UserId,
-                InsertedTime = DateTime.Now
+                InsertedTime = DateTime.Now,
+                ReturnDate = request.ReturnDate
             };
             await _trendingBooksService.IncrementTrendingBookAsync(request.BookId);
 
@@ -105,7 +114,9 @@ public class TransactionService : ITransactionService
         {
             var transaction = await _unitOfWork.TransactionRepository.GetByIdAsync(request.Id);
             if (transaction == null)
+            {
                 return new ApiResult { IsSuccess = false, Message = "Transaction not found" };
+            }
 
             transaction.ReturnDate = request.ReturnDate ?? transaction.ReturnDate;
             transaction.Status = request.Status ?? transaction.Status;
@@ -128,10 +139,40 @@ public class TransactionService : ITransactionService
         {
             var transaction = await _unitOfWork.TransactionRepository.GetByIdAsync(id);
             if (transaction == null)
+            {
                 return new ApiResult { IsSuccess = false, Message = "Transaction not found" };
+            }
 
             await _unitOfWork.TransactionRepository.DeleteAsync(transaction, _currentUserService.UserId!);
             return new ApiResult { IsSuccess = true, Message = "Transaction marked as deleted" };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
+        }
+    }
+
+    public async Task<ApiResult> GetTransactionsByUserIdAsync(int userId)
+    {
+        try
+        {
+            var transactions = await _unitOfWork.TransactionRepository.GetAllAsync();
+            var transactionList = transactions
+                .Where(t => t.UserId == userId)
+                .Select(t => new GetTransactionDto
+                {
+                    Id = t.Id,
+                    UserId = t.UserId,
+                    BookId = t.BookId,
+                    UserFullName = $"{t.User?.FirstName} {t.User?.LastName}",
+                    BookName = t.Book?.Title ?? "Unknown Book",
+                    IssueDate = t.IssueDate,
+                    DueDate = t.DueDate,
+                    ReturnDate = t.ReturnDate,
+                    Status = t.Status
+                }).ToList();
+
+            return new ApiResult { IsSuccess = true, Data = transactionList };
         }
         catch (Exception ex)
         {

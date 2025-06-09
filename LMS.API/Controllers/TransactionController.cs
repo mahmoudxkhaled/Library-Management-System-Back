@@ -1,4 +1,5 @@
 ﻿using LMS.BL;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.API.Controllers;
@@ -46,6 +47,14 @@ public class TransactionController : ControllerBase
     public async Task<IActionResult> DeleteTransaction(string id)
     {
         var result = await _transactionService.DeleteTransactionAsync(id);
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
+
+    [HttpGet("GetTransactionsByUserId/{userId}")]
+    [Authorize(Roles = "Admin,Librarian")]
+    public async Task<IActionResult> GetTransactionsByUserId(int userId)
+    {
+        var result = await _transactionService.GetTransactionsByUserIdAsync(userId);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 }
