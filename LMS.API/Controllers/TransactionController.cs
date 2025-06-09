@@ -1,4 +1,5 @@
 ﻿using LMS.BL;
+using LMS.BL.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -56,5 +57,13 @@ public class TransactionController : ControllerBase
     {
         var result = await _transactionService.GetTransactionsByUserIdAsync(userId);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
+
+    [HttpGet("MyBorrowHistory")]
+    [Authorize]
+    public async Task<ActionResult<ApiResult>> GetCurrentUserTransactions()
+    {
+        var result = await _transactionService.GetCurrentUserTransactionsAsync();
+        return Ok(result);
     }
 }

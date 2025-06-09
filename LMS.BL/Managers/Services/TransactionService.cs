@@ -179,4 +179,42 @@ public class TransactionService : ITransactionService
             return new ApiResult { IsSuccess = false, Message = ex.Message };
         }
     }
+
+    public async Task<ApiResult> GetCurrentUserTransactionsAsync()
+    {
+        try
+        {
+            var userId = int.Parse(_currentUserService.UserId!);
+            var transactions = await _unitOfWork.TransactionRepository.GetAllAsync();
+            var userTransactions = transactions
+                .Where(t => t.UserId == userId)
+                .OrderByDescending(t => t.IssueDate)
+                .Select(t => new UserTransactionHistoryDto
+                {
+                    Id = t.Id,
+                    BookId = t.BookId,
+                    BookName = t.Book.Title,
+                    BookImageUrl = t.Book.ImageUrl,
+                    IssueDate = t.IssueDate,
+                    DueDate = t.DueDate,
+                    ReturnDate = t.ReturnDate,
+                    Status = t.Status
+                })
+                .ToList();
+
+            return new ApiResult
+            {
+                IsSuccess = true,
+                Data = userTransactions
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult
+            {
+                IsSuccess = false,
+                Message = ex.Message
+            };
+        }
+    }
 }
