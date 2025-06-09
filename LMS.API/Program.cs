@@ -65,20 +65,9 @@ builder.Services.AddCors(options =>
     });
 });
 
-
-#region Base URL Filter
-//builder.Services.AddControllers(options =>
-//{
-//    options.Filters.Add<AttachDomainResponseFilter>(); 
-//});
-//builder.Services.AddHttpContextAccessor(); / 
-#endregion
-
-
-
 #region Identity 
 
-builder.Services.AddIdentity<User, Role>(options =>
+builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
 {
     options.User.RequireUniqueEmail = true;
     options.Password.RequireNonAlphanumeric = false;
@@ -90,9 +79,6 @@ builder.Services.AddIdentity<User, Role>(options =>
 })
 .AddEntityFrameworkStores<LMSDbContext>()
 .AddDefaultTokenProviders();
-
-
-
 
 #endregion
 
@@ -130,16 +116,14 @@ builder.Services.AddAuthentication(options =>
 
 var app = builder.Build();
 
-// 🔹 Call Role & Admin Seeding After App Building
+// 🔹 Call Admin Seeding After App Building
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     try
     {
         var userManager = services.GetRequiredService<UserManager<User>>();
-        var roleManager = services.GetRequiredService<RoleManager<Role>>();
-        // 🔹 Await is used inside an async Task function, so we use RunAsync
-        await DbSeeder.SeedRolesAndAdminAsync(userManager, roleManager);
+        await DbSeeder.SeedAdminAsync(userManager);
     }
     catch (Exception ex)
     {

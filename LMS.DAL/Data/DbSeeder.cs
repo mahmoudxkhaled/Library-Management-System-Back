@@ -6,23 +6,10 @@ namespace LMS.DAL.Data
 {
     public static class DbSeeder
     {
-        public static async Task SeedRolesAndAdminAsync(UserManager<User> userManager, RoleManager<Role> roleManager)
+        public static async Task SeedAdminAsync(UserManager<User> userManager)
         {
             try
             {
-
-
-                string[] roleNames = { "Admin", "Librarian", "Member" };
-
-                // 🔹 Ensure roles exist
-                foreach (var roleName in roleNames)
-                {
-                    if (!await roleManager.RoleExistsAsync(roleName))
-                    {
-                        await roleManager.CreateAsync(new Role(roleName));
-                    }
-                }
-
                 // 🔹 Ensure admin user exists
                 string adminEmail = "admin@lms.com";
                 string adminPassword = "Admin@123"; // 🔴 Change in production
@@ -30,7 +17,6 @@ namespace LMS.DAL.Data
                 var adminUser = await userManager.FindByEmailAsync(adminEmail);
                 if (adminUser == null)
                 {
-
                     var newAdmin = new User
                     {
                         Email = adminEmail.Trim(),
@@ -50,9 +36,6 @@ namespace LMS.DAL.Data
                         throw new Exception($"Failed to create admin user: {string.Join(", ", createUserResult.Errors.Select(e => e.Description))}");
                     }
 
-                    // ✅ Assign Admin role
-                    await userManager.AddToRoleAsync(newAdmin, "Admin");
-
                     // ✅ Assign Claims
                     List<Claim> claims = new()
                     {
@@ -68,23 +51,16 @@ namespace LMS.DAL.Data
                     }
 
                     Console.WriteLine("✅ Admin user created successfully.");
-
                 }
                 else
                 {
                     Console.WriteLine("ℹ️ Admin user already exists.");
                 }
-
-
-
             }
             catch (Exception ex)
-
-
             {
                 Console.WriteLine($"❌ Error seeding admin user: {ex.Message}");
             }
-
         }
     }
 }

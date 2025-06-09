@@ -1,11 +1,12 @@
 ﻿using LMS.DAL.Data.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace LMS.DAL;
 
-public class LMSDbContext : IdentityDbContext<User, Role, int>
+public class LMSDbContext : IdentityDbContext<User, IdentityRole<int>, int>
 {
     #region Constructors
 
@@ -25,7 +26,6 @@ public class LMSDbContext : IdentityDbContext<User, Role, int>
     public DbSet<TrendingBook> TrendingBooks => Set<TrendingBook>();
     public DbSet<User> User => Set<User>();
     public DbSet<Author> Authors => Set<Author>();
-
 
     #endregion
 
@@ -91,56 +91,56 @@ public class LMSDbContext : IdentityDbContext<User, Role, int>
         #endregion
         #region Authors
         modelBuilder.Entity<Author>().HasData(
-                new Author { Id = 1, FullName = "F. Scott Fitzgerald",ImageUrl= "Uploads/Authors/cbb2b78f-8694-4431-a464-3a9b1726cd7f_20250402_175701.webp", DateOfBirth = new DateOnly(1896, 9, 1), Description = "American novelist, best known for 'The Great Gatsby.'" },
-                new Author { Id = 2, FullName = "Harper Lee",ImageUrl= "Uploads/Authors/37cec819-13d2-4923-9d75-e17474d414a2_20250402_175816.jpeg", DateOfBirth = new DateOnly(1926, 4, 20), Description = "American author of 'To Kill a Mockingbird.'" },
-                new Author { Id = 3, FullName = "Arthur Charles Clarke", ImageUrl= "Uploads/Authors/ea772cf3-f09a-46fc-a574-f56e3566e3bf_20250402_180120.jpeg", DateOfBirth = new DateOnly(1976, 2, 24), Description = "Israeli historian and author of 'Sapiens.'" },
-                new Author { Id = 4, FullName = "Tara Westover",ImageUrl= "Uploads/Authors/bc98f022-05a4-4504-ac55-a6b79a59a477_20250402_180600.webp", DateOfBirth = new DateOnly(1986, 9, 27), Description = "American memoirist, known for 'Educated.'" },
-                new Author { Id = 5, FullName = "Stephen Hawking",ImageUrl= "Uploads/Authors/0c495402-9543-4952-8f69-66f39043f4f7_20250402_180804.jpeg", DateOfBirth = new DateOnly(1942, 1, 8), Description = "English theoretical physicist, known for 'A Brief History of Time.'" },
-                new Author { Id = 6, FullName = "Richard Dawkins",ImageUrl= "Uploads/Authors/1e0f58a7-04d3-4a67-acde-7df83d2dce5a_20250402_181011.jpeg", DateOfBirth = new DateOnly(1941, 3, 26), Description = "English evolutionary biologist, author of 'The Selfish Gene.'" },
-                new Author { Id = 7, FullName = "Steven Strogatz",ImageUrl= "Uploads/Authors/0118303f-f410-4423-8dab-5e23924cdef0_20250402_181147.jpeg" ,DateOfBirth = new DateOnly(1959, 5, 13), Description = "American mathematician, author of 'The Joy of x.'" },
-                new Author { Id = 8, FullName = "Edwin A. Abbott",ImageUrl= "Uploads/Authors/1be5aefe-56c4-4d1e-b87c-aaf3211c5acf_20250402_160002.jpeg", DateOfBirth = new DateOnly(1838, 12, 20), Description = "English schoolmaster and theologian, known for 'Flatland.'" },
-                new Author { Id = 9, FullName = "Anne Frank",ImageUrl= "Uploads/Authors/c979a01b-7192-45d1-b2a8-51efc59f9199_20250402_151258.jpeg", DateOfBirth = new DateOnly(1929, 6, 12), Description = "Jewish diarist, known for 'The Diary of a Young Girl.'" },
-                new Author { Id = 10, FullName = "Peter Frankopan",ImageUrl= "Uploads/Authors/cfd27d17-0f76-4824-9365-154ff7ee871c_20250402_181600.jpeg", DateOfBirth = new DateOnly(1971, 8, 10), Description = "British historian, author of 'The Silk Roads.'" },
-                new Author { Id = 11, FullName = "Walter Isaacson",ImageUrl= "Uploads/Authors/4d15adec-12ee-4255-ae8e-2ff16a79fe96_20250402_193321.jpeg", DateOfBirth = new DateOnly(1952, 5, 20), Description = "American author and biographer, known for 'Steve Jobs.'" },
-                new Author { Id = 12, FullName = "Malcolm X",ImageUrl= "Uploads/Authors/5a95aca0-8fb8-406a-ae0e-04d7e02db21f_20250402_174937.jpeg", DateOfBirth = new DateOnly(1925, 5, 19), Description = "African American civil rights leader, co-author of 'The Autobiography of Malcolm X.'" },
-                new Author { Id = 13, FullName = "Herman Melville",ImageUrl= "Uploads/Authors/ecd8f1b5-49ac-4fcc-aa2b-06815efe01e0_20250402_160403.jpeg", DateOfBirth = new DateOnly(1819, 8, 1), Description = "American author, known for 'Moby-Dick.'" },
-                new Author { Id = 14, FullName = "Jane Austen",ImageUrl= "Uploads/Authors/ca76345f-b440-44ad-b582-57f1b9a01a28_20250402_160756.jpeg", DateOfBirth = new DateOnly(1775, 12, 16), Description = "English novelist, best known for 'Pride and Prejudice.'" },
-                new Author { Id = 15, FullName = "Marcus Aurelius",ImageUrl= "Uploads/Authors/b4b9c56d-2b43-4764-85be-03cfcc590347_20250402_193607.jpeg", DateOfBirth = new DateOnly(121, 4, 26), Description = "Roman Emperor, known for 'Meditations.'" },
-                new Author { Id = 16, FullName = "Plato",ImageUrl= "Uploads/Authors/7b593e7a-b03e-49f2-8017-a0c72f802804_20250402_193740.jpeg", DateOfBirth = new DateOnly(427, 5, 21), Description = "Ancient Greek philosopher, author of 'The Republic.'" },
-                new Author { Id = 17, FullName = "Sidney Sheldon",ImageUrl= "Uploads/Authors/80598739-3622-4043-a6d7-fe9891d4139d_20250402_152017.jpg", DateOfBirth = new DateOnly(1934, 3, 5), Description = "Israeli-American psychologist, author of 'Thinking, Fast and Slow.'" },
-                new Author { Id = 18, FullName = "Charles Duhigg",ImageUrl= "Uploads/Authors/a38eed70-fd98-49d9-aaca-8faec2adea2d_20250402_151501.jpeg", DateOfBirth = new DateOnly(1974, 4, 27), Description = "American journalist, author of 'The Power of Habit.'" },
-                new Author { Id = 19, FullName = "James Clear",ImageUrl= "Uploads/Authors/1df19d32-8a82-4bda-b4b2-e448c459c7e3_20250402_160708.jpeg", DateOfBirth = new DateOnly(1986, 7, 22), Description = "Author of 'Atomic Habits.'" },
-                new Author { Id = 20, FullName = "Stephen R. Covey",ImageUrl= "Uploads/Authors/3697df34-d29d-4fa0-9517-8abf6edb9d57_20250402_193956.jpeg", DateOfBirth = new DateOnly(1932, 10, 24), Description = "American educator, author of 'The 7 Habits of Highly Effective People.'" },
-                new Author { Id = 21, FullName = "E.H. Gombrich",ImageUrl= "Uploads/Authors/183bd937-d422-4627-81fd-748e3fc64b9c_20250402_155915.webp", DateOfBirth = new DateOnly(1909, 3, 20), Description = "Austrian-born British art historian, known for 'The Story of Art.'" },
-                new Author { Id = 22, FullName = "John Berger",ImageUrl= "Uploads/Authors/67d544cf-f321-4140-b200-2cab44cf829e_20250402_174813.jpeg", DateOfBirth = new DateOnly(1926, 11, 5), Description = "British art critic and theorist, author of 'Ways of Seeing.'" },
-                new Author { Id = 23, FullName = "Alex Ross",ImageUrl= "Uploads/Authors/26201ade-0cb7-44a2-8c42-3ad4a1f989c5_20250402_151223.jpeg", DateOfBirth = new DateOnly(1968, 11, 10), Description = "American music critic, author of 'The Rest Is Noise.'" },
-                new Author { Id = 24, FullName = "David Byrne",ImageUrl= "Uploads/Authors/82cd6f40-8394-4dc5-87b8-c10cb7cad73c_20250402_152113.webp", DateOfBirth = new DateOnly(1952, 5, 14), Description = "American musician and author of 'How Music Works.'" },
-                new Author { Id = 25, FullName = "Bessel van der Kolk",ImageUrl= "Uploads/Authors/e63b6047-7e89-4ba3-a3f0-421239b79656_20250402_151350.jpeg", DateOfBirth = new DateOnly(1943, 7, 5), Description = "Dutch-American psychiatrist, author of 'The Body Keeps the Score.'" },
-                new Author { Id = 26, FullName = "Christopher McDougall",ImageUrl= "Uploads/Authors/6f40020c-45e4-413c-9fcd-8dfa81a95c3a_20250402_151529.jpeg", DateOfBirth = new DateOnly(1962, 6, 10), Description = "American author, known for 'Born to Run.'" },
-                new Author { Id = 27, FullName = "Irma S. Rombauer",ImageUrl= "Uploads/Authors/d86a4fb2-d5f4-40fe-b68d-311b1da2810e_20250402_160444.jpeg", DateOfBirth = new DateOnly(1877, 3, 15), Description = "American author, known for 'The Joy of Cooking.'" },
+                new Author { Id = 1, FullName = "F. Scott Fitzgerald", ImageUrl = "Uploads/Authors/cbb2b78f-8694-4431-a464-3a9b1726cd7f_20250402_175701.webp", DateOfBirth = new DateOnly(1896, 9, 1), Description = "American novelist, best known for 'The Great Gatsby.'" },
+                new Author { Id = 2, FullName = "Harper Lee", ImageUrl = "Uploads/Authors/37cec819-13d2-4923-9d75-e17474d414a2_20250402_175816.jpeg", DateOfBirth = new DateOnly(1926, 4, 20), Description = "American author of 'To Kill a Mockingbird.'" },
+                new Author { Id = 3, FullName = "Arthur Charles Clarke", ImageUrl = "Uploads/Authors/ea772cf3-f09a-46fc-a574-f56e3566e3bf_20250402_180120.jpeg", DateOfBirth = new DateOnly(1976, 2, 24), Description = "Israeli historian and author of 'Sapiens.'" },
+                new Author { Id = 4, FullName = "Tara Westover", ImageUrl = "Uploads/Authors/bc98f022-05a4-4504-ac55-a6b79a59a477_20250402_180600.webp", DateOfBirth = new DateOnly(1986, 9, 27), Description = "American memoirist, known for 'Educated.'" },
+                new Author { Id = 5, FullName = "Stephen Hawking", ImageUrl = "Uploads/Authors/0c495402-9543-4952-8f69-66f39043f4f7_20250402_180804.jpeg", DateOfBirth = new DateOnly(1942, 1, 8), Description = "English theoretical physicist, known for 'A Brief History of Time.'" },
+                new Author { Id = 6, FullName = "Richard Dawkins", ImageUrl = "Uploads/Authors/1e0f58a7-04d3-4a67-acde-7df83d2dce5a_20250402_181011.jpeg", DateOfBirth = new DateOnly(1941, 3, 26), Description = "English evolutionary biologist, author of 'The Selfish Gene.'" },
+                new Author { Id = 7, FullName = "Steven Strogatz", ImageUrl = "Uploads/Authors/0118303f-f410-4423-8dab-5e23924cdef0_20250402_181147.jpeg", DateOfBirth = new DateOnly(1959, 5, 13), Description = "American mathematician, author of 'The Joy of x.'" },
+                new Author { Id = 8, FullName = "Edwin A. Abbott", ImageUrl = "Uploads/Authors/1be5aefe-56c4-4d1e-b87c-aaf3211c5acf_20250402_160002.jpeg", DateOfBirth = new DateOnly(1838, 12, 20), Description = "English schoolmaster and theologian, known for 'Flatland.'" },
+                new Author { Id = 9, FullName = "Anne Frank", ImageUrl = "Uploads/Authors/c979a01b-7192-45d1-b2a8-51efc59f9199_20250402_151258.jpeg", DateOfBirth = new DateOnly(1929, 6, 12), Description = "Jewish diarist, known for 'The Diary of a Young Girl.'" },
+                new Author { Id = 10, FullName = "Peter Frankopan", ImageUrl = "Uploads/Authors/cfd27d17-0f76-4824-9365-154ff7ee871c_20250402_181600.jpeg", DateOfBirth = new DateOnly(1971, 8, 10), Description = "British historian, author of 'The Silk Roads.'" },
+                new Author { Id = 11, FullName = "Walter Isaacson", ImageUrl = "Uploads/Authors/4d15adec-12ee-4255-ae8e-2ff16a79fe96_20250402_193321.jpeg", DateOfBirth = new DateOnly(1952, 5, 20), Description = "American author and biographer, known for 'Steve Jobs.'" },
+                new Author { Id = 12, FullName = "Malcolm X", ImageUrl = "Uploads/Authors/5a95aca0-8fb8-406a-ae0e-04d7e02db21f_20250402_174937.jpeg", DateOfBirth = new DateOnly(1925, 5, 19), Description = "African American civil rights leader, co-author of 'The Autobiography of Malcolm X.'" },
+                new Author { Id = 13, FullName = "Herman Melville", ImageUrl = "Uploads/Authors/ecd8f1b5-49ac-4fcc-aa2b-06815efe01e0_20250402_160403.jpeg", DateOfBirth = new DateOnly(1819, 8, 1), Description = "American author, known for 'Moby-Dick.'" },
+                new Author { Id = 14, FullName = "Jane Austen", ImageUrl = "Uploads/Authors/ca76345f-b440-44ad-b582-57f1b9a01a28_20250402_160756.jpeg", DateOfBirth = new DateOnly(1775, 12, 16), Description = "English novelist, best known for 'Pride and Prejudice.'" },
+                new Author { Id = 15, FullName = "Marcus Aurelius", ImageUrl = "Uploads/Authors/b4b9c56d-2b43-4764-85be-03cfcc590347_20250402_193607.jpeg", DateOfBirth = new DateOnly(121, 4, 26), Description = "Roman Emperor, known for 'Meditations.'" },
+                new Author { Id = 16, FullName = "Plato", ImageUrl = "Uploads/Authors/7b593e7a-b03e-49f2-8017-a0c72f802804_20250402_193740.jpeg", DateOfBirth = new DateOnly(427, 5, 21), Description = "Ancient Greek philosopher, author of 'The Republic.'" },
+                new Author { Id = 17, FullName = "Sidney Sheldon", ImageUrl = "Uploads/Authors/80598739-3622-4043-a6d7-fe9891d4139d_20250402_152017.jpg", DateOfBirth = new DateOnly(1934, 3, 5), Description = "Israeli-American psychologist, author of 'Thinking, Fast and Slow.'" },
+                new Author { Id = 18, FullName = "Charles Duhigg", ImageUrl = "Uploads/Authors/a38eed70-fd98-49d9-aaca-8faec2adea2d_20250402_151501.jpeg", DateOfBirth = new DateOnly(1974, 4, 27), Description = "American journalist, author of 'The Power of Habit.'" },
+                new Author { Id = 19, FullName = "James Clear", ImageUrl = "Uploads/Authors/1df19d32-8a82-4bda-b4b2-e448c459c7e3_20250402_160708.jpeg", DateOfBirth = new DateOnly(1986, 7, 22), Description = "Author of 'Atomic Habits.'" },
+                new Author { Id = 20, FullName = "Stephen R. Covey", ImageUrl = "Uploads/Authors/3697df34-d29d-4fa0-9517-8abf6edb9d57_20250402_193956.jpeg", DateOfBirth = new DateOnly(1932, 10, 24), Description = "American educator, author of 'The 7 Habits of Highly Effective People.'" },
+                new Author { Id = 21, FullName = "E.H. Gombrich", ImageUrl = "Uploads/Authors/183bd937-d422-4627-81fd-748e3fc64b9c_20250402_155915.webp", DateOfBirth = new DateOnly(1909, 3, 20), Description = "Austrian-born British art historian, known for 'The Story of Art.'" },
+                new Author { Id = 22, FullName = "John Berger", ImageUrl = "Uploads/Authors/67d544cf-f321-4140-b200-2cab44cf829e_20250402_174813.jpeg", DateOfBirth = new DateOnly(1926, 11, 5), Description = "British art critic and theorist, author of 'Ways of Seeing.'" },
+                new Author { Id = 23, FullName = "Alex Ross", ImageUrl = "Uploads/Authors/26201ade-0cb7-44a2-8c42-3ad4a1f989c5_20250402_151223.jpeg", DateOfBirth = new DateOnly(1968, 11, 10), Description = "American music critic, author of 'The Rest Is Noise.'" },
+                new Author { Id = 24, FullName = "David Byrne", ImageUrl = "Uploads/Authors/82cd6f40-8394-4dc5-87b8-c10cb7cad73c_20250402_152113.webp", DateOfBirth = new DateOnly(1952, 5, 14), Description = "American musician and author of 'How Music Works.'" },
+                new Author { Id = 25, FullName = "Bessel van der Kolk", ImageUrl = "Uploads/Authors/e63b6047-7e89-4ba3-a3f0-421239b79656_20250402_151350.jpeg", DateOfBirth = new DateOnly(1943, 7, 5), Description = "Dutch-American psychiatrist, author of 'The Body Keeps the Score.'" },
+                new Author { Id = 26, FullName = "Christopher McDougall", ImageUrl = "Uploads/Authors/6f40020c-45e4-413c-9fcd-8dfa81a95c3a_20250402_151529.jpeg", DateOfBirth = new DateOnly(1962, 6, 10), Description = "American author, known for 'Born to Run.'" },
+                new Author { Id = 27, FullName = "Irma S. Rombauer", ImageUrl = "Uploads/Authors/d86a4fb2-d5f4-40fe-b68d-311b1da2810e_20250402_160444.jpeg", DateOfBirth = new DateOnly(1877, 3, 15), Description = "American author, known for 'The Joy of Cooking.'" },
                 new Author { Id = 28, FullName = "Samin Nosrat", DateOfBirth = new DateOnly(1979, 11, 7), Description = "American chef and author of 'Salt, Fat, Acid, Heat.'" },
-                new Author { Id = 29, FullName = "Jon Krakauer",ImageUrl= "Uploads/Authors/d59f3b6d-5e14-4fb8-bfa4-eb521d5b1abd_20250402_174850.jpeg", DateOfBirth = new DateOnly(1954, 4, 12), Description = "American author, known for 'Into the Wild.'" },
-                new Author { Id = 30, FullName = "Eric Weiner",ImageUrl= "Uploads/Authors/43c1798a-524f-4b5b-993a-05a9d2f2f861_20250402_160041.jpeg", DateOfBirth = new DateOnly(1962, 10, 26), Description = "American author, known for 'The Geography of Bliss.'" },
-                new Author { Id = 31, FullName = "J.K. Rowling",ImageUrl= "Uploads/Authors/e1c62018-0910-48b2-977d-ef6e78b8e2dc_20250402_150251.jpeg", DateOfBirth = new DateOnly(1965, 7, 20), Description = "British author, known for the 'Harry Potter' series." },
+                new Author { Id = 29, FullName = "Jon Krakauer", ImageUrl = "Uploads/Authors/d59f3b6d-5e14-4fb8-bfa4-eb521d5b1abd_20250402_174850.jpeg", DateOfBirth = new DateOnly(1954, 4, 12), Description = "American author, known for 'Into the Wild.'" },
+                new Author { Id = 30, FullName = "Eric Weiner", ImageUrl = "Uploads/Authors/43c1798a-524f-4b5b-993a-05a9d2f2f861_20250402_160041.jpeg", DateOfBirth = new DateOnly(1962, 10, 26), Description = "American author, known for 'The Geography of Bliss.'" },
+                new Author { Id = 31, FullName = "J.K. Rowling", ImageUrl = "Uploads/Authors/e1c62018-0910-48b2-977d-ef6e78b8e2dc_20250402_150251.jpeg", DateOfBirth = new DateOnly(1965, 7, 20), Description = "British author, known for the 'Harry Potter' series." },
                 new Author { Id = 32, FullName = "Maurice Sendak", DateOfBirth = new DateOnly(1928, 6, 10), Description = "American author of children's books, known for 'Where the Wild Things Are.'" },
-                new Author { Id = 33, FullName = "J.R.R. Tolkien",ImageUrl= "Uploads/Authors/dcdb66fd-5fb6-43f6-a8ce-9cf0ab5b4008_20250402_160625.jpeg", DateOfBirth = new DateOnly(1892, 1, 3), Description = "English author, known for 'The Hobbit.'" },
+                new Author { Id = 33, FullName = "J.R.R. Tolkien", ImageUrl = "Uploads/Authors/dcdb66fd-5fb6-43f6-a8ce-9cf0ab5b4008_20250402_160625.jpeg", DateOfBirth = new DateOnly(1892, 1, 3), Description = "English author, known for 'The Hobbit.'" },
                 new Author { Id = 34, FullName = "Patrick Rothfuss", DateOfBirth = new DateOnly(1973, 6, 6), Description = "American author, known for 'The Name of the Wind.'" },
-                new Author { Id = 35, FullName = "Frank Herbert",ImageUrl= "Uploads/Authors/d8674beb-3d6e-4eff-b657-99174468991d_20250402_160108.jpeg", DateOfBirth = new DateOnly(1920, 10, 8), Description = "American science fiction author, known for 'Dune.'" },
+                new Author { Id = 35, FullName = "Frank Herbert", ImageUrl = "Uploads/Authors/d8674beb-3d6e-4eff-b657-99174468991d_20250402_160108.jpeg", DateOfBirth = new DateOnly(1920, 10, 8), Description = "American science fiction author, known for 'Dune.'" },
                 new Author { Id = 36, FullName = "William Gibson", DateOfBirth = new DateOnly(1948, 3, 17), Description = "American-Canadian author, known for 'Neuromancer.'" },
                 new Author { Id = 37, FullName = "Stieg Larsson", DateOfBirth = new DateOnly(1954, 8, 15), Description = "Swedish author, known for 'The Girl with the Dragon Tattoo.'" },
-                new Author { Id = 38, FullName = "Gillian Flynn", ImageUrl= "Uploads/Authors/f1b1d709-2878-4db0-a1dd-540214e6c6fc_20250402_160327.jpeg", DateOfBirth = new DateOnly(1971, 2, 24), Description = "American author, known for 'Gone Girl.'" },
-                new Author { Id = 39, FullName = "Alex Michaelides",ImageUrl= "Uploads/Authors/8dcc9a1f-de9c-4185-ae6b-9e111886f1f3_20250402_150936.jpeg", DateOfBirth = new DateOnly(1968, 11, 22), Description = "Cypriot-British author, known for 'The Silent Patient.'" },
+                new Author { Id = 38, FullName = "Gillian Flynn", ImageUrl = "Uploads/Authors/f1b1d709-2878-4db0-a1dd-540214e6c6fc_20250402_160327.jpeg", DateOfBirth = new DateOnly(1971, 2, 24), Description = "American author, known for 'Gone Girl.'" },
+                new Author { Id = 39, FullName = "Alex Michaelides", ImageUrl = "Uploads/Authors/8dcc9a1f-de9c-4185-ae6b-9e111886f1f3_20250402_150936.jpeg", DateOfBirth = new DateOnly(1968, 11, 22), Description = "Cypriot-British author, known for 'The Silent Patient.'" },
                 new Author { Id = 40, FullName = "Paula Hawkins", DateOfBirth = new DateOnly(1972, 8, 26), Description = "British author, known for 'The Girl on the Train.'" },
                 new Author { Id = 41, FullName = "Ray Bradbury", DateOfBirth = new DateOnly(1920, 8, 22), Description = "American author, known for 'Fahrenheit 451.'" },
-                new Author { Id = 42, FullName = "George Orwell",ImageUrl= "Uploads/Authors/ada31ec3-af92-463c-9437-52622a6ff058_20250402_160249.jpeg", DateOfBirth = new DateOnly(1903, 6, 25), Description = "British author, known for '1984.'" },
-                new Author { Id = 43, FullName = "Aldous Huxley",ImageUrl= "Uploads/Authors/79d85041-8d9e-4dae-97eb-353f2b9efa55_20250402_151129.jpeg", DateOfBirth = new DateOnly(1894, 7, 26), Description = "English author, known for 'Brave New World.'" },
+                new Author { Id = 42, FullName = "George Orwell", ImageUrl = "Uploads/Authors/ada31ec3-af92-463c-9437-52622a6ff058_20250402_160249.jpeg", DateOfBirth = new DateOnly(1903, 6, 25), Description = "British author, known for '1984.'" },
+                new Author { Id = 43, FullName = "Aldous Huxley", ImageUrl = "Uploads/Authors/79d85041-8d9e-4dae-97eb-353f2b9efa55_20250402_151129.jpeg", DateOfBirth = new DateOnly(1894, 7, 26), Description = "English author, known for 'Brave New World.'" },
                 new Author { Id = 44, FullName = "Margaret Atwood", DateOfBirth = new DateOnly(1939, 11, 18), Description = "Canadian author, known for 'The Handmaid's Tale.'" },
-                new Author { Id = 45, FullName = "J.D. Salinger",ImageUrl= "Uploads/Authors/1620c1c2-16ba-4c2b-a862-9f666a1d6d6f_20250402_160547.jpeg", DateOfBirth = new DateOnly(1919, 1, 1), Description = "American author, known for 'The Catcher in the Rye.'" },
+                new Author { Id = 45, FullName = "J.D. Salinger", ImageUrl = "Uploads/Authors/1620c1c2-16ba-4c2b-a862-9f666a1d6d6f_20250402_160547.jpeg", DateOfBirth = new DateOnly(1919, 1, 1), Description = "American author, known for 'The Catcher in the Rye.'" },
                 new Author { Id = 46, FullName = "S.E. Hinton", DateOfBirth = new DateOnly(1950, 7, 22), Description = "American author, known for 'The Outsiders.'" },
                 new Author { Id = 47, FullName = "Oscar Wilde", DateOfBirth = new DateOnly(1854, 10, 16), Description = "Irish author, known for 'The Picture of Dorian Gray.'" },
                 new Author { Id = 48, FullName = "Mary Shelley", DateOfBirth = new DateOnly(1797, 8, 20), Description = "English author, known for 'Frankenstein.'" },
-                new Author { Id = 49, FullName = "Bram Stoker",ImageUrl= "Uploads/Authors/475d6e1b-e566-4e20-b986-04c691089ac4_20250402_151431.jpeg", DateOfBirth = new DateOnly(1847, 11, 8), Description = "Irish author, known for 'Dracula.'" },
-                new Author { Id = 50, FullName = "Fyodor Dostoevsky",ImageUrl= "Uploads/Authors/f72c8663-b8c9-431d-8012-0a18c45fb6e3_20250402_160154.jpeg", DateOfBirth = new DateOnly(1821, 11, 11), Description = "Russian author, known for 'Crime and Punishment.'" }
+                new Author { Id = 49, FullName = "Bram Stoker", ImageUrl = "Uploads/Authors/475d6e1b-e566-4e20-b986-04c691089ac4_20250402_151431.jpeg", DateOfBirth = new DateOnly(1847, 11, 8), Description = "Irish author, known for 'Dracula.'" },
+                new Author { Id = 50, FullName = "Fyodor Dostoevsky", ImageUrl = "Uploads/Authors/f72c8663-b8c9-431d-8012-0a18c45fb6e3_20250402_160154.jpeg", DateOfBirth = new DateOnly(1821, 11, 11), Description = "Russian author, known for 'Crime and Punishment.'" }
             );
         #endregion
 
@@ -204,7 +204,9 @@ public class LMSDbContext : IdentityDbContext<User, Role, int>
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             if (typeof(ISharedColumns).IsAssignableFrom(entityType.ClrType) && entityType.BaseType == null)
+            {
                 modelBuilder.Entity(entityType.ClrType).HasQueryFilter(CreateIsDeletedFilter(entityType.ClrType));
+            }
         }
     }
     #endregion
