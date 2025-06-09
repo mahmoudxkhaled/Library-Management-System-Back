@@ -66,4 +66,12 @@ public class TransactionController : ControllerBase
         var result = await _transactionService.GetCurrentUserTransactionsAsync();
         return Ok(result);
     }
+
+    [HttpPost("BorrowBook")]
+    [Authorize]
+    public async Task<ActionResult<ApiResult>> BorrowBook(BorrowBookDto request)
+    {
+        var result = await _transactionService.BorrowBookAsync(request);
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
 }

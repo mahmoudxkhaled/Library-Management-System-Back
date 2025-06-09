@@ -217,4 +217,84 @@ public class TransactionService : ITransactionService
             };
         }
     }
+
+    public async Task<ApiResult> BorrowBookAsync(BorrowBookDto request)
+    {
+        try
+        {
+            // Get the current user's ID
+            var userId = int.Parse(_currentUserService.UserId!);
+
+            // Check if the book exists and is available
+            var book = await _unitOfWork.BookRepository.GetByIdAsync(request.BookId);
+            if (book == null)
+            {
+                return new ApiResult { IsSuccess = false, Message = "Book not found" };
+            }
+
+            if (book.AvailableCopies <= 0)
+            {
+                return new ApiResult { IsSuccess = false, Message = "Book is not available for borrowing" };
+            }
+
+            // Check if user already has an active transaction for this book
+            var existingTransaction = await _unitOfWork.TransactionRepository.GetAllAsync();
+            var hasActiveTransaction = existingTransaction
+                .Any(t => t.UserId == userId && 
+                         t.BookId == request.BookId && 
+                         (t.Status == TransactionStatus.Issued.ToString() || 
+                          t.Status == TransactionStatus.Overdue.ToString()));
+
+            if (hasActiveTransaction)
+            {
+                return new ApiResult { IsSuccess = false, Message = "You already have an active transaction for this book" };
+            }
+
+            // Create new transaction
+            var transaction = new Transaction
+            {
+                Id = Guid.NewGuid(),
+                UserId = userId,
+                BookId = request.BookId,
+                IssueDate = DateTime.Now,
+                DueDate = request.DueDate,
+                Status = TransactionStatus.Issued.ToString(),
+                InsertedUserId = _currentUserService.UserId,
+                InsertedTime = DateTime.Now
+            };
+
+            // Update book availability
+            book.AvailableCopies--;
+            book.UpdateUserId = _currentUserService.UserId;
+            book.UpdateTime = DateTime.Now;
+
+            // Add transaction and update book
+            await _unitOfWork.TransactionRepository.AddAsync(transaction);
+            _unitOfWork.BookRepository.Update(book);
+            await _unitOfWork.SaveChangesAsync();
+
+            // Increment trending book count
+            await _trendingBooksService.IncrementTrendingBookAsync(request.BookId);
+
+            return new ApiResult 
+            { 
+                IsSuccess = true, 
+                Message = "Book borrowed successfully", 
+                Data = new UserTransactionHistoryDto
+                {
+                    Id = transaction.Id,
+                    BookId = book.Id,
+                    BookName = book.Title,
+                    BookImageUrl = book.ImageUrl,
+                    IssueDate = transaction.IssueDate,
+                    DueDate = transaction.DueDate,
+                    Status = transaction.Status
+                }
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
+        }
+    }
 }
