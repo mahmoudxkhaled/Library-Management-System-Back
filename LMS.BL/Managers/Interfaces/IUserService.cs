@@ -18,5 +18,6 @@ namespace LMS.BL
         Task<ApiResult> AddUserAsync(AddUserDto userDto);
         Task<ApiResult> GetUserById(int id);
         Task<ApiResult> updateUserProfile(UpdateUserProfileDto updateUserProfile,HttpContext httpContext);
+        Task<ApiResult> UpdateUserDetailsAsync(UpdateUserDetailsDto updateUserDetails, HttpContext httpContext);
     }
 }

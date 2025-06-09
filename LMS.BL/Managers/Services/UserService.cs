@@ -414,4 +414,53 @@ public class UserService : IUserService
             return new ApiResult { IsSuccess = false, Message = ex.Message };
         }
     }
+
+    public async Task<ApiResult> UpdateUserDetailsAsync(UpdateUserDetailsDto updateUserDetails, HttpContext httpContext)
+    {
+        try
+        {
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(updateUserDetails.Id);
+            if (user == null)
+            {
+                return new ApiResult { IsSuccess = false, Message = "User not found" };
+            }
+
+            // Update user details
+            user.FirstName = updateUserDetails.FirstName.Trim();
+            user.LastName = updateUserDetails.LastName.Trim();
+            user.PhoneNumber = updateUserDetails.PhoneNumber.Trim();
+            user.UserName = user.Email; // Keep username same as email
+
+            // Handle profile image if provided
+            if (updateUserDetails.ProfileImage is not null)
+            {
+                user.ProfileImageUrl = await _helperService.SaveFileAsync((IFormFile)updateUserDetails.ProfileImage, "Users", httpContext);
+            }
+
+            // Update the user
+            _unitOfWork.UserRepository.Update(user);
+            await _unitOfWork.SaveChangesAsync();
+
+            return new ApiResult 
+            { 
+                IsSuccess = true, 
+                Message = "User details updated successfully",
+                Data = new GetUserDto
+                {
+                    Id = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    PhoneNumber = user.PhoneNumber,
+                    ProfileImageUrl = user.ProfileImageUrl,
+                    Role = user.Role,
+                    IsActive = user.IsActive
+                }
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
+        }
+    }
 }

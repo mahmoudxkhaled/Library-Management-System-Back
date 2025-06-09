@@ -1,5 +1,6 @@
 ﻿using LMS.BL;
 using LMS.BL.Dtos.User;
+using LMS.BL.Shared.Models;
 using LMS.DAL;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -133,5 +134,18 @@ public class UserController : ControllerBase
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
+    [HttpPut("UpdateCurrentUserDetails")]
+    [Authorize]
+    public async Task<IActionResult> UpdateUserDetails([FromForm] UpdateUserDetailsDto updateUserDetails)
+    {
+        var userId = User?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        if (userId == null || int.Parse(userId) != updateUserDetails.Id)
+        {
+            return BadRequest(new ApiResult { IsSuccess = false, Message = "You can only update your own details" });
+        }
+
+        var result = await _userService.UpdateUserDetailsAsync(updateUserDetails, HttpContext);
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
 
 }
