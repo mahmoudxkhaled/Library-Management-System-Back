@@ -32,7 +32,8 @@ public class UserController : ControllerBase
     public async Task<ActionResult> changePassword(ChangePasswordDto changePasswordDto)
     {
         var userId = User?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-        if (userId != null) {
+        if (userId != null)
+        {
             var user = await userManager.FindByIdAsync(userId);
             if (user != null)
             {
@@ -115,13 +116,22 @@ public class UserController : ControllerBase
     [Authorize]
     public async Task<ActionResult> updateUserProfile(UpdateUserProfileDto updateUserProfile)
     {
-         var result = await _userService.GetUserById(updateUserProfile.Id);
-        if(result.IsSuccess) 
+        var result = await _userService.GetUserById(updateUserProfile.Id);
+        if (result.IsSuccess)
         {
-           await _userService.updateUserProfile(updateUserProfile,HttpContext);
+            await _userService.updateUserProfile(updateUserProfile, HttpContext);
         }
-            return result.IsSuccess ? Ok(result) : BadRequest(result);
-        
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+
     }
+
+    [HttpGet("GetAllUsersByRole/{role}")]
+    [Authorize(Roles = "Admin,Librarian")]
+    public async Task<IActionResult> GetAllUsersByRole(string role)
+    {
+        var result = await _userService.GetAllUsersByRoleAsync(role);
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
+
 
 }

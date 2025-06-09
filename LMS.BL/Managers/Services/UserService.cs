@@ -192,19 +192,18 @@ public class UserService : IUserService
     {
         try
         {
-            var user = await _manager.FindByIdAsync(request.UserId);
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(int.Parse(request.UserId));
             if (user == null)
             {
                 return new ApiResult { IsSuccess = false, Message = "User not found." };
             }
 
-            var result = await _manager.AddToRoleAsync(user, request.Role);
-            if (!result.Succeeded)
-            {
-                return new ApiResult { IsSuccess = false, ErrorList = result.Errors.Select(e => new ApiError { Key = e.Code, Message = e.Description }).ToList() };
-            }
+            // Update the role directly in the user table
+            user.Role = request.Role;
+            _unitOfWork.UserRepository.Update(user);
+            await _unitOfWork.SaveChangesAsync();
 
-            return new ApiResult { IsSuccess = true, Message = "Role added successfully." };
+            return new ApiResult { IsSuccess = true, Message = "Role updated successfully." };
         }
         catch (Exception ex)
         {
@@ -388,5 +387,31 @@ public class UserService : IUserService
         _unitOfWork.UserRepository.Update(user);
         await _unitOfWork.SaveChangesAsync();
         return new ApiResult { IsSuccess=true };
+    }
+
+    public async Task<ApiResult> GetAllUsersByRoleAsync(string role)
+    {
+        try
+        {
+            var users = (await _unitOfWork.UserRepository.GetAllAsync())
+                .Where(u => u.Role == role)
+                .Select(u => new GetUserDto
+                {
+                    Id = u.Id,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    Email = u.Email,
+                    Role = u.Role,
+                    IsActive = u.IsActive,
+                    PhoneNumber = u.PhoneNumber,
+                    ProfileImageUrl = u.ProfileImageUrl
+                }).ToList();
+
+            return new ApiResult { IsSuccess = true, Data = users };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
+        }
     }
 }
