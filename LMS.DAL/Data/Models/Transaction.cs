@@ -52,6 +52,9 @@ namespace LMS.DAL
             }
         }
 
+        // Track when the user was last notified about overdue status
+        public DateTime? LastOverdueNotified { get; set; }
+
         #region Shared Columns
 
         public DateTime? InsertedTime { get; set; }
