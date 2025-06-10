@@ -1,4 +1,5 @@
-﻿using LMS.BL.Shared.Models;
+﻿using LMS.BL.Managers.Interfaces;
+using LMS.BL.Shared.Models;
 using LMS.DAL;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
@@ -9,16 +10,19 @@ public class TransactionService : ITransactionService
     private readonly IUnitOfWork _unitOfWork;
     private readonly ITrendingBooksService _trendingBooksService;
     private readonly ICurrentUserService _currentUserService;
+    private readonly IEmailService _emailService;
 
 
     public TransactionService(
         IUnitOfWork unitOfWork,
         ITrendingBooksService trendingBooksService,
-        ICurrentUserService currentUserService)
+        ICurrentUserService currentUserService,
+        IEmailService emailService)
     {
         _unitOfWork = unitOfWork;
         _trendingBooksService = trendingBooksService;
         _currentUserService = currentUserService;
+        _emailService = emailService;
     }
 
     public async Task<ApiResult> GetAllTransactionsAsync()
@@ -337,7 +341,7 @@ public class TransactionService : ITransactionService
         foreach (var transaction in filteredTransactions)
         {
             var cell = worksheet.Cells[row, 1, row, 7];
-            
+
             // Check if transaction is overdue
             bool isOverdue = transaction.Status == TransactionStatus.Overdue.ToString();
 
@@ -368,5 +372,33 @@ public class TransactionService : ITransactionService
         worksheet.Cells.AutoFitColumns();
 
         return package.GetAsByteArray();
+    }
+
+    public async Task<int> SendOverdueNotificationsAsync()
+    {
+        int sent = 0;
+        var overdueTransactions = await _unitOfWork.TransactionRepository.GetWhereIncludeAsync(
+            t => t.Status == "Overdue" && (t.LastOverdueNotified == null || t.LastOverdueNotified.Value.Date < DateTime.Now.Date), "User", "Book");
+
+
+
+
+        foreach (var transaction in overdueTransactions)
+        {
+            if (transaction.User?.Email != null)
+            {
+                var subject = "Library Book Overdue Notice";
+                var body = $"Dear {transaction.User.FirstName},\n\nYour borrowed book '{transaction.Book?.Title}' is overdue. Please return it as soon as possible.";
+                try
+                {
+                    await _emailService.SendEmailAsync(transaction.User.Email, subject, body);
+                    transaction.LastOverdueNotified = DateTime.Now;
+                    sent++;
+                }
+                catch { }
+            }
+        }
+        await _unitOfWork.SaveChangesAsync();
+        return sent;
     }
 }

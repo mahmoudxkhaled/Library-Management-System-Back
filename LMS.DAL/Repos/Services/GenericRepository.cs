@@ -62,5 +62,20 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         _context.Set<T>().Update(entity);
         await _context.SaveChangesAsync();
     }
+
+    public async Task<IEnumerable<T>> GetWhereAsync(System.Linq.Expressions.Expression<Func<T, bool>> predicate)
+    {
+        return await _context.Set<T>().Where(predicate).ToListAsync();
+    }
+
+    public async Task<IEnumerable<T>> GetWhereIncludeAsync(System.Linq.Expressions.Expression<Func<T, bool>> predicate, params string[] includes)
+    {
+        IQueryable<T> query = _context.Set<T>();
+        foreach (var include in includes)
+        {
+            query = query.Include(include);
+        }
+        return await query.Where(predicate).ToListAsync();
+    }
     #endregion
 }

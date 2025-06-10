@@ -2,6 +2,7 @@
 using LMS.BL.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using LMS.DAL;
 
 namespace LMS.API.Controllers;
 
@@ -94,5 +95,13 @@ public class TransactionController : ControllerBase
         {
             return BadRequest(new ApiResult { IsSuccess = false, Message = ex.Message });
         }
+    }
+
+    [HttpPost("SendOverdueNotifications")]
+    [Authorize(Roles = "Admin,Librarian")]
+    public async Task<IActionResult> SendOverdueNotifications()
+    {
+        int sent = await _transactionService.SendOverdueNotificationsAsync();
+        return Ok(new { Message = $"Overdue notifications sent: {sent}" });
     }
 }
