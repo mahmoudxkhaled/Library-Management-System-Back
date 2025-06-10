@@ -1,5 +1,7 @@
 ﻿using LMS.BL.Shared.Models;
 using LMS.DAL;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
 namespace LMS.BL;
 
 public class TransactionService : ITransactionService
@@ -240,9 +242,9 @@ public class TransactionService : ITransactionService
             // Check if user already has an active transaction for this book
             var existingTransaction = await _unitOfWork.TransactionRepository.GetAllAsync();
             var hasActiveTransaction = existingTransaction
-                .Any(t => t.UserId == userId && 
-                         t.BookId == request.BookId && 
-                         (t.Status == TransactionStatus.Issued.ToString() || 
+                .Any(t => t.UserId == userId &&
+                         t.BookId == request.BookId &&
+                         (t.Status == TransactionStatus.Issued.ToString() ||
                           t.Status == TransactionStatus.Overdue.ToString()));
 
             if (hasActiveTransaction)
@@ -276,10 +278,10 @@ public class TransactionService : ITransactionService
             // Increment trending book count
             await _trendingBooksService.IncrementTrendingBookAsync(request.BookId);
 
-            return new ApiResult 
-            { 
-                IsSuccess = true, 
-                Message = "Book borrowed successfully", 
+            return new ApiResult
+            {
+                IsSuccess = true,
+                Message = "Book borrowed successfully",
                 Data = new UserTransactionHistoryDto
                 {
                     Id = transaction.Id,
@@ -296,5 +298,93 @@ public class TransactionService : ITransactionService
         {
             return new ApiResult { IsSuccess = false, Message = ex.Message };
         }
+    }
+
+    public async Task<byte[]> GenerateTransactionReportAsync(TransactionReportDto request)
+    {
+        // Set the license context for EPPlus 8+
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+        var transactions = await _unitOfWork.TransactionRepository.GetAllAsync();
+        var filteredTransactions = transactions
+            .Where(t => t.IssueDate >= request.StartDate && t.IssueDate <= request.EndDate)
+            .ToList();
+
+        using var package = new ExcelPackage();
+        var worksheet = package.Workbook.Worksheets.Add("Transactions");
+
+        // Add headers
+        worksheet.Cells[1, 1].Value = "Transaction ID";
+        worksheet.Cells[1, 2].Value = "Book Title";
+        worksheet.Cells[1, 3].Value = "User Name";
+        worksheet.Cells[1, 4].Value = "Issue Date";
+        worksheet.Cells[1, 5].Value = "Due Date";
+        worksheet.Cells[1, 6].Value = "Return Date";
+        worksheet.Cells[1, 7].Value = "Status";
+
+        // Style the header row
+        using (var range = worksheet.Cells[1, 1, 1, 7])
+        {
+            range.Style.Font.Bold = true;
+            range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+            range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+        }
+
+        // Group by book first, then by user
+        var bookGroups = filteredTransactions
+            .GroupBy(t => t.BookId)
+            .Select(g => new
+            {
+                BookId = g.Key,
+                BookTitle = g.First().Book?.Title,
+                UserGroups = g.GroupBy(t => t.UserId)
+                    .Select(ug => new
+                    {
+                        UserId = ug.Key,
+                        UserName = $"{ug.First().User?.FirstName} {ug.First().User?.LastName}",
+                        Transactions = ug.ToList()
+                    })
+                    .OrderBy(ug => ug.UserName)
+            })
+            .OrderBy(g => g.BookTitle);
+
+        int row = 2;
+        foreach (var bookGroup in bookGroups)
+        {
+            // Add book header
+            worksheet.Cells[row, 1].Value = $"Book: {bookGroup.BookTitle}";
+            worksheet.Cells[row, 1].Style.Font.Bold = true;
+            worksheet.Cells[row, 1].Style.Font.Size = 12;
+            row++;
+
+            foreach (var userGroup in bookGroup.UserGroups)
+            {
+                // Add user subheader
+                worksheet.Cells[row, 2].Value = $"User: {userGroup.UserName}";
+                worksheet.Cells[row, 2].Style.Font.Bold = true;
+                worksheet.Cells[row, 2].Style.Font.Italic = true;
+                row++;
+
+                // Add transactions for this user
+                foreach (var transaction in userGroup.Transactions.OrderByDescending(t => t.IssueDate))
+                {
+                    worksheet.Cells[row, 1].Value = transaction.Id;
+                    worksheet.Cells[row, 2].Value = bookGroup.BookTitle;
+                    worksheet.Cells[row, 3].Value = userGroup.UserName;
+                    worksheet.Cells[row, 4].Value = transaction.IssueDate;
+                    worksheet.Cells[row, 5].Value = transaction.DueDate;
+                    worksheet.Cells[row, 6].Value = transaction.ReturnDate;
+                    worksheet.Cells[row, 7].Value = transaction.Status;
+                    row++;
+                }
+                row++; // Add space between users
+            }
+            row++; // Add space between books
+        }
+
+        // Auto-fit columns
+        worksheet.Cells.AutoFitColumns();
+
+        return package.GetAsByteArray();
     }
 }

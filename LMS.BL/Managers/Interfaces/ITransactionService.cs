@@ -12,4 +12,5 @@ public interface ITransactionService
     Task<ApiResult> UpdateTransactionAsync(UpdateTransactionDto request);
     Task<ApiResult> DeleteTransactionAsync(string id);
     Task<ApiResult> BorrowBookAsync(BorrowBookDto request);
+    Task<byte[]> GenerateTransactionReportAsync(TransactionReportDto request);
 }
