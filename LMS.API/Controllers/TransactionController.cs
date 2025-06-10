@@ -75,7 +75,7 @@ public class TransactionController : ControllerBase
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpPost("DownloadReport")]
+    [HttpPost("DownloadActivitiesReport")]
     [Authorize(Roles = "Admin,Librarian")]
     public async Task<IActionResult> DownloadReport(TransactionReportDto request)
     {

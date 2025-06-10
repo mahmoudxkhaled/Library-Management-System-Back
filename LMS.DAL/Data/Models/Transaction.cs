@@ -25,12 +25,32 @@ namespace LMS.DAL
 
         public DateTime? ReturnDate { get; set; } // Actual return date.
 
+        private string _status = "Issued";
         [Required]
         [MaxLength(20)]
-        public string Status { get; set; } = "Issued";
-        // "Issued" → Book is borrowed but not yet returned.
-        // "Returned" → Book has been successfully returned.
-        // "Overdue" → Book is past due and not yet returned.
+        public string Status 
+        { 
+            get 
+            {
+                // If book is not returned and due date has passed, it's overdue
+                if (_status == "Issued" && ReturnDate == null && DueDate < DateTime.Now)
+                {
+                    return "Overdue";
+                }
+                return _status;
+            }
+            set 
+            {
+                if (value == "Issued" || value == "Returned" || value == "Overdue")
+                {
+                    _status = value;
+                }
+                else
+                {
+                    throw new ArgumentException("Invalid status value. Must be 'Issued', 'Returned', or 'Overdue'");
+                }
+            }
+        }
 
         #region Shared Columns
 

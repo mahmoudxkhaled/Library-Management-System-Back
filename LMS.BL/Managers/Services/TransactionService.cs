@@ -308,6 +308,8 @@ public class TransactionService : ITransactionService
         var transactions = await _unitOfWork.TransactionRepository.GetAllAsync();
         var filteredTransactions = transactions
             .Where(t => t.IssueDate >= request.StartDate && t.IssueDate <= request.EndDate)
+            .OrderBy(t => t.Book?.Title)
+            .ThenBy(t => $"{t.User?.FirstName} {t.User?.LastName}")
             .ToList();
 
         using var package = new ExcelPackage();
@@ -330,56 +332,36 @@ public class TransactionService : ITransactionService
             range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
         }
 
-        // Group by book first, then by user
-        var bookGroups = filteredTransactions
-            .GroupBy(t => t.BookId)
-            .Select(g => new
-            {
-                BookId = g.Key,
-                BookTitle = g.First().Book?.Title,
-                UserGroups = g.GroupBy(t => t.UserId)
-                    .Select(ug => new
-                    {
-                        UserId = ug.Key,
-                        UserName = $"{ug.First().User?.FirstName} {ug.First().User?.LastName}",
-                        Transactions = ug.ToList()
-                    })
-                    .OrderBy(ug => ug.UserName)
-            })
-            .OrderBy(g => g.BookTitle);
-
+        // Add transaction data
         int row = 2;
-        foreach (var bookGroup in bookGroups)
+        foreach (var transaction in filteredTransactions)
         {
-            // Add book header
-            worksheet.Cells[row, 1].Value = $"Book: {bookGroup.BookTitle}";
-            worksheet.Cells[row, 1].Style.Font.Bold = true;
-            worksheet.Cells[row, 1].Style.Font.Size = 12;
-            row++;
+            var cell = worksheet.Cells[row, 1, row, 7];
+            
+            // Check if transaction is overdue
+            bool isOverdue = transaction.Status == TransactionStatus.Overdue.ToString();
 
-            foreach (var userGroup in bookGroup.UserGroups)
+            if (isOverdue)
             {
-                // Add user subheader
-                worksheet.Cells[row, 2].Value = $"User: {userGroup.UserName}";
-                worksheet.Cells[row, 2].Style.Font.Bold = true;
-                worksheet.Cells[row, 2].Style.Font.Italic = true;
-                row++;
-
-                // Add transactions for this user
-                foreach (var transaction in userGroup.Transactions.OrderByDescending(t => t.IssueDate))
-                {
-                    worksheet.Cells[row, 1].Value = transaction.Id;
-                    worksheet.Cells[row, 2].Value = bookGroup.BookTitle;
-                    worksheet.Cells[row, 3].Value = userGroup.UserName;
-                    worksheet.Cells[row, 4].Value = transaction.IssueDate;
-                    worksheet.Cells[row, 5].Value = transaction.DueDate;
-                    worksheet.Cells[row, 6].Value = transaction.ReturnDate;
-                    worksheet.Cells[row, 7].Value = transaction.Status;
-                    row++;
-                }
-                row++; // Add space between users
+                cell.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                cell.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightPink);
+                cell.Style.Font.Color.SetColor(System.Drawing.Color.Red);
             }
-            row++; // Add space between books
+
+            worksheet.Cells[row, 1].Value = transaction.Id;
+            worksheet.Cells[row, 2].Value = transaction.Book?.Title;
+            worksheet.Cells[row, 3].Value = $"{transaction.User?.FirstName} {transaction.User?.LastName}";
+            worksheet.Cells[row, 4].Value = transaction.IssueDate;
+            worksheet.Cells[row, 5].Value = transaction.DueDate;
+            worksheet.Cells[row, 6].Value = transaction.ReturnDate;
+            worksheet.Cells[row, 7].Value = transaction.Status;
+
+            // Format date columns
+            worksheet.Cells[row, 4].Style.Numberformat.Format = "yyyy-mm-dd";
+            worksheet.Cells[row, 5].Style.Numberformat.Format = "yyyy-mm-dd";
+            worksheet.Cells[row, 6].Style.Numberformat.Format = "yyyy-mm-dd";
+
+            row++;
         }
 
         // Auto-fit columns
