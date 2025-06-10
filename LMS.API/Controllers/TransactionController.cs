@@ -1,4 +1,6 @@
 ﻿using LMS.BL;
+using LMS.BL.Shared.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.API.Controllers;
@@ -47,5 +49,50 @@ public class TransactionController : ControllerBase
     {
         var result = await _transactionService.DeleteTransactionAsync(id);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
+
+    [HttpGet("GetTransactionsByUserId/{userId}")]
+    [Authorize(Roles = "Admin,Librarian")]
+    public async Task<IActionResult> GetTransactionsByUserId(int userId)
+    {
+        var result = await _transactionService.GetTransactionsByUserIdAsync(userId);
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
+
+    [HttpGet("MyBorrowHistory")]
+    [Authorize]
+    public async Task<ActionResult<ApiResult>> GetCurrentUserTransactions()
+    {
+        var result = await _transactionService.GetCurrentUserTransactionsAsync();
+        return Ok(result);
+    }
+
+    [HttpPost("BorrowBook")]
+    [Authorize]
+    public async Task<ActionResult<ApiResult>> BorrowBook(BorrowBookDto request)
+    {
+        var result = await _transactionService.BorrowBookAsync(request);
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
+
+    [HttpPost("DownloadActivitiesReport")]
+    [Authorize(Roles = "Admin,Librarian")]
+    public async Task<IActionResult> DownloadReport(TransactionReportDto request)
+    {
+        try
+        {
+            var reportBytes = await _transactionService.GenerateTransactionReportAsync(request);
+            var fileName = $"TransactionReport_{request.StartDate:yyyyMMdd}_{request.EndDate:yyyyMMdd}.xlsx";
+
+            return File(
+                reportBytes,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                fileName
+            );
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new ApiResult { IsSuccess = false, Message = ex.Message });
+        }
     }
 }

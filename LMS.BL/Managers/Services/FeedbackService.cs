@@ -62,9 +62,35 @@ public class FeedbackService : IFeedbackService
     {
         try
         {
+            var userId = int.Parse(_currentUserService.UserId!);
+
+            // Check if user has borrowed and returned the book
+            var hasBorrowed = await _unitOfWork.TransactionRepository.HasUserBorrowedBookAsync(userId, request.BookId);
+            if (!hasBorrowed)
+            {
+                return new ApiResult 
+                { 
+                    IsSuccess = false, 
+                    Message = "You can only review books that you have borrowed and returned" 
+                };
+            }
+
+            // Check if user has already reviewed this book
+            var existingFeedback = (await _unitOfWork.FeedbackRepository.GetAllAsync())
+                .FirstOrDefault(f => f.UserId == userId && f.BookId == request.BookId);
+            
+            if (existingFeedback != null)
+            {
+                return new ApiResult 
+                { 
+                    IsSuccess = false, 
+                    Message = "You have already reviewed this book" 
+                };
+            }
+
             var feedback = new Feedback
             {
-                UserId = request.UserId,
+                UserId = userId,
                 BookId = request.BookId,
                 Rating = request.Rating,
                 Comment = request.Comment,

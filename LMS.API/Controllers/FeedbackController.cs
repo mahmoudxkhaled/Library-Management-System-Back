@@ -1,4 +1,6 @@
 ﻿using LMS.BL;
+using LMS.BL.Shared.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.API.Controllers;
@@ -28,6 +30,7 @@ public class FeedbackController : ControllerBase
     }
 
     [HttpPost("AddFeedback")]
+    [Authorize]
     public async Task<IActionResult> AddFeedback(AddFeedbackDto request)
     {
         var result = await _feedbackService.AddFeedbackAsync(request);
