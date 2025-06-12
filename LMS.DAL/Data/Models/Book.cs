@@ -38,6 +38,7 @@ namespace LMS.DAL
         [ForeignKey(nameof(CategoryId))]
         public Category Category { get; set; }
         public Author Author { get; set; }
+        public bool IsTrending { get; set; }
 
         public ICollection<Transaction> Transactions { get; set; } = new HashSet<Transaction>();
         public ICollection<Feedback> Feedbacks { get; set; } = new HashSet<Feedback>();
