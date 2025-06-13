@@ -369,7 +369,7 @@ public class UserService : IUserService
         {
             return new ApiResult { IsSuccess=false,Message=$"not found user by id {id}"};
         }
-        return new ApiResult { IsSuccess=true,Data=new UserDetailsDto { Id=user.Id,FirstName=user.FirstName,LastName=user.LastName,UserName=user.UserName,Email=user.Email,PhoneNumber=user.PhoneNumber,ProfileImageUrl=user.ProfileImageUrl} };
+        return new ApiResult { IsSuccess=true,Data=new UserDetailsDto { Id=user.Id,FirstName=user.FirstName,LastName=user.LastName,PhoneNumber=user.PhoneNumber,ProfileImageUrl=user.ProfileImageUrl,Address=user.Address,DateofBirth=user.DateOfBirth} };
     }
     public async Task<ApiResult> updateUserProfile(UpdateUserProfileDto updateUserProfile,HttpContext httpContext)
     {
@@ -377,9 +377,9 @@ public class UserService : IUserService
         if (user == null) return new ApiResult {IsSuccess = true }; 
         user.FirstName= updateUserProfile.FirstName;    
         user.LastName= updateUserProfile.LastName;
-        user.UserName= updateUserProfile.UserName;
-        user.Email= updateUserProfile.Email;
-        user.PhoneNumber= updateUserProfile.PhoneNumber;
+        user.PhoneNumber = updateUserProfile.PhoneNumber;
+        user.Address = updateUserProfile.Address;
+        user.DateOfBirth =updateUserProfile.DateOfBirth;
         if (updateUserProfile.ProfileImageUrl != null) 
         {
             user.ProfileImageUrl = await _helperService.SaveFileAsync(updateUserProfile.ProfileImageUrl, "Users", httpContext);
