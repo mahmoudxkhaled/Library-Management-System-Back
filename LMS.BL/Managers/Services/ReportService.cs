@@ -241,13 +241,13 @@ public class ReportService : IReportService
 
             // Calculate days overdue
             int daysOverdue = 0;
-            if (isOverdue)
+            if (isOverdue && transaction.DueDate.HasValue)
             {
-                daysOverdue = (DateTime.Now - transaction.DueDate).Days;
+                daysOverdue = (DateTime.Now - transaction.DueDate!.Value).Days;
             }
-            else if (isReturned && transaction.ReturnDate > transaction.DueDate)
+            else if (isReturned && transaction.DueDate.HasValue && transaction.ReturnDate > transaction.DueDate)
             {
-                daysOverdue = (transaction.ReturnDate.Value - transaction.DueDate).Days;
+                daysOverdue = (transaction.ReturnDate.Value - transaction.DueDate!.Value).Days;
             }
             worksheet.Cells[row, 8].Value = daysOverdue;
 

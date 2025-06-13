@@ -32,7 +32,24 @@ public class LMSDbContext : IdentityDbContext<User, IdentityRole<int>, int>
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Transaction>()
+            .HasOne(a => a.User)
+            .WithMany(a => a.RequestedTransactions)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Transaction>()
+           .HasOne(a => a.IssuedByUser)
+           .WithMany(a => a.IssuedTransactions)
+           .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Transaction>()
+           .HasOne(a => a.ReturnedByUser)
+           .WithMany(a => a.ReturnedTransactions)
+           .OnDelete(DeleteBehavior.Restrict);
+
         base.OnModelCreating(modelBuilder);
+
+        
         #region Seeding Data
         #region Categories
         modelBuilder.Entity<Category>().HasData(

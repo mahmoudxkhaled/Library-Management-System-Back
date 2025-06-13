@@ -203,6 +203,7 @@ public class TransactionService : ITransactionService
                     IssueDate = t.IssueDate,
                     DueDate = t.DueDate,
                     ReturnDate = t.ReturnDate,
+                    RequestDate = t.RequestDate,
                     Status = t.Status
                 })
                 .ToList();
@@ -241,14 +242,14 @@ public class TransactionService : ITransactionService
             {
                 return new ApiResult { IsSuccess = false, Message = "Book is not available for borrowing" };
             }
-
+            if(request.BorrowDays > 90)
+            {
+                return new ApiResult { IsSuccess = false, Message = "You can not borrow book for more than 90 days" };
+            }
             // Check if user already has an active transaction for this book
-            var existingTransaction = await _unitOfWork.TransactionRepository.GetAllAsync();
-            var hasActiveTransaction = existingTransaction
-                .Any(t => t.UserId == userId &&
+            var hasActiveTransaction = await _unitOfWork.TransactionRepository.AnyAsync(t => t.UserId == userId &&
                          t.BookId == request.BookId &&
-                         (t.Status == TransactionStatus.Issued.ToString() ||
-                          t.Status == TransactionStatus.Overdue.ToString()));
+                         t.Status != TransactionStatus.Returned.ToString());
 
             if (hasActiveTransaction)
             {
@@ -261,9 +262,9 @@ public class TransactionService : ITransactionService
                 Id = Guid.NewGuid(),
                 UserId = userId,
                 BookId = request.BookId,
-                IssueDate = DateTime.Now,
-                DueDate = request.DueDate,
-                Status = TransactionStatus.Issued.ToString(),
+                BorrowDays = request.BorrowDays,
+                RequestDate = DateTime.Now,
+                Status = TransactionStatus.Pending.ToString(),
                 InsertedUserId = _currentUserService.UserId,
                 InsertedTime = DateTime.Now
             };
@@ -456,6 +457,7 @@ public class TransactionService : ITransactionService
                     Id = transaction.Id,
                     UserId = transaction.UserId,
                     BookId = transaction.BookId,
+                    RequestDate = transaction.RequestDate,
                     IssueDate = transaction.IssueDate,
                     DueDate = transaction.DueDate,
                     ReturnDate = transaction.ReturnDate,

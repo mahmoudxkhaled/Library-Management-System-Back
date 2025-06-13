@@ -6,10 +6,12 @@ public class UserTransactionHistoryDto
     public int BookId { get; set; }
     public string BookName { get; set; } = null!;
     public string BookImageUrl { get; set; } = null!;
-    public DateTime IssueDate { get; set; }
-    public DateTime DueDate { get; set; }
+
+    public DateTime RequestDate { get; set; }
+    public DateTime? IssueDate { get; set; }
+    public DateTime? DueDate { get; set; }
     public DateTime? ReturnDate { get; set; }
     public string Status { get; set; } = null!;
     public bool IsOverdue => Status == "Overdue";
-    public int DaysRemaining => (int)(DueDate - DateTime.Now).TotalDays;
+    public int DaysRemaining => DueDate.HasValue? (int)(DueDate.Value - DateTime.Now).TotalDays : 0;
 } 
