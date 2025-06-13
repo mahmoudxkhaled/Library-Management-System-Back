@@ -76,27 +76,6 @@ public class TransactionController : ControllerBase
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpPost("DownloadActivitiesReport")]
-    [Authorize(Roles = "Admin,Librarian")]
-    public async Task<IActionResult> DownloadReport(TransactionReportDto request)
-    {
-        try
-        {
-            var reportBytes = await _transactionService.GenerateTransactionReportAsync(request);
-            var fileName = $"TransactionReport_{request.StartDate:yyyyMMdd}_{request.EndDate:yyyyMMdd}.xlsx";
-
-            return File(
-                reportBytes,
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                fileName
-            );
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new ApiResult { IsSuccess = false, Message = ex.Message });
-        }
-    }
-
     [HttpPost("SendOverdueNotifications")]
     [Authorize(Roles = "Admin,Librarian")]
     public async Task<IActionResult> SendOverdueNotifications()

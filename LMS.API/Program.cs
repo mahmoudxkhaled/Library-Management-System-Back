@@ -51,9 +51,19 @@ try
         }
         });
     });
+    builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+        options.JsonSerializerOptions.WriteIndented = true;
+    });
 
     builder.Services.AddBusinessLayer();
     builder.Services.AddDataAccessLayer();
+    builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+    builder.Services.AddScoped<IBookService, BookService>();
+    builder.Services.AddScoped<ITransactionService, TransactionService>();
+    builder.Services.AddScoped<IReportService, ReportService>();
     // Register background service
     // builder.Services.AddHostedService<OverdueNotificationBackgroundService>();
 
