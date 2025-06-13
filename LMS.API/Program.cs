@@ -1,4 +1,5 @@
 ﻿using LMS.BL;
+using LMS.BL.Services;
 using LMS.DAL;
 using LMS.DAL.Data;
 using Microsoft.AspNetCore.Identity;
@@ -51,9 +52,20 @@ try
         }
         });
     });
+    builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+        options.JsonSerializerOptions.WriteIndented = true;
+    });
 
     builder.Services.AddBusinessLayer();
     builder.Services.AddDataAccessLayer();
+    builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+    builder.Services.AddScoped<IBookService, BookService>();
+    builder.Services.AddScoped<ITransactionService, TransactionService>();
+    builder.Services.AddScoped<IReportService, ReportService>();
+    builder.Services.AddScoped<IDashboardService, DashboardService>();
     // Register background service
     // builder.Services.AddHostedService<OverdueNotificationBackgroundService>();
 
