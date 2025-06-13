@@ -12,7 +12,6 @@ public class UnitOfWork : IUnitOfWork
     public ICategoryRepository CategoryRepository { get; }
     public IFeedbackRepository FeedbackRepository { get; }
     public ITransactionRepository TransactionRepository { get; }
-    public ITrendingBooksRepository TrendingBooksRepository { get; }
     public IUserRepository UserRepository { get; }
     public IAuthorRepository AuthorRepository { get; }
     #endregion
@@ -27,9 +26,8 @@ public class UnitOfWork : IUnitOfWork
         , ICategoryRepository categoryRepository
         , IFeedbackRepository feedbackRepository
         , ITransactionRepository transactionRepository
-        , ITrendingBooksRepository trendingBooksRepository
         , IUserRepository userRepository
-        ,IAuthorRepository authorRepository
+        , IAuthorRepository authorRepository
                 )
     {
         _context = context;
@@ -37,9 +35,8 @@ public class UnitOfWork : IUnitOfWork
         CategoryRepository = categoryRepository;
         FeedbackRepository = feedbackRepository;
         TransactionRepository = transactionRepository;
-        TrendingBooksRepository = trendingBooksRepository;
         UserRepository = userRepository;
-        AuthorRepository = authorRepository;    
+        AuthorRepository = authorRepository;
     }
     #endregion
 

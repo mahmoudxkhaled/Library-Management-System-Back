@@ -1,4 +1,5 @@
 ﻿using LMS.BL;
+using LMS.BL.Dtos.Book;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.API.Controllers;
@@ -14,17 +15,18 @@ public class TrendingBooksController : ControllerBase
         _trendingBooksService = trendingBooksService;
     }
 
-    [HttpGet("GetAllTrendingBooks")]
-    public async Task<IActionResult> GetAllTrendingBooks()
+    [HttpPost("GetAllTrendingBooks{first}/{rows}")]
+    public async Task<ActionResult> GetAllTrendingBooks(int first, int rows, BookParams bookParams)
+
     {
-        var result = await _trendingBooksService.GetAllTrendingBooksAsync();
+        var result = await _trendingBooksService.GetAllTrendingBooksAsync(first, rows, bookParams.sortOrder, bookParams.sortField, bookParams.Search, bookParams.categoryId, bookParams.authorId);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpPost("IncrementTrendingBook/{bookId}")]
-    public async Task<IActionResult> IncrementTrendingBook(int bookId)
+    [HttpPost("SetTrendingBook/{bookId}")]
+    public async Task<IActionResult> SetTrendingBook(int bookId)
     {
-        var result = await _trendingBooksService.IncrementTrendingBookAsync(bookId);
+        var result = await _trendingBooksService.SetTrendingBookAsync(bookId);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 }

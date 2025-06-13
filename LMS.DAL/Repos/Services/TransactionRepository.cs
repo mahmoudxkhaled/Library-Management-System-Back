@@ -48,5 +48,20 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
                           t.Status == TransactionStatus.Returned.ToString());
     }
 
+    public async Task<List<int>> GetTopBorrowedBooksAsync(int count = 20)
+    {
+        return await _context.Transaction
+            .GroupBy(t => t.BookId)
+            .Select(g => new
+            {
+                BookId = g.Key,
+                TransactionCount = g.Count()
+            })
+            .OrderByDescending(x => x.TransactionCount)
+            .Take(count)
+            .Select(x => x.BookId)
+            .ToListAsync();
+    }
+
     #endregion
 }

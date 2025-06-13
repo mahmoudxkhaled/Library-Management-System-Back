@@ -102,7 +102,7 @@ public class TransactionService : ITransactionService
                 InsertedTime = DateTime.Now,
                 ReturnDate = request.ReturnDate
             };
-            await _trendingBooksService.IncrementTrendingBookAsync(request.BookId);
+            await _trendingBooksService.SetTrendingBookAsync(request.BookId);
 
             await _unitOfWork.TransactionRepository.AddAsync(transaction);
             await _unitOfWork.SaveChangesAsync();
@@ -280,7 +280,7 @@ public class TransactionService : ITransactionService
             await _unitOfWork.SaveChangesAsync();
 
             // Increment trending book count
-            await _trendingBooksService.IncrementTrendingBookAsync(request.BookId);
+            await _trendingBooksService.SetTrendingBookAsync(request.BookId);
 
             return new ApiResult
             {
