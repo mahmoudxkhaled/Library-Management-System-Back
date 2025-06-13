@@ -69,7 +69,23 @@ public class BookService : IBookService
         {
             var book = await _unitOfWork.BookRepository.getBookDetailsById(id);
             if (book == null)
+            {
                 return new ApiResult<BookDetailsDto>() { IsSuccess = false, Message = $"Not found any book by this Id {id}" };
+            }
+
+            // Check if the current user has any active transactions for this book
+            bool IsBorrowed = false;
+            if (_currentUserService.UserId != null)
+            {
+                var userId = int.Parse(_currentUserService.UserId);
+                var transactions = await _unitOfWork.TransactionRepository.GetAllAsync();
+                IsBorrowed = transactions.Any(t =>
+                    t.UserId == userId &&
+                    t.BookId == id &&
+                    (t.Status == TransactionStatus.Issued.ToString() ||
+                     t.Status == TransactionStatus.Overdue.ToString()));
+            }
+
             return new ApiResult<BookDetailsDto>()
             {
                 IsSuccess = true,
@@ -81,6 +97,7 @@ public class BookService : IBookService
                     PublicationYear = book.PublicationYear,
                     AvailableCopies = book.AvailableCopies,
                     TotalCopies = book.TotalCopies,
+                    IsBorrowed = IsBorrowed,
                     AuthorFullName = book.Author.FullName,
                     AuthorDescription = book.Author.Description,
                     AuthorImageUrl = book.Author.ImageUrl,
@@ -103,7 +120,9 @@ public class BookService : IBookService
         {
             var book = await _unitOfWork.BookRepository.GetBookWithAuthorByIdAsync(id);
             if (book == null)
+            {
                 return new ApiResult { IsSuccess = false, Message = "Book not found" };
+            }
 
             return new ApiResult
             {
@@ -164,7 +183,9 @@ public class BookService : IBookService
         {
             var book = await _unitOfWork.BookRepository.GetByIdAsync(request.Id);
             if (book == null)
+            {
                 return new ApiResult { IsSuccess = false, Message = "Book not found" };
+            }
 
             book.Title = request.Title ?? book.Title;
             book.Description = request.Description ?? book.Description;
@@ -193,7 +214,9 @@ public class BookService : IBookService
         {
             var book = await _unitOfWork.BookRepository.GetByIdAsync(bookId);
             if (book == null)
+            {
                 return new ApiResult { IsSuccess = false, Message = "Book not found" };
+            }
 
             await _unitOfWork.BookRepository.DeleteAsync(book, _currentUserService.UserId!);
             return new ApiResult { IsSuccess = true, Message = "Book marked as deleted" };
@@ -211,7 +234,9 @@ public class BookService : IBookService
 
             var book = await _unitOfWork.BookRepository.GetByIdAsync(id);
             if (book is null)
+            {
                 return new ApiResult { IsSuccess = false, Message = "Book not found" };
+            }
 
             book.ActivationTime = DateTime.Now;
             book.IsActive = !book.IsActive;
