@@ -80,7 +80,7 @@ public class TransactionService : ITransactionService
                     UserFullName = $"{transaction.User?.FirstName} {transaction.User?.LastName}",
                     BookName = transaction.Book?.Title ?? "Unknown Book",
                     BorrowDays = transaction.BorrowDays,
-                    IssuedByUser = transaction.IssuedByUserId.HasValue? $"{transaction.IssuedByUser?.FirstName} {transaction.IssuedByUser?.LastName}" : "",
+                    IssuedByUser = transaction.IssuedByUserId.HasValue ? $"{transaction.IssuedByUser?.FirstName} {transaction.IssuedByUser?.LastName}" : "",
                     ReturnedByUser = transaction.ReturnedByUserId.HasValue ? $"{transaction.ReturnedByUser?.FirstName} {transaction.ReturnedByUser?.LastName}" : "",
                     ReturnNotes = transaction.ReturnNotes
 
@@ -250,7 +250,7 @@ public class TransactionService : ITransactionService
             {
                 return new ApiResult { IsSuccess = false, Message = "Book is not available for borrowing" };
             }
-            if(request.BorrowDays > 90)
+            if (request.BorrowDays > 90)
             {
                 return new ApiResult { IsSuccess = false, Message = "You can not borrow book for more than 90 days" };
             }
@@ -324,7 +324,7 @@ public class TransactionService : ITransactionService
             {
                 return new ApiResult { IsSuccess = false, Message = "Transaction not found" };
             }
-            if(transaction.Status != TransactionStatus.Pending.ToString())
+            if (transaction.Status != TransactionStatus.Pending.ToString())
             {
                 return new ApiResult { IsSuccess = false, Message = "Transaction should be pending" };
             }
@@ -452,24 +452,56 @@ public class TransactionService : ITransactionService
     {
         int sent = 0;
         var overdueTransactions = await _unitOfWork.TransactionRepository.GetWhereIncludeAsync(
-            t => t.Status == "Overdue" && (t.LastOverdueNotified == null || t.LastOverdueNotified.Value.Date < DateTime.Now.Date), "User", "Book");
-
-
-
+            t => t.Status == "Overdue" && (t.LastOverdueNotified == null || t.LastOverdueNotified.Value.Date < DateTime.Now.AddHours(0)), "User", "Book");
 
         foreach (var transaction in overdueTransactions)
         {
             if (transaction.User?.Email != null)
             {
+
                 var subject = "Library Book Overdue Notice";
-                var body = $"Dear {transaction.User.FirstName},\n\nYour borrowed book '{transaction.Book?.Title}' is overdue. Please return it as soon as possible.";
+                var daysOverdue = (DateTime.Now - transaction.DueDate.Value).Days;
+                var body = $@"
+                    <html>
+                    <body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333;'>
+                        <div style='max-width: 600px; margin: 0 auto; padding: 20px;'>
+                            <h2 style='color: #d9534f;'>Overdue Book Notice</h2>
+                            
+                            <p>Dear {transaction.User.FirstName},</p>
+                            
+                            <p>This is a reminder that the following book is currently overdue:</p>
+                            
+                            <div style='background-color: #f8f9fa; padding: 15px; border-left: 4px solid #d9534f; margin: 20px 0;'>
+                                <p style='margin: 0;'><strong>Book Title:</strong> {transaction.Book?.Title}</p>
+                                <p style='margin: 5px 0;'><strong>Due Date:</strong> {transaction.DueDate:MMMM dd, yyyy}</p>
+                                <p style='margin: 5px 0;'><strong>Days Overdue:</strong> {daysOverdue} day(s)</p>
+                            </div>
+                            
+                            <p>Please return this book to the library as soon as possible to avoid any additional penalties.</p>
+                            
+                            <p>If you have already returned the book, please disregard this notice.</p>
+                            
+                            <div style='margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;'>
+                                <p style='margin: 0;'>Best regards,</p>
+                                <p style='margin: 5px 0;'><strong>Library Management System</strong></p>
+                                <p style='margin: 0; color: #666;'>Your trusted source for knowledge</p>
+                            </div>
+                        </div>
+                    </body>
+                    </html>";
+
                 try
                 {
+                    //for testing
+                    ///  transaction.User.Email = "antonius.a.ghaly@gmail.com";
                     await _emailService.SendEmailAsync(transaction.User.Email, subject, body);
                     transaction.LastOverdueNotified = DateTime.Now;
                     sent++;
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to send overdue notice to {transaction.User.Email}: {ex.Message}");
+                }
             }
         }
         await _unitOfWork.SaveChangesAsync();

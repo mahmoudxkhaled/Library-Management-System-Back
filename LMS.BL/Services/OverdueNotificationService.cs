@@ -6,38 +6,28 @@ namespace LMS.BL.Services
 {
     public class OverdueNotificationService
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IEmailService _emailService;
+        private readonly ITransactionService _transactionService;
         private readonly IConfiguration _configuration;
 
         public OverdueNotificationService(
-            IUnitOfWork unitOfWork,
-            IEmailService emailService,
+            ITransactionService transactionService,
             IConfiguration configuration)
         {
-            _unitOfWork = unitOfWork;
-            _emailService = emailService;
+            _transactionService = transactionService;
             _configuration = configuration;
         }
 
         public async Task ProcessOverdueNotifications()
         {
-            var overdueTransactions = (await _unitOfWork.TransactionRepository.GetAllAsync())
-                .Where(t => t.Status == "Overdue" && (t.LastOverdueNotified == null || t.LastOverdueNotified.Value.Date < DateTime.Now.Date))
-                .ToList();
-
-            foreach (var transaction in overdueTransactions)
+            try
             {
-                if (transaction.User?.Email != null)
-                {
-                    var subject = "Library Book Overdue Notice";
-                    var body = $"Dear {transaction.User.FirstName},\n\nYour borrowed book '{transaction.Book?.Title}' is overdue. Please return it as soon as possible.";
-
-                    await _emailService.SendEmailAsync(transaction.User.Email, subject, body);
-                    transaction.LastOverdueNotified = DateTime.Now;
-                }
+                var sentCount = await _transactionService.SendOverdueNotificationsAsync();
+                Console.WriteLine($"✅ Successfully sent {sentCount} overdue notifications.");
             }
-            await _unitOfWork.SaveChangesAsync();
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Error processing overdue notifications: {ex.Message}");
+            }
         }
     }
 }
