@@ -17,7 +17,6 @@ public class TrendingBooksController : ControllerBase
 
     [HttpPost("GetAllTrendingBooks/{first}/{rows}")]
     public async Task<ActionResult> GetAllTrendingBooks(int first, int rows, BookParams bookParams)
-
     {
         var result = await _trendingBooksService.GetAllTrendingBooksAsync(first, rows, bookParams.sortOrder, bookParams.sortField, bookParams.Search, bookParams.categoryId, bookParams.authorId);
         if (result.Data != null)

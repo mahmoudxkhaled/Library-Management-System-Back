@@ -3,6 +3,7 @@ using LMS.BL.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using LMS.DAL;
+using LMS.BL.Dtos.Transaction;
 
 namespace LMS.API.Controllers;
 
@@ -18,13 +19,29 @@ public class TransactionController : ControllerBase
     }
 
     [HttpGet("GetAllTransactions")]
+    [Authorize(Roles = "Admin,Librarian")]
     public async Task<IActionResult> GetAllTransactions()
     {
         var result = await _transactionService.GetAllTransactionsAsync();
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
+    [HttpPost("IssueBook")]
+    [Authorize(Roles = "Admin,Librarian")]
+    public async Task<IActionResult> IssueBook(IssueBookDto request)
+    {
+        var result = await _transactionService.IssueBookAsync(request);
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
+    [HttpPost("ReturnBook")]
+    [Authorize(Roles = "Admin,Librarian")]
+    public async Task<IActionResult> ReturnBook(ReturnBookDto request)
+    {
+        var result = await _transactionService.ReturnBookAsync(request);
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
 
     [HttpGet("GetTransactionById/{id}")]
+    [Authorize(Roles = "Admin,Librarian")]
     public async Task<IActionResult> GetTransactionById(string id)
     {
         var result = await _transactionService.GetTransactionByIdAsync(id);
@@ -32,6 +49,7 @@ public class TransactionController : ControllerBase
     }
 
     [HttpPost("AddTransaction")]
+    [Authorize(Roles = "Admin,Librarian")]
     public async Task<IActionResult> AddTransaction(AddTransactionDto request)
     {
         var result = await _transactionService.AddTransactionAsync(request);

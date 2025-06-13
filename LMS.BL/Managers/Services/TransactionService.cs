@@ -1,4 +1,5 @@
-﻿using LMS.BL.Managers.Interfaces;
+﻿using LMS.BL.Dtos.Transaction;
+using LMS.BL.Managers.Interfaces;
 using LMS.BL.Shared.Models;
 using LMS.DAL;
 using OfficeOpenXml;
@@ -33,8 +34,9 @@ public class TransactionService : ITransactionService
             var transactionList = transactions.Select(t => new GetTransactionDto
             {
                 Id = t.Id,
-                UserId = t.UserId,
                 BookId = t.BookId,
+                UserId = t.UserId,
+                RequestDate = t.RequestDate,
                 IssueDate = t.IssueDate,
                 DueDate = t.DueDate,
                 ReturnDate = t.ReturnDate,
@@ -65,17 +67,22 @@ public class TransactionService : ITransactionService
             return new ApiResult
             {
                 IsSuccess = true,
-                Data = new GetTransactionDto
+                Data = new TransactionDetailsDto
                 {
                     Id = transaction.Id,
                     UserId = transaction.UserId,
                     BookId = transaction.BookId,
+                    RequestDate = transaction.RequestDate,
                     IssueDate = transaction.IssueDate,
                     DueDate = transaction.DueDate,
                     ReturnDate = transaction.ReturnDate,
                     Status = transaction.Status,
                     UserFullName = $"{transaction.User?.FirstName} {transaction.User?.LastName}",
                     BookName = transaction.Book?.Title ?? "Unknown Book",
+                    BorrowDays = transaction.BorrowDays,
+                    IssuedByUser = transaction.IssuedByUserId.HasValue? $"{transaction.IssuedByUser?.FirstName} {transaction.IssuedByUser?.LastName}" : "",
+                    ReturnedByUser = transaction.ReturnedByUserId.HasValue ? $"{transaction.ReturnedByUser?.FirstName} {transaction.ReturnedByUser?.LastName}" : "",
+                    ReturnNotes = transaction.ReturnNotes
 
                 }
             };
@@ -169,6 +176,7 @@ public class TransactionService : ITransactionService
                     Id = t.Id,
                     UserId = t.UserId,
                     BookId = t.BookId,
+                    RequestDate = t.RequestDate,
                     UserFullName = $"{t.User?.FirstName} {t.User?.LastName}",
                     BookName = t.Book?.Title ?? "Unknown Book",
                     IssueDate = t.IssueDate,
@@ -203,6 +211,7 @@ public class TransactionService : ITransactionService
                     IssueDate = t.IssueDate,
                     DueDate = t.DueDate,
                     ReturnDate = t.ReturnDate,
+                    RequestDate = t.RequestDate,
                     Status = t.Status
                 })
                 .ToList();
@@ -241,14 +250,14 @@ public class TransactionService : ITransactionService
             {
                 return new ApiResult { IsSuccess = false, Message = "Book is not available for borrowing" };
             }
-
+            if(request.BorrowDays > 90)
+            {
+                return new ApiResult { IsSuccess = false, Message = "You can not borrow book for more than 90 days" };
+            }
             // Check if user already has an active transaction for this book
-            var existingTransaction = await _unitOfWork.TransactionRepository.GetAllAsync();
-            var hasActiveTransaction = existingTransaction
-                .Any(t => t.UserId == userId &&
+            var hasActiveTransaction = await _unitOfWork.TransactionRepository.AnyAsync(t => t.UserId == userId &&
                          t.BookId == request.BookId &&
-                         (t.Status == TransactionStatus.Issued.ToString() ||
-                          t.Status == TransactionStatus.Overdue.ToString()));
+                         t.Status != TransactionStatus.Returned.ToString());
 
             if (hasActiveTransaction)
             {
@@ -261,9 +270,9 @@ public class TransactionService : ITransactionService
                 Id = Guid.NewGuid(),
                 UserId = userId,
                 BookId = request.BookId,
-                IssueDate = DateTime.Now,
-                DueDate = request.DueDate,
-                Status = TransactionStatus.Issued.ToString(),
+                BorrowDays = request.BorrowDays,
+                RequestDate = DateTime.Now,
+                Status = TransactionStatus.Pending.ToString(),
                 InsertedUserId = _currentUserService.UserId,
                 InsertedTime = DateTime.Now
             };
@@ -296,6 +305,74 @@ public class TransactionService : ITransactionService
                     Status = transaction.Status
                 }
             };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
+        }
+    }
+
+    public async Task<ApiResult> IssueBookAsync(IssueBookDto request)
+    {
+        try
+        {
+            // Get the current user's ID
+            var userId = int.Parse(_currentUserService.UserId!);
+
+            var transaction = await _unitOfWork.TransactionRepository.GetByIdAsync(request.TransactionId);
+            if (transaction == null)
+            {
+                return new ApiResult { IsSuccess = false, Message = "Transaction not found" };
+            }
+            if(transaction.Status != TransactionStatus.Pending.ToString())
+            {
+                return new ApiResult { IsSuccess = false, Message = "Transaction should be pending" };
+            }
+            transaction.IssueDate = request.IssueDate;
+            transaction.DueDate = request.IssueDate.AddDays(transaction.BorrowDays);
+            transaction.Status = TransactionStatus.Issued.ToString();
+            transaction.IssuedByUserId = userId; // Set the user who issued the book
+            transaction.UpdateUserId = _currentUserService.UserId;
+            transaction.UpdateTime = DateTime.Now;
+            transaction.Book.AvailableCopies--; // Decrement the book's available copies
+
+            _unitOfWork.TransactionRepository.Update(transaction);
+            await _unitOfWork.SaveChangesAsync();
+            return new ApiResult { IsSuccess = true, Message = "Book has been Issued successfully" };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
+        }
+    }
+
+    public async Task<ApiResult> ReturnBookAsync(ReturnBookDto request)
+    {
+        try
+        {
+            // Get the current user's ID
+            var userId = int.Parse(_currentUserService.UserId!);
+
+            var transaction = await _unitOfWork.TransactionRepository.GetByIdAsync(request.TransactionId);
+            if (transaction == null)
+            {
+                return new ApiResult { IsSuccess = false, Message = "Transaction not found" };
+            }
+            if (transaction.Status != TransactionStatus.Issued.ToString() && transaction.Status != TransactionStatus.Overdue.ToString())
+            {
+                return new ApiResult { IsSuccess = false, Message = "Transaction should be issued" };
+            }
+            transaction.ReturnDate = request.ReturnDate;
+            transaction.Status = TransactionStatus.Returned.ToString();
+            transaction.ReturnNotes = request.Notes;
+            transaction.ReturnedByUserId = userId; // Set the user who returned the book
+            transaction.UpdateUserId = _currentUserService.UserId;
+            transaction.UpdateTime = DateTime.Now;
+            transaction.Book.AvailableCopies++; // Increment the book's available copies
+
+            _unitOfWork.TransactionRepository.Update(transaction);
+            await _unitOfWork.SaveChangesAsync();
+            return new ApiResult { IsSuccess = true, Message = "Book has been Returned successfully" };
         }
         catch (Exception ex)
         {
@@ -456,6 +533,7 @@ public class TransactionService : ITransactionService
                     Id = transaction.Id,
                     UserId = transaction.UserId,
                     BookId = transaction.BookId,
+                    RequestDate = transaction.RequestDate,
                     IssueDate = transaction.IssueDate,
                     DueDate = transaction.DueDate,
                     ReturnDate = transaction.ReturnDate,

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace LMS.DAL;
 
@@ -76,6 +77,11 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
             query = query.Include(include);
         }
         return await query.Where(predicate).ToListAsync();
+    }
+
+    public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
+    {
+        return await _context.Set<T>().AnyAsync(predicate);
     }
     #endregion
 }

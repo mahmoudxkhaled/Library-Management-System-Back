@@ -23,7 +23,9 @@ namespace LMS.DAL
         [MaxLength(50)]
         public string Role { get; set; } = null!; // Admin, Librarian, Member
 
-        public ICollection<Transaction> Transactions { get; set; } = new HashSet<Transaction>();
+        public ICollection<Transaction> RequestedTransactions { get; set; } = new HashSet<Transaction>();
+        public ICollection<Transaction> IssuedTransactions { get; set; } = new HashSet<Transaction>();
+        public ICollection<Transaction> ReturnedTransactions { get; set; } = new HashSet<Transaction>();
         public ICollection<Feedback> Feedbacks { get; set; } = new HashSet<Feedback>();
 
         #region Shared Columns

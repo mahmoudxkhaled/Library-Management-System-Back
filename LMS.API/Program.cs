@@ -148,7 +148,11 @@ try
         try
         {
             var userManager = services.GetRequiredService<UserManager<User>>();
+            var unitOfWork = services.GetRequiredService<IUnitOfWork>();
             await DbSeeder.SeedAdminAsync(userManager);
+            await DbSeeder.SeedLibrarianAsync(userManager);
+            await DbSeeder.SeedMembersAsync(userManager);
+            //await DbSeeder.SeedTransactionsAsync(unitOfWork);
         }
         catch (Exception ex)
         {

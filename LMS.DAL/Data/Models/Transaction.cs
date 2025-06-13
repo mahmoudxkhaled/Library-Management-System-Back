@@ -19,11 +19,28 @@ namespace LMS.DAL
 
         public Book? Book { get; set; }
 
-        public DateTime IssueDate { get; set; }
-        public DateTime DueDate { get; set; } // Calculated based on the number of borrow days.
-
         public int BorrowDays { get; set; }
+
+        public DateTime RequestDate { get; set; }
+
+        #region Issuing
+        public DateTime? IssueDate { get; set; }
+
+        public int? IssuedByUserId { get; set; }
+
+        public User? IssuedByUser { get; set; }
+
+        #endregion
+
+
+        public DateTime? DueDate { get; set; } // Calculated based on the number of borrow days.
+
         public DateTime? ReturnDate { get; set; } // Actual return date.
+
+        public int? ReturnedByUserId { get; set; }
+        public User? ReturnedByUser { get; set; }
+
+        public string? ReturnNotes { get; set; } 
 
         private string _status = "Pending";
         [Required]
@@ -41,7 +58,7 @@ namespace LMS.DAL
             }
             set
             {
-                if (value == "Issued" || value == "Returned" || value == "Overdue")
+                if (value == "Pending" || value == "Issued" || value == "Returned" || value == "Overdue")
                 {
                     _status = value;
                 }
