@@ -2,10 +2,7 @@
 using LMS.BL.Managers.Interfaces;
 using LMS.BL.Shared.Models;
 using LMS.DAL.Data;
-using LMS.DAL.Data.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.API.Controllers
@@ -64,13 +61,22 @@ namespace LMS.API.Controllers
             {
                 var author = await _authorService.GetAuthorById(id);
                 if (author == null)
+                {
                     return NotFound(new ApiResult { IsSuccess = false, Data = $"not found author by {id}" });
+                }
+
                 var hasBooks = await _authorService.checkAuthorHasBook(id);
                 if (hasBooks)
+                {
                     return BadRequest(new ApiResult { IsSuccess = false, Message = $"This author cannot be deleted because it has books associated with it" });
+                }
+
                 var UserId = User?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
                 if (UserId == null)
+                {
                     return Unauthorized(new ApiResult { IsSuccess = false });
+                }
+
                 var deleted = await _authorService.DeleteAuthorById(id, UserId);
                 return Ok(new ApiResult { IsSuccess = true });
             }
@@ -93,8 +99,11 @@ namespace LMS.API.Controllers
         {
             var UserId = User?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             if (UserId == null)
-                return Unauthorized(new ApiResult { IsSuccess=false});
-            var result = await _authorService.CreateAuthor(createAuthorDto,HttpContext,UserId);
+            {
+                return Unauthorized(new ApiResult { IsSuccess = false });
+            }
+
+            var result = await _authorService.CreateAuthor(createAuthorDto, HttpContext, UserId);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
         [HttpPut]
@@ -103,7 +112,10 @@ namespace LMS.API.Controllers
         {
             var UserId = User?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             if (UserId == null)
+            {
                 return Unauthorized(new ApiResult { IsSuccess = false });
+            }
+
             var result = await _authorService.UpdateAuthor(updateAuthorDto, HttpContext, UserId);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
