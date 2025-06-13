@@ -67,7 +67,7 @@ public class TransactionService : ITransactionService
             return new ApiResult
             {
                 IsSuccess = true,
-                Data = new GetTransactionDto
+                Data = new TransactionDetailsDto
                 {
                     Id = transaction.Id,
                     UserId = transaction.UserId,
@@ -79,6 +79,10 @@ public class TransactionService : ITransactionService
                     Status = transaction.Status,
                     UserFullName = $"{transaction.User?.FirstName} {transaction.User?.LastName}",
                     BookName = transaction.Book?.Title ?? "Unknown Book",
+                    BorrowDays = transaction.BorrowDays,
+                    IssuedByUser = transaction.IssuedByUserId.HasValue? $"{transaction.IssuedByUser?.FirstName} {transaction.IssuedByUser?.LastName}" : "",
+                    ReturnedByUser = transaction.ReturnedByUserId.HasValue ? $"{transaction.ReturnedByUser?.FirstName} {transaction.ReturnedByUser?.LastName}" : "",
+                    ReturnNotes = transaction.ReturnNotes
 
                 }
             };
