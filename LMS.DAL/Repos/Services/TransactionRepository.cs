@@ -63,5 +63,12 @@ public class TransactionRepository : GenericRepository<Transaction>, ITransactio
             .ToListAsync();
     }
 
+    public IQueryable<Transaction> GetAll()
+    {
+        return _context.Transaction.AsQueryable();
+    }
+
+
+
     #endregion
 }

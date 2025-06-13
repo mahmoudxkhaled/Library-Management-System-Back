@@ -99,8 +99,7 @@ public class TransactionService : ITransactionService
                 DueDate = request.DueDate,
                 Status = TransactionStatus.Issued.ToString(),
                 InsertedUserId = _currentUserService.UserId,
-                InsertedTime = DateTime.Now,
-                ReturnDate = request.ReturnDate
+                InsertedTime = DateTime.Now
             };
             await _trendingBooksService.SetTrendingBookAsync(request.BookId);
 
@@ -448,9 +447,9 @@ public class TransactionService : ITransactionService
             _unitOfWork.TransactionRepository.Update(transaction);
             await _unitOfWork.SaveChangesAsync();
 
-            return new ApiResult 
-            { 
-                IsSuccess = true, 
+            return new ApiResult
+            {
+                IsSuccess = true,
                 Message = $"Transaction status updated to {newStatus} successfully",
                 Data = new GetTransactionDto
                 {
