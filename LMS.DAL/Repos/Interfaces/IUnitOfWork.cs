@@ -1,5 +1,4 @@
 ﻿using LMS.DAL.Repos.Interfaces;
-using LMS.DAL.Repos.Services;
 
 namespace LMS.DAL;
 
@@ -10,8 +9,7 @@ public interface IUnitOfWork
     ICategoryRepository CategoryRepository { get; }
     IFeedbackRepository FeedbackRepository { get; }
     ITransactionRepository TransactionRepository { get; }
-    ITrendingBooksRepository TrendingBooksRepository { get; }
-    IAuthorRepository AuthorRepository { get;}
+    IAuthorRepository AuthorRepository { get; }
     Task<int> SaveChangesAsync();
 
 }

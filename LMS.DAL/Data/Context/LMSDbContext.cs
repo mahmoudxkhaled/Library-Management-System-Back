@@ -23,7 +23,6 @@ public class LMSDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     public DbSet<Category> Category => Set<Category>();
     public DbSet<Feedback> Feedback => Set<Feedback>();
     public DbSet<Transaction> Transaction => Set<Transaction>();
-    public DbSet<TrendingBook> TrendingBooks => Set<TrendingBook>();
     public DbSet<User> User => Set<User>();
     public DbSet<Author> Authors => Set<Author>();
 
