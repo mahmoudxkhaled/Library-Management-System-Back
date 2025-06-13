@@ -1,4 +1,5 @@
 ﻿using LMS.BL;
+using LMS.BL.Services;
 using LMS.DAL;
 using LMS.DAL.Data;
 using Microsoft.AspNetCore.Identity;
@@ -64,6 +65,7 @@ try
     builder.Services.AddScoped<IBookService, BookService>();
     builder.Services.AddScoped<ITransactionService, TransactionService>();
     builder.Services.AddScoped<IReportService, ReportService>();
+    builder.Services.AddScoped<IDashboardService, DashboardService>();
     // Register background service
     // builder.Services.AddHostedService<OverdueNotificationBackgroundService>();
 
