@@ -15,11 +15,21 @@ public class TrendingBooksController : ControllerBase
         _trendingBooksService = trendingBooksService;
     }
 
-    [HttpPost("GetAllTrendingBooks{first}/{rows}")]
+    [HttpPost("GetAllTrendingBooks/{first}/{rows}")]
     public async Task<ActionResult> GetAllTrendingBooks(int first, int rows, BookParams bookParams)
 
     {
         var result = await _trendingBooksService.GetAllTrendingBooksAsync(first, rows, bookParams.sortOrder, bookParams.sortField, bookParams.Search, bookParams.categoryId, bookParams.authorId);
+        if (result.Data != null)
+        {
+            for (int i = 0; i < result.Data.Result.Count; i++)
+            {
+                if (result.Data.Result[i].ImageUrl != null)
+                {
+                    result.Data.Result[i].ImageUrl = $"{Request.Scheme}://{Request.Host}/{result.Data.Result[i].ImageUrl}";
+                }
+            };
+        }
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
