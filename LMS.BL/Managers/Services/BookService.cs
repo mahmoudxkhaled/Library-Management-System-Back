@@ -124,6 +124,19 @@ public class BookService : IBookService
                 return new ApiResult { IsSuccess = false, Message = "Book not found" };
             }
 
+            // Check if the current user has any active transactions for this book
+            bool IsBorrowed = false;
+            if (_currentUserService.UserId != null)
+            {
+                var userId = int.Parse(_currentUserService.UserId);
+                var transactions = await _unitOfWork.TransactionRepository.GetAllAsync();
+                IsBorrowed = transactions.Any(t =>
+                    t.UserId == userId &&
+                    t.BookId == id &&
+                    (t.Status == TransactionStatus.Issued.ToString() ||
+                     t.Status == TransactionStatus.Overdue.ToString()));
+            }
+
             return new ApiResult
             {
                 IsSuccess = true,
@@ -138,6 +151,7 @@ public class BookService : IBookService
                     TotalCopies = book.TotalCopies,
                     CategoryId = book.CategoryId,
                     ImageUrl = book.ImageUrl,
+                    IsBorrowed = IsBorrowed
                 }
             };
         }
