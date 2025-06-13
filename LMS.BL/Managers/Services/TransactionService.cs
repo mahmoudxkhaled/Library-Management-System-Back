@@ -1,4 +1,5 @@
-﻿using LMS.BL.Managers.Interfaces;
+﻿using LMS.BL.Dtos.Transaction;
+using LMS.BL.Managers.Interfaces;
 using LMS.BL.Shared.Models;
 using LMS.DAL;
 using OfficeOpenXml;
@@ -33,8 +34,9 @@ public class TransactionService : ITransactionService
             var transactionList = transactions.Select(t => new GetTransactionDto
             {
                 Id = t.Id,
-                UserId = t.UserId,
                 BookId = t.BookId,
+                UserId = t.UserId,
+                RequestDate = t.RequestDate,
                 IssueDate = t.IssueDate,
                 DueDate = t.DueDate,
                 ReturnDate = t.ReturnDate,
@@ -70,6 +72,7 @@ public class TransactionService : ITransactionService
                     Id = transaction.Id,
                     UserId = transaction.UserId,
                     BookId = transaction.BookId,
+                    RequestDate = transaction.RequestDate,
                     IssueDate = transaction.IssueDate,
                     DueDate = transaction.DueDate,
                     ReturnDate = transaction.ReturnDate,
@@ -169,6 +172,7 @@ public class TransactionService : ITransactionService
                     Id = t.Id,
                     UserId = t.UserId,
                     BookId = t.BookId,
+                    RequestDate = t.RequestDate,
                     UserFullName = $"{t.User?.FirstName} {t.User?.LastName}",
                     BookName = t.Book?.Title ?? "Unknown Book",
                     IssueDate = t.IssueDate,
@@ -297,6 +301,72 @@ public class TransactionService : ITransactionService
                     Status = transaction.Status
                 }
             };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
+        }
+    }
+
+    public async Task<ApiResult> IssueBookAsync(IssueBookDto request)
+    {
+        try
+        {
+            // Get the current user's ID
+            var userId = int.Parse(_currentUserService.UserId!);
+
+            var transaction = await _unitOfWork.TransactionRepository.GetByIdAsync(request.TransactionId);
+            if (transaction == null)
+            {
+                return new ApiResult { IsSuccess = false, Message = "Transaction not found" };
+            }
+            if(transaction.Status != TransactionStatus.Pending.ToString())
+            {
+                return new ApiResult { IsSuccess = false, Message = "Transaction should be pending" };
+            }
+            transaction.IssueDate = request.IssueDate;
+            transaction.DueDate = request.IssueDate.AddDays(transaction.BorrowDays);
+            transaction.Status = TransactionStatus.Issued.ToString();
+            transaction.IssuedByUserId = userId; // Set the user who issued the book
+            transaction.UpdateUserId = _currentUserService.UserId;
+            transaction.UpdateTime = DateTime.Now;
+
+            _unitOfWork.TransactionRepository.Update(transaction);
+            await _unitOfWork.SaveChangesAsync();
+            return new ApiResult { IsSuccess = true, Message = "Book has been Issued successfully" };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
+        }
+    }
+
+    public async Task<ApiResult> ReturnBookAsync(ReturnBookDto request)
+    {
+        try
+        {
+            // Get the current user's ID
+            var userId = int.Parse(_currentUserService.UserId!);
+
+            var transaction = await _unitOfWork.TransactionRepository.GetByIdAsync(request.TransactionId);
+            if (transaction == null)
+            {
+                return new ApiResult { IsSuccess = false, Message = "Transaction not found" };
+            }
+            if (transaction.Status != TransactionStatus.Issued.ToString())
+            {
+                return new ApiResult { IsSuccess = false, Message = "Transaction should be issued" };
+            }
+            transaction.ReturnDate = request.ReturnDate;
+            transaction.Status = TransactionStatus.Returned.ToString();
+            transaction.ReturnNotes = request.Notes;
+            transaction.ReturnedByUserId = userId; // Set the user who returned the book
+            transaction.UpdateUserId = _currentUserService.UserId;
+            transaction.UpdateTime = DateTime.Now;
+
+            _unitOfWork.TransactionRepository.Update(transaction);
+            await _unitOfWork.SaveChangesAsync();
+            return new ApiResult { IsSuccess = true, Message = "Book has been Returned successfully" };
         }
         catch (Exception ex)
         {
