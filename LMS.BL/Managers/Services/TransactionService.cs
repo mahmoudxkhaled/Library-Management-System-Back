@@ -401,4 +401,74 @@ public class TransactionService : ITransactionService
         await _unitOfWork.SaveChangesAsync();
         return sent;
     }
+
+    public async Task<ApiResult> ChangeTransactionStatusAsync(ChangeTransactionStatusDto request)
+    {
+        try
+        {
+            var transaction = await _unitOfWork.TransactionRepository.GetByIdAsync(request.TransactionId);
+            if (transaction == null)
+            {
+                return new ApiResult { IsSuccess = false, Message = "Transaction not found" };
+            }
+
+            // Validate status
+            if (!Enum.TryParse<TransactionStatus>(request.Status, out var newStatus))
+            {
+                return new ApiResult { IsSuccess = false, Message = "Invalid status value" };
+            }
+
+            // Update transaction
+            transaction.Status = newStatus.ToString();
+            if (request.ReturnDate.HasValue)
+            {
+                transaction.ReturnDate = request.ReturnDate.Value;
+            }
+            else if (newStatus == TransactionStatus.Returned)
+            {
+                transaction.ReturnDate = DateTime.Now;
+            }
+
+            // If returning the book, update book availability
+            if (newStatus == TransactionStatus.Returned)
+            {
+                var book = await _unitOfWork.BookRepository.GetByIdAsync(transaction.BookId);
+                if (book != null)
+                {
+                    book.AvailableCopies++;
+                    book.UpdateUserId = _currentUserService.UserId;
+                    book.UpdateTime = DateTime.Now;
+                    _unitOfWork.BookRepository.Update(book);
+                }
+            }
+
+            transaction.UpdateUserId = _currentUserService.UserId;
+            transaction.UpdateTime = DateTime.Now;
+
+            _unitOfWork.TransactionRepository.Update(transaction);
+            await _unitOfWork.SaveChangesAsync();
+
+            return new ApiResult 
+            { 
+                IsSuccess = true, 
+                Message = $"Transaction status updated to {newStatus} successfully",
+                Data = new GetTransactionDto
+                {
+                    Id = transaction.Id,
+                    UserId = transaction.UserId,
+                    BookId = transaction.BookId,
+                    IssueDate = transaction.IssueDate,
+                    DueDate = transaction.DueDate,
+                    ReturnDate = transaction.ReturnDate,
+                    Status = transaction.Status,
+                    UserFullName = $"{transaction.User?.FirstName} {transaction.User?.LastName}",
+                    BookName = transaction.Book?.Title ?? "Unknown Book"
+                }
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
+        }
+    }
 }

@@ -14,4 +14,5 @@ public interface ITransactionService
     Task<ApiResult> BorrowBookAsync(BorrowBookDto request);
     Task<byte[]> GenerateTransactionReportAsync(TransactionReportDto request);
     Task<int> SendOverdueNotificationsAsync();
+    Task<ApiResult> ChangeTransactionStatusAsync(ChangeTransactionStatusDto request);
 }

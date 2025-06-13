@@ -104,4 +104,12 @@ public class TransactionController : ControllerBase
         int sent = await _transactionService.SendOverdueNotificationsAsync();
         return Ok(new { Message = $"Overdue notifications sent: {sent}" });
     }
+
+    [HttpPut("ChangeStatus")]
+    [Authorize(Roles = "Admin,Librarian")]
+    public async Task<ActionResult<ApiResult>> ChangeTransactionStatus(ChangeTransactionStatusDto request)
+    {
+        var result = await _transactionService.ChangeTransactionStatusAsync(request);
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
 }
