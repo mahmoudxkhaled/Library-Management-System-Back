@@ -78,12 +78,16 @@ public class BookService : IBookService
             if (_currentUserService.UserId != null)
             {
                 var userId = int.Parse(_currentUserService.UserId);
-                var transactions = await _unitOfWork.TransactionRepository.GetAllAsync();
-                IsBorrowed = transactions.Any(t =>
-                    t.UserId == userId &&
-                    t.BookId == id &&
-                    (t.Status == TransactionStatus.Issued.ToString() ||
-                     t.Status == TransactionStatus.Overdue.ToString()));
+                var transactions =  _unitOfWork.TransactionRepository.GetAll();
+                if(transactions!=null)
+                {
+                    IsBorrowed = transactions.Any(t =>
+                                        t.UserId == userId &&
+                                        t.BookId == id &&
+                                        (t.Status == TransactionStatus.Issued.ToString() ||
+                                         t.Status == TransactionStatus.Overdue.ToString()));
+                }
+                
             }
 
             return new ApiResult<BookDetailsDto>()

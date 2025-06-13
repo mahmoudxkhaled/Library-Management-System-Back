@@ -54,14 +54,17 @@ public class BookController : ControllerBase
     public async Task<ActionResult<BookDetailsDto>> getBookDetailsById(int id)
     {
         var result = await _bookService.getBookDetailsById(id);
-        if (result.Data != null)
+        if (result != null)
         {
-            if (result.Data.ImageUrl != null)
-                result.Data.ImageUrl = $"{Request.Scheme}://{Request.Host}/{result.Data.ImageUrl}";
-            if (result.Data.AuthorImageUrl != null)
-                result.Data.AuthorImageUrl = $"{Request.Scheme}://{Request.Host}/{result.Data.AuthorImageUrl}";
-            if (result.Data.CategoryImageUrl != null)
-                result.Data.CategoryImageUrl = $"{Request.Scheme}://{Request.Host}/{result.Data.CategoryImageUrl}";
+            if (result.Data != null)
+            {
+                if (result.Data.ImageUrl != null)
+                    result.Data.ImageUrl = $"{Request.Scheme}://{Request.Host}/{result.Data.ImageUrl}";
+                if (result.Data.AuthorImageUrl != null)
+                    result.Data.AuthorImageUrl = $"{Request.Scheme}://{Request.Host}/{result.Data.AuthorImageUrl}";
+                if (result.Data.CategoryImageUrl != null)
+                    result.Data.CategoryImageUrl = $"{Request.Scheme}://{Request.Host}/{result.Data.CategoryImageUrl}";
+            }
         }
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }

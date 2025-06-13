@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LMS.DAL.Migrations
 {
     [DbContext(typeof(LMSDbContext))]
-    [Migration("20250610092852_add-LastOverdueNotified")]
-    partial class addLastOverdueNotified
+    [Migration("20250613121411_m")]
+    partial class m
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,6 +76,9 @@ namespace LMS.DAL.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsTrending")
+                        .HasColumnType("bit");
+
                     b.Property<int>("PublicationYear")
                         .HasColumnType("int");
 
@@ -113,6 +116,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/240a09b8-7452-4cda-99e4-48627bfc2ba6_20250330_001414.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 1925,
                             Title = "The Great Gatsby",
                             TotalCopies = 15
@@ -127,6 +131,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/bbc43e3c-beff-4517-a107-e3ad3b7c3fbb_20250330_002428.png",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 1960,
                             Title = "To Kill a Mockingbird",
                             TotalCopies = 12
@@ -141,6 +146,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/ec03a3c1-b718-407b-9465-f8e867353021_20250330_000242.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 2011,
                             Title = "Sapiens: A Brief History of Humankind",
                             TotalCopies = 20
@@ -155,6 +161,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/0ff5c317-7915-4ee3-954f-4ebd7608d428_20250329_235320.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 2018,
                             Title = "Educated",
                             TotalCopies = 7
@@ -169,6 +176,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/2f7ebca3-e6c4-4c0b-aeac-ff396a023c49_20250329_234906.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 1988,
                             Title = "A Brief History of Time",
                             TotalCopies = 25
@@ -183,6 +191,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/1ecaf167-5c32-4f68-8c43-57b97dec2a3e_20250330_002042.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 1976,
                             Title = "The Selfish Gene",
                             TotalCopies = 12
@@ -197,6 +206,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/eaeefb94-29ae-486b-baba-078d7ca17429_20250330_001647.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 2014,
                             Title = "The Joy of x",
                             TotalCopies = 9
@@ -211,6 +221,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/e8b354e3-7ce0-4824-a92d-6cd434ef30cb_20250329_235623.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 1884,
                             Title = "Flatland: A Romance of Many Dimensions",
                             TotalCopies = 10
@@ -225,6 +236,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/169f079a-cfff-4d87-8f84-5a873a895504_20250330_001103.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 1947,
                             Title = "The Diary of a Young Girl",
                             TotalCopies = 8
@@ -239,6 +251,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/c508f639-13fb-425e-8e56-508c3fc2ba6b_20250330_002117.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 2015,
                             Title = "The Silk Roads",
                             TotalCopies = 18
@@ -253,6 +266,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/b5d07a17-b507-4aca-ae02-67407a95e307_20250330_000437.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 2011,
                             Title = "Steve Jobs",
                             TotalCopies = 15
@@ -267,6 +281,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/5fd61fc7-4a57-4cec-bc1e-153df1b8d08b_20250330_000750.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 1965,
                             Title = "The Autobiography of Malcolm X",
                             TotalCopies = 12
@@ -281,6 +296,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/7186fad6-481e-4b35-8730-bb5b38fe44d0_20250330_000006.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 1851,
                             Title = "Moby-Dick",
                             TotalCopies = 10
@@ -295,6 +311,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/5b2c0142-74e5-4317-a9fb-dacaa00f2610_20250330_000111.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 1813,
                             Title = "Pride and Prejudice",
                             TotalCopies = 14
@@ -308,6 +325,7 @@ namespace LMS.DAL.Migrations
                             Description = "The personal writings of the Roman Emperor Marcus Aurelius on Stoic philosophy.",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 180,
                             Title = "Meditations",
                             TotalCopies = 10
@@ -321,6 +339,7 @@ namespace LMS.DAL.Migrations
                             Description = "Plato's philosophical dialogue about justice, the ideal state, and the nature of the human soul.",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = -380,
                             Title = "The Republic",
                             TotalCopies = 11
@@ -335,6 +354,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/ddfb6c14-a1f1-4685-a835-16afd6354aac_20250330_002323.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 2011,
                             Title = "Thinking, Fast and Slow",
                             TotalCopies = 15
@@ -349,6 +369,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/c70e070d-1a1f-499c-9b66-9373873efd4d_20250330_001755.png",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 2012,
                             Title = "The Power of Habit",
                             TotalCopies = 14
@@ -363,6 +384,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/cdb6b6a0-dfc6-4f79-b81f-d53cbd47f797_20250329_234920.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 2018,
                             Title = "Atomic Habits",
                             TotalCopies = 15
@@ -377,6 +399,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/2d209324-e47a-4a72-b249-c27a8fd9b447_20250330_000600.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 1989,
                             Title = "The 7 Habits of Highly Effective People",
                             TotalCopies = 20
@@ -391,6 +414,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/f0e19d8b-bc7a-4630-9f96-0cb3b943bcab_20250330_002206.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 1950,
                             Title = "The Story of Art",
                             TotalCopies = 12
@@ -405,6 +429,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/b1f5b2da-1307-47ba-8ea1-fdbe780bd088_20250330_002539.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 1972,
                             Title = "Ways of Seeing",
                             TotalCopies = 9
@@ -419,6 +444,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/7147db03-a13b-4773-bfd3-d80fe01c4743_20250330_001923.png",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 2007,
                             Title = "The Rest Is Noise",
                             TotalCopies = 10
@@ -433,6 +459,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/00e82a7d-5452-4a08-b4a0-a75eb692656c_20250329_235723.png",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 2012,
                             Title = "How Music Works",
                             TotalCopies = 12
@@ -447,6 +474,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/d7f01374-6dff-4ea2-8d22-afd607cbdc11_20250330_000838.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 2014,
                             Title = "The Body Keeps the Score",
                             TotalCopies = 15
@@ -461,6 +489,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/f845f829-8491-4d04-8358-0d9064c7ec90_20250329_235131.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 2009,
                             Title = "Born to Run",
                             TotalCopies = 10
@@ -475,6 +504,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/c3902039-c0cb-4827-93c2-e523bfbca2e8_20250330_001629.png",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 1931,
                             Title = "The Joy of Cooking",
                             TotalCopies = 11
@@ -489,6 +519,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/34a1babd-4c98-4060-83e1-4a5ba9710042_20250330_000128.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 2017,
                             Title = "Salt, Fat, Acid, Heat",
                             TotalCopies = 8
@@ -503,6 +534,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/a26c1840-336e-4111-a9b6-1992fda7e5ca_20250329_235800.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 2000,
                             Title = "Kitchen Confidential",
                             TotalCopies = 12
@@ -517,6 +549,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/3f907f78-cd85-443b-82a3-d2663bbf74cd_20250330_001723.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 2006,
                             Title = "The Omnivore's Dilemma",
                             TotalCopies = 15
@@ -531,6 +564,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/317c1742-37a7-439c-9b23-00d0a708f7c8_20250330_000039.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 2000,
                             Title = "On Writing",
                             TotalCopies = 10
@@ -545,6 +579,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/2b87c9ee-4b19-40aa-ba32-8e45a76d4a88_20250329_235032.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 1994,
                             Title = "Bird by Bird",
                             TotalCopies = 9
@@ -559,6 +594,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/3d3e4b70-925b-42e4-98ef-42a94c5ae486_20250330_001224.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 1959,
                             Title = "The Elements of Style",
                             TotalCopies = 18
@@ -573,6 +609,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/2a7a7859-0f63-4643-8c93-a8e9951fda2d_20250330_002241.png",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 2002,
                             Title = "The War of Art",
                             TotalCopies = 12
@@ -587,6 +624,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/ac5dceb7-753b-4064-9f6e-6cc45176ffb2_20250330_000713.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 1988,
                             Title = "The Alchemist",
                             TotalCopies = 20
@@ -601,6 +639,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/46ce4b1e-404e-4aac-8b35-856c527a26b4_20250329_234649.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 1949,
                             Title = "1984",
                             TotalCopies = 14
@@ -615,6 +654,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/2f0c9609-566c-4fda-b9b9-cd9fead1e986_20250329_235216.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 1932,
                             Title = "Brave New World",
                             TotalCopies = 12
@@ -629,6 +669,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/c77cc79e-9e1b-4d65-8c9d-4ba5a67c9c95_20250329_235349.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 1953,
                             Title = "Fahrenheit 451",
                             TotalCopies = 14
@@ -643,6 +684,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/e5ba1036-fa70-4fb2-b647-b4897e63962f_20250330_000909.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 1951,
                             Title = "The Catcher in the Rye",
                             TotalCopies = 18
@@ -657,6 +699,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/23782e39-0ede-4324-b69f-63f70e9785c4_20250330_001449.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 1985,
                             Title = "The Handmaid's Tale",
                             TotalCopies = 15
@@ -671,6 +714,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/7d195219-1d98-477a-9b98-d30bae0b3464_20250330_002011.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 2006,
                             Title = "The Road",
                             TotalCopies = 10
@@ -685,6 +729,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/4b8da56f-7688-4d5b-b07e-d9853db96d1b_20250329_235845.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 2013,
                             Title = "Life After Life",
                             TotalCopies = 12
@@ -699,6 +744,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/52825395-52a2-4bea-9ee4-67a28f2c38b2_20250330_000508.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 2013,
                             Title = "The 5th Wave",
                             TotalCopies = 14
@@ -713,6 +759,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/c14ad657-c986-44c1-ae6b-2bacc1b2b577_20250330_001551.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 2008,
                             Title = "The Hunger Games",
                             TotalCopies = 18
@@ -727,6 +774,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/eea4aa7e-c852-46ca-9320-c2413be5836a_20250329_235249.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 2011,
                             Title = "Divergent",
                             TotalCopies = 15
@@ -741,6 +789,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/75eaa5a8-101b-4649-b94a-cc975b6b71d3_20250330_001300.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 2015,
                             Title = "The Girl on the Train",
                             TotalCopies = 12
@@ -755,6 +804,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/37e1b6dd-3596-460b-a5ea-75ab35e76de2_20250329_235640.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 2012,
                             Title = "Gone Girl",
                             TotalCopies = 14
@@ -769,6 +819,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/93e160f6-53a0-43c6-b70e-b5bf34a40d1d_20250330_000313.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 2006,
                             Title = "Sharp Objects",
                             TotalCopies = 10
@@ -783,6 +834,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/472104fd-a07c-4b6d-833a-f1980ade7088_20250329_234953.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 2014,
                             Title = "Big Little Lies",
                             TotalCopies = 18
@@ -797,6 +849,7 @@ namespace LMS.DAL.Migrations
                             ImageUrl = "Uploads/Books/16ccf3cf-cda1-465f-9c2e-ddd95c7e86da_20250330_001343.jpeg",
                             IsActive = true,
                             IsDeleted = false,
+                            IsTrending = false,
                             PublicationYear = 2005,
                             Title = "The Girl with the Dragon Tattoo",
                             TotalCopies = 15
@@ -1904,6 +1957,9 @@ namespace LMS.DAL.Migrations
                     b.Property<int>("BookId")
                         .HasColumnType("int");
 
+                    b.Property<int>("BorrowDays")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("DeletedTime")
                         .HasColumnType("datetime2");
 
@@ -1993,9 +2049,15 @@ namespace LMS.DAL.Migrations
                     b.Property<string>("ActivationUserId")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateOfBirth")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DeletedTime")
                         .HasColumnType("datetime2");

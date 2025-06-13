@@ -13,6 +13,8 @@ namespace LMS.DAL
         [Required]
         [MaxLength(100)]
         public string LastName { get; set; } = null!;
+        public string? Address { get; set; }
+        public DateTime? DateOfBirth { get; set; }
 
         [Url]
         public string? ProfileImageUrl { get; set; }
