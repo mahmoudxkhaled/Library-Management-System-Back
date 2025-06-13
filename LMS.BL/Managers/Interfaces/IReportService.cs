@@ -7,4 +7,5 @@ public interface IReportService
 {
     Task<byte[]> GenerateTransactionReportAsync(TransactionReportDto request);
     Task<byte[]> GenerateUserReportAsync(UserReportRequest request);
+    Task<byte[]> GenerateUserBorrowingHistoryReportAsync(UserBorrowingHistoryRequest request);
 } 

@@ -68,4 +68,30 @@ public class ReportsController : ControllerBase
             return BadRequest(new { message = ex.Message });
         }
     }
+
+    [HttpGet("DownloadUserBorrowingHistory")]
+    [Authorize(Roles = "Admin,Librarian")]
+    public async Task<IActionResult> DownloadUserBorrowingHistory([FromQuery] UserBorrowingHistoryRequest request)
+    {
+        try
+        {
+            var reportBytes = await _reportService.GenerateUserBorrowingHistoryReportAsync(request);
+            
+            string fileName;
+            if (request.StartDate.HasValue && request.EndDate.HasValue)
+            {
+                fileName = $"UserBorrowingHistory_{request.UserId}_{request.StartDate:yyyy-MM-dd}_to_{request.EndDate:yyyy-MM-dd}.xlsx";
+            }
+            else
+            {
+                fileName = $"UserBorrowingHistory_{request.UserId}_All.xlsx";
+            }
+
+            return File(reportBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
 } 
