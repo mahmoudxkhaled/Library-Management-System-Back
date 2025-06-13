@@ -1,4 +1,5 @@
-﻿using LMS.BL;
+﻿using Hangfire;
+using LMS.BL;
 using LMS.BL.Services;
 using LMS.DAL;
 using LMS.DAL.Data;
@@ -18,6 +19,16 @@ try
     builder.Services.AddDbContext<LMSDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
     #endregion
+
+    // Add Hangfire services
+    builder.Services.AddHangfire(configuration => configuration
+        .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+        .UseSimpleAssemblyNameTypeSerializer()
+        .UseRecommendedSerializerSettings()
+        .UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+    // Add the processing server as IHostedService
+    builder.Services.AddHangfireServer();
 
     // Add services to the container.
     builder.Services.AddControllers();
@@ -165,6 +176,17 @@ try
     app.UseAuthorization();
 
     app.MapControllers();
+
+    // Configure Hangfire dashboard
+    app.UseHangfireDashboard("/hangfire");
+
+    // Schedule the overdue notification job
+    var checkIntervalMinutes = builder.Configuration.GetValue<int>("OverdueNotificationOptions:CheckIntervalMinutes");
+    var checkIntervalHours = builder.Configuration.GetValue<int>("OverdueNotificationOptions:CheckIntervalHours");
+    RecurringJob.AddOrUpdate<OverdueNotificationService>(
+        "process-overdue-notifications",
+        x => x.ProcessOverdueNotifications(),
+        Cron.Daily(checkIntervalHours, checkIntervalMinutes));
 
     await app.RunAsync();
 }
