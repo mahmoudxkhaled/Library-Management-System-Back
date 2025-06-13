@@ -334,6 +334,7 @@ public class TransactionService : ITransactionService
             transaction.IssuedByUserId = userId; // Set the user who issued the book
             transaction.UpdateUserId = _currentUserService.UserId;
             transaction.UpdateTime = DateTime.Now;
+            transaction.Book.AvailableCopies--; // Decrement the book's available copies
 
             _unitOfWork.TransactionRepository.Update(transaction);
             await _unitOfWork.SaveChangesAsync();
@@ -357,7 +358,7 @@ public class TransactionService : ITransactionService
             {
                 return new ApiResult { IsSuccess = false, Message = "Transaction not found" };
             }
-            if (transaction.Status != TransactionStatus.Issued.ToString())
+            if (transaction.Status != TransactionStatus.Issued.ToString() && transaction.Status != TransactionStatus.Overdue.ToString())
             {
                 return new ApiResult { IsSuccess = false, Message = "Transaction should be issued" };
             }
@@ -367,6 +368,7 @@ public class TransactionService : ITransactionService
             transaction.ReturnedByUserId = userId; // Set the user who returned the book
             transaction.UpdateUserId = _currentUserService.UserId;
             transaction.UpdateTime = DateTime.Now;
+            transaction.Book.AvailableCopies++; // Increment the book's available copies
 
             _unitOfWork.TransactionRepository.Update(transaction);
             await _unitOfWork.SaveChangesAsync();
