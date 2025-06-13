@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LMS.DAL
@@ -11,7 +10,7 @@ namespace LMS.DAL
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
-        public int UserId { get; set; }  
+        public int UserId { get; set; }
 
         public User? User { get; set; }
 
@@ -23,14 +22,15 @@ namespace LMS.DAL
         public DateTime IssueDate { get; set; }
         public DateTime DueDate { get; set; } // Calculated based on the number of borrow days.
 
+        public int BorrowDays { get; set; }
         public DateTime? ReturnDate { get; set; } // Actual return date.
 
-        private string _status = "Issued";
+        private string _status = "Pending";
         [Required]
         [MaxLength(20)]
-        public string Status 
-        { 
-            get 
+        public string Status
+        {
+            get
             {
                 // If book is not returned and due date has passed, it's overdue
                 if (_status == "Issued" && ReturnDate == null && DueDate < DateTime.Now)
@@ -39,7 +39,7 @@ namespace LMS.DAL
                 }
                 return _status;
             }
-            set 
+            set
             {
                 if (value == "Issued" || value == "Returned" || value == "Overdue")
                 {
