@@ -334,7 +334,6 @@ public class TransactionService : ITransactionService
             transaction.IssuedByUserId = userId; // Set the user who issued the book
             transaction.UpdateUserId = _currentUserService.UserId;
             transaction.UpdateTime = DateTime.Now;
-            transaction.Book.AvailableCopies--; // Decrement the book's available copies
 
             _unitOfWork.TransactionRepository.Update(transaction);
             await _unitOfWork.SaveChangesAsync();
