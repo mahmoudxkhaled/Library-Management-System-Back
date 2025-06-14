@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using LMS.DAL.Data.Models;
 
 namespace LMS.DAL.Data
 {
@@ -259,6 +260,123 @@ namespace LMS.DAL.Data
             catch (Exception ex)
             {
                 Console.WriteLine($"❌ Error seeding transactions: {ex.Message}");
+            }
+        }
+
+        public static async Task SeedUsersWithTransactionsAsync(UserManager<User> userManager, IUnitOfWork unitOfWork, int numberOfUsers)
+        {
+            try
+            {
+                var random = new Random();
+                var books = await unitOfWork.BookRepository.GetAllAsync();
+                var defaultPassword = "Pass@123";
+
+                var firstNames = new[] { "Ahmed", "Mohamed", "Ali", "Youssef", "Omar", "Mostafa", "Hassan", "Mahmoud", "Khaled", "Ibrahim" };
+                var lastNames = new[] { "Hussein", "Farag", "Salah", "Saad", "Abdelrahman", "Tawfik", "Hamdy", "Gamal", "Nasser", "Zaki" };
+
+                // Create specified number of users
+                for (int i = 1; i <= numberOfUsers; i++)
+                {
+                    string email = $"user{i}@lms.com";
+                    var existingUser = await userManager.FindByEmailAsync(email);
+                    
+                    if (existingUser == null)
+                    {
+                        // Use modulo to cycle through names if numberOfUsers > 10
+                        var firstNameIndex = (i - 1) % firstNames.Length;
+                        var lastNameIndex = (i - 1) % lastNames.Length;
+
+                        var newUser = new User
+                        {
+                            Email = email,
+                            FirstName = firstNames[firstNameIndex],
+                            LastName = lastNames[lastNameIndex],
+                            UserName = email,
+                            PhoneNumber = "000000000000",
+                            Role = "Member",
+                            InsertedTime = DateTime.Now,
+                            IsActive = true,
+                            EmailConfirmed = true
+                        };
+
+                        var createUserResult = await userManager.CreateAsync(newUser, defaultPassword);
+                        if (!createUserResult.Succeeded)
+                        {
+                            Console.WriteLine($"Failed to create user {email}: {string.Join(", ", createUserResult.Errors.Select(e => e.Description))}");
+                            continue;
+                        }
+
+                        // Assign claims
+                        List<Claim> claims = new()
+                        {
+                            new Claim(ClaimTypes.NameIdentifier, newUser.Id.ToString()),
+                            new Claim(ClaimTypes.Email, newUser.Email.ToString()),
+                            new Claim(ClaimTypes.Role, newUser.Role.ToString()),
+                        };
+
+                        var claimsResult = await userManager.AddClaimsAsync(newUser, claims);
+                        if (!claimsResult.Succeeded)
+                        {
+                            Console.WriteLine($"Failed to add claims for {email}: {string.Join(", ", claimsResult.Errors.Select(e => e.Description))}");
+                            continue;
+                        }
+
+                        // Create 1-5 random transactions for this user
+                        int transactionCount = random.Next(1, 6);
+                        for (int j = 0; j < transactionCount; j++)
+                        {
+                            var randomBook = books.ElementAt(random.Next(books.Count()));
+                            var requestDate = DateTime.Now.AddDays(-random.Next(1, 60));
+                            var issueDate = requestDate.AddDays(random.Next(1, 3));
+                            var borrowDays = random.Next(7, 15);
+                            var dueDate = issueDate.AddDays(borrowDays);
+
+                            // Randomly select a status
+                            var statuses = new[] { "Pending", "Issued", "Returned", "Overdue" };
+                            var status = statuses[random.Next(statuses.Length)];
+                            DateTime? returnDate = null;
+
+                            if (status == "Returned")
+                            {
+                                returnDate = issueDate.AddDays(random.Next(1, borrowDays));
+                            }
+                            else if (status == "Overdue")
+                            {
+                                // Ensure the due date is in the past
+                                dueDate = DateTime.Now.AddDays(-random.Next(1, 10));
+                            }
+
+                            var transaction = new Transaction
+                            {
+                                UserId = newUser.Id,
+                                BookId = randomBook.Id,
+                                RequestDate = requestDate,
+                                IssueDate = issueDate,
+                                DueDate = dueDate,
+                                ReturnDate = returnDate,
+                                Status = status,
+                                BorrowDays = borrowDays,
+                                InsertedTime = DateTime.Now,
+                                IsActive = true
+                            };
+
+                            await unitOfWork.TransactionRepository.AddAsync(transaction);
+                        }
+
+                        Console.WriteLine($"✅ Created user {email} with {transactionCount} transactions");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"ℹ️ User {email} already exists");
+                    }
+                }
+
+                await unitOfWork.SaveChangesAsync();
+                Console.WriteLine($"✅ Successfully seeded {numberOfUsers} users with random transactions");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Error seeding users with transactions: {ex.Message}");
             }
         }
     }

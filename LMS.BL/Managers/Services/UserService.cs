@@ -287,7 +287,8 @@ public class UserService : IUserService
             }
 
             // Generate a random password
-            string generatedPassword = GenerateRandomPassword(12);
+            //            string generatedPassword = GenerateRandomPassword(12);
+            string generatedPassword = "Pass@123";
 
             User user = new()
             {
@@ -296,7 +297,7 @@ public class UserService : IUserService
                 LastName = userDto.LastName.Trim(),
                 UserName = userDto.Email,
                 PhoneNumber = userDto.PhoneNumber,
-                Role = Roles.Member.ToString(),
+                Role = userDto.Role,
                 InsertedTime = DateTime.Now,
                 IsActive = true,
             };
@@ -364,29 +365,33 @@ public class UserService : IUserService
     }
     public async Task<ApiResult> GetUserById(int id)
     {
-        var user= await _unitOfWork.UserRepository.GetByIdAsync(id);    
-        if(user == null) 
+        var user = await _unitOfWork.UserRepository.GetByIdAsync(id);
+        if (user == null)
         {
-            return new ApiResult { IsSuccess=false,Message=$"not found user by id {id}"};
+            return new ApiResult { IsSuccess = false, Message = $"not found user by id {id}" };
         }
-        return new ApiResult { IsSuccess=true,Data=new UserDetailsDto { Id=user.Id,FirstName=user.FirstName,LastName=user.LastName,PhoneNumber=user.PhoneNumber,ProfileImageUrl=user.ProfileImageUrl,Address=user.Address,DateofBirth=user.DateOfBirth} };
+        return new ApiResult { IsSuccess = true, Data = new UserDetailsDto { Id = user.Id, FirstName = user.FirstName, LastName = user.LastName, PhoneNumber = user.PhoneNumber, ProfileImageUrl = user.ProfileImageUrl, Address = user.Address, DateofBirth = user.DateOfBirth } };
     }
-    public async Task<ApiResult> updateUserProfile(UpdateUserProfileDto updateUserProfile,HttpContext httpContext)
+    public async Task<ApiResult> updateUserProfile(UpdateUserProfileDto updateUserProfile, HttpContext httpContext)
     {
         var user = await _unitOfWork.UserRepository.GetByIdAsync(updateUserProfile.Id);
-        if (user == null) return new ApiResult {IsSuccess = true }; 
-        user.FirstName= updateUserProfile.FirstName;    
-        user.LastName= updateUserProfile.LastName;
+        if (user == null)
+        {
+            return new ApiResult { IsSuccess = true };
+        }
+
+        user.FirstName = updateUserProfile.FirstName;
+        user.LastName = updateUserProfile.LastName;
         user.PhoneNumber = updateUserProfile.PhoneNumber;
         user.Address = updateUserProfile.Address;
-        user.DateOfBirth =updateUserProfile.DateOfBirth;
-        if (updateUserProfile.ProfileImageUrl != null) 
+        user.DateOfBirth = updateUserProfile.DateOfBirth;
+        if (updateUserProfile.ProfileImageUrl != null)
         {
             user.ProfileImageUrl = await _helperService.SaveFileAsync(updateUserProfile.ProfileImageUrl, "Users", httpContext);
         }
         _unitOfWork.UserRepository.Update(user);
         await _unitOfWork.SaveChangesAsync();
-        return new ApiResult { IsSuccess=true };
+        return new ApiResult { IsSuccess = true };
     }
 
     public async Task<ApiResult> GetAllUsersByRoleAsync(string role)
@@ -441,9 +446,9 @@ public class UserService : IUserService
             _unitOfWork.UserRepository.Update(user);
             await _unitOfWork.SaveChangesAsync();
 
-            return new ApiResult 
-            { 
-                IsSuccess = true, 
+            return new ApiResult
+            {
+                IsSuccess = true,
                 Message = "User details updated successfully",
                 Data = new GetUserDto
                 {
