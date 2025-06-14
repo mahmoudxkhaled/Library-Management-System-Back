@@ -459,6 +459,12 @@ public class TransactionService : ITransactionService
         {
             if (transaction.User?.Email != null)
             {
+                // Check if email is a Gmail address
+                if (!transaction.User.Email.EndsWith("@gmail.com", StringComparison.OrdinalIgnoreCase))
+                {
+                    Console.WriteLine($"Skipping non-Gmail address: {transaction.User.Email}");
+                    continue;
+                }
 
                 var subject = "Library Book Overdue Notice";
                 var daysOverdue = (DateTime.Now - transaction.DueDate.Value).Days;
@@ -493,11 +499,10 @@ public class TransactionService : ITransactionService
 
                 try
                 {
-                    //for testing
-                    ///  transaction.User.Email = "antonius.a.ghaly@gmail.com";
                     await _emailService.SendEmailAsync(transaction.User.Email, subject, body);
                     transaction.LastOverdueNotified = DateTime.Now;
                     sent++;
+                    Console.WriteLine($"Successfully sent overdue notice to {transaction.User.Email}");
                 }
                 catch (Exception ex)
                 {

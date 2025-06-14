@@ -152,7 +152,8 @@ try
             await DbSeeder.SeedAdminAsync(userManager);
             await DbSeeder.SeedLibrarianAsync(userManager);
             await DbSeeder.SeedMembersAsync(userManager);
-            //await DbSeeder.SeedTransactionsAsync(unitOfWork);
+            //await DbSeeder.SeedTransactionsAsync(unitOfWork); //one time run don't unComment
+            // await DbSeeder.SeedUsersWithTransactionsAsync(userManager, unitOfWork,10);  //one time run don't unComment
         }
         catch (Exception ex)
         {
