@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using LMS.BL.Dtos;
 using LMS.DAL;
 using Microsoft.EntityFrameworkCore;
@@ -10,85 +7,95 @@ namespace LMS.BL.Services
     public class DashboardService : IDashboardService
     {
         private readonly ITransactionRepository _transactionRepository;
+        private readonly IUserRepository _userRepository;
 
-        public DashboardService(ITransactionRepository transactionRepository)
+        public DashboardService(ITransactionRepository transactionRepository, IUserRepository userRepository)
         {
             _transactionRepository = transactionRepository;
+            _userRepository = userRepository;
         }
 
-        public async Task<IEnumerable<TopUserDto>> GetTopBorrowingUsersAsync(int count = 5)
+        public async Task<DashboardDto> GetDashboardAsync(int count = 5)
+        {
+            return new DashboardDto
+            {
+                TransactionCount = await _transactionRepository.CountAsync(),
+                ReturnedCount = await _transactionRepository.CountAsync(t => t.Status == TransactionStatus.Returned.ToString()),
+                OverdueCount = await _transactionRepository.CountAsync(t => t.Status == TransactionStatus.Overdue.ToString()),
+                MembersCount = await _userRepository.CountAsync(t => t.Role == "Member"),
+
+                TopBooks = await GetTopBorrowedBooksAsync(count),
+                TopAuthers = await GetTopBorrowedAuthorsAsync(count),
+                TopCategories = await GetTopBorrowedCategoriesAsync(count),
+                TopUsers = await GetTopBorrowingUsersAsync(count)
+
+            };
+        }
+        private async Task<List<ChartDto>> GetTopBorrowingUsersAsync(int count = 5)
         {
             var topUsers = await _transactionRepository.GetAll()
                 .Where(t => t.Status != TransactionStatus.Pending.ToString())
                 .GroupBy(t => new { t.UserId, t.User.FirstName, t.User.LastName })
-                .Select(g => new TopUserDto
+                .Select(g => new ChartDto
                 {
-                    Id = g.Key.UserId,
-                    FullName = $"{g.Key.FirstName} {g.Key.LastName}",
-                    BooksBorrowedCount = g.Count()
+                    Text = $"{g.Key.FirstName} {g.Key.LastName}",
+                    Value = g.Count()
                 })
-                .OrderByDescending(u => u.BooksBorrowedCount)
+                .OrderByDescending(u => u.Value)
                 .Take(count)
                 .ToListAsync();
 
             return topUsers;
         }
 
-        public async Task<IEnumerable<TopBookDto>> GetTopBorrowedBooksAsync(int? count = 5)
+        private async Task<List<ChartDto>> GetTopBorrowedBooksAsync(int? count = 5)
         {
             var actualCount = count ?? 5;
             var topBooks = await _transactionRepository.GetAll()
                 .Where(t => t.Status != TransactionStatus.Pending.ToString())
-                .GroupBy(t => new { t.BookId, t.Book.Title, t.Book.Author.FullName, t.Book.ImageUrl })
-                .Select(g => new TopBookDto
+                .GroupBy(t => new { t.BookId, t.Book.Title })
+                .Select(g => new ChartDto
                 {
-                    Id = g.Key.BookId,
-                    Title = g.Key.Title,
-                    AuthorName = g.Key.FullName,
-                    ImageUrl = g.Key.ImageUrl,
-                    BorrowCount = g.Count()
+                    Text = g.Key.Title,
+                    Value = g.Count()
                 })
-                .OrderByDescending(b => b.BorrowCount)
+                .OrderByDescending(b => b.Value)
                 .Take(actualCount)
                 .ToListAsync();
 
             return topBooks;
         }
 
-        public async Task<IEnumerable<TopCategoryDto>> GetTopBorrowedCategoriesAsync(int? count = 5)
+        private async Task<List<ChartDto>> GetTopBorrowedCategoriesAsync(int? count = 5)
         {
             var actualCount = count ?? 5;
             var topCategories = await _transactionRepository.GetAll()
                 .Where(t => t.Status != TransactionStatus.Pending.ToString())
-                .GroupBy(t => new { t.Book.CategoryId, t.Book.Category.Name, t.Book.Category.ImageUrl })
-                .Select(g => new TopCategoryDto
+                .GroupBy(t => new { t.Book.CategoryId, t.Book.Category.Name })
+                .Select(g => new ChartDto
                 {
-                    Id = g.Key.CategoryId,
-                    Name = g.Key.Name,
-                    ImageUrl = g.Key.ImageUrl,
-                    BorrowCount = g.Count()
+                    Text = g.Key.Name,
+                    Value = g.Count()
                 })
-                .OrderByDescending(c => c.BorrowCount)
+                .OrderByDescending(c => c.Value)
                 .Take(actualCount)
                 .ToListAsync();
 
             return topCategories;
         }
 
-        public async Task<IEnumerable<TopAuthorDto>> GetTopBorrowedAuthorsAsync(int? count = 5)
+        private async Task<List<ChartDto>> GetTopBorrowedAuthorsAsync(int? count = 5)
         {
             var actualCount = count ?? 5;
             var topAuthors = await _transactionRepository.GetAll()
                 .Where(t => t.Status != TransactionStatus.Pending.ToString())
-                .GroupBy(t => new { t.Book.AuthorId, t.Book.Author.FullName, t.Book.Author.ImageUrl })
-                .Select(g => new TopAuthorDto
+                .GroupBy(t => new { t.Book.AuthorId, t.Book.Author.FullName })
+                .Select(g => new ChartDto
                 {
-                    Id = g.Key.AuthorId,
-                    FullName = g.Key.FullName,
-                    ImageUrl = g.Key.ImageUrl,
-                    BorrowCount = g.Count()
+                    Text = g.Key.FullName,
+                    Value = g.Count()
                 })
-                .OrderByDescending(a => a.BorrowCount)
+                .OrderByDescending(a => a.Value)
                 .Take(actualCount)
                 .ToListAsync();
 

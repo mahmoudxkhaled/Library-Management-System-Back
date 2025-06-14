@@ -83,5 +83,12 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         return await _context.Set<T>().AnyAsync(predicate);
     }
+    public async Task<int> CountAsync(Expression<Func<T, bool>>? predicate = null)
+    {
+        if (predicate != null)
+            return await _context.Set<T>().CountAsync(predicate);
+        else
+            return await _context.Set<T>().CountAsync();
+    }
     #endregion
 }
