@@ -1,4 +1,7 @@
-﻿using LMS.BL.Dtos.Transaction;
+﻿using LMS.BL.Dtos;
+using System.Drawing;
+using LMS.BL.Dtos.Transaction;
+using LMS.BL.Dtos.User;
 using LMS.BL.Managers.Interfaces;
 using LMS.BL.Shared.Models;
 using LMS.DAL;
@@ -53,7 +56,56 @@ public class TransactionService : ITransactionService
             return new ApiResult { IsSuccess = false, Message = ex.Message };
         }
     }
+    public async Task<byte[]> ExportToExcel(List<SelectedFilters> selectedFilters)
+    {
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+        using (var package = new ExcelPackage())
+        {
+            var transactions = await _unitOfWork.TransactionRepository.GetAllAsync();
+            List<TransactionExcellData> TransactionExcellDataList = transactions.Select(t => new TransactionExcellData() { Book =t.Book?.Title,User = string.Concat(t.User?.FirstName,t.User?.LastName), RequestDate = t.RequestDate.ToString("d"), IssueDate = t.IssueDate?.ToString("d"), DueDate = t.DueDate?.ToString("d"), ReturnDate = t.ReturnDate?.ToString("d"),Status=t.Status,IssuedByUser= string.Concat(t.IssuedByUser?.FirstName, t.IssuedByUser?.LastName),ReturnedByUser= string.Concat(t.ReturnedByUser?.FirstName, t.ReturnedByUser?.LastName), }).ToList();
+            var stream = new MemoryStream();
+            var UsersSheet = package.Workbook.Worksheets.Add("Books");
+            UsersSheet.Row(1).Height = 35;
+            UsersSheet.Row(1).Style.Locked = true;
+            // Unlock all cells
+            UsersSheet.Cells.Style.Locked = false;
+            UsersSheet.Cells[1, 1, 1, selectedFilters.Count].Style.Locked = true;
+            // Protect the sheet
+            UsersSheet.Cells[1, 1, 1, selectedFilters.Count].Style.Locked = true;
+            UsersSheet.Protection.IsProtected = true;
+            UsersSheet.Protection.SetPassword("54321");
+            UsersSheet.Protection.AllowSelectLockedCells = true;
+            UsersSheet.Protection.AllowSelectUnlockedCells = true;
+            UsersSheet.Columns[1, 10].Width = 20;
+            UsersSheet.Row(1).Style.Font.Size = 15;
+            UsersSheet.Row(1).Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+            UsersSheet.Row(1).Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+            UsersSheet.Cells[1, 1, 1, selectedFilters.Count].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            UsersSheet.Cells[1, 1, 1, selectedFilters.Count].Style.Fill.BackgroundColor.SetColor(Color.SkyBlue);
+            UsersSheet.Row(1).Style.Font.Bold = true;
+            // set columns headers
+            for (int i = 0; i < selectedFilters.Count; i++)
+            {
+                UsersSheet.Cells[1, i + 1].Value = selectedFilters[i].name;
+            }
+            // set transactions Records
+            var row = 2;
+            for (int b = 0; b < TransactionExcellDataList?.Count(); b++)
+            {
+                for (int i = 0; i < selectedFilters.Count; i++)
+                {
 
+                    var bookType = TransactionExcellDataList[b].GetType();
+                    var property = bookType.GetProperty(selectedFilters[i].name);
+                    if (property != null) UsersSheet.Cells[row, i + 1].Value = property.GetValue(TransactionExcellDataList[b]);
+                }
+                row++;
+            }
+            // Auto-fit columns
+            UsersSheet.Cells.AutoFitColumns();
+            return package.GetAsByteArray();
+        }
+    }
     public async Task<ApiResult> GetTransactionByIdAsync(string id)
     {
         try

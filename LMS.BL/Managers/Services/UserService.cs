@@ -1,10 +1,15 @@
-﻿using LMS.BL.Dtos.User;
+﻿using LMS.BL.Dtos.Book;
+using LMS.BL.Dtos;
+using LMS.BL.Dtos.User;
 using LMS.BL.Shared.Models;
 using LMS.DAL;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using OfficeOpenXml.Style;
+using OfficeOpenXml;
+using System.Drawing;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -92,6 +97,57 @@ public class UserService : IUserService
         catch (Exception ex)
         {
             return new ApiResult { Message = ex.Message, IsSuccess = false, };
+        }
+    }
+    public async Task<byte[]> ExportToExcel(List<SelectedFilters> selectedFilters)
+    {
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+        using (var package = new ExcelPackage())
+        {
+            var users = await _unitOfWork.UserRepository.GetAllAsync();
+            List<UserExcellData> userExcelDataList = users.Select(u => new UserExcellData() {FirstName=u.FirstName,LastName=u.LastName,Address=u.Address,DateOfBirth=u.DateOfBirth?.ToString("d"),Email=u.Email,PhoneNumber=u.PhoneNumber}).ToList();
+            var stream = new MemoryStream();
+            var UsersSheet = package.Workbook.Worksheets.Add("Books");
+            UsersSheet.Row(1).Height = 35;
+            UsersSheet.Row(1).Style.Locked = true;
+            // Unlock all cells
+            UsersSheet.Cells.Style.Locked = false;
+            UsersSheet.Cells[1, 1, 1, selectedFilters.Count].Style.Locked = true;
+            // Protect the sheet
+            UsersSheet.Cells[1, 1, 1, selectedFilters.Count].Style.Locked = true;
+            UsersSheet.Protection.IsProtected = true;
+            UsersSheet.Protection.SetPassword("54321");
+            UsersSheet.Protection.AllowSelectLockedCells = true;
+            UsersSheet.Protection.AllowSelectUnlockedCells = true;
+            UsersSheet.Columns[1, 10].Width = 20;
+            UsersSheet.Row(1).Style.Font.Size = 15;
+            UsersSheet.Row(1).Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+            UsersSheet.Row(1).Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+            UsersSheet.Cells[1, 1, 1, selectedFilters.Count].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            UsersSheet.Cells[1, 1, 1, selectedFilters.Count].Style.Fill.BackgroundColor.SetColor(Color.SkyBlue);
+            UsersSheet.Row(1).Style.Font.Bold = true;
+            // set columns headers
+            for (int i = 0; i < selectedFilters.Count; i++)
+            {
+                UsersSheet.Cells[1, i + 1].Value = selectedFilters[i].name;
+            }
+            // set Users Records
+            var row = 2;
+            List<string> list = new List<string>();
+            for (int b = 0; b < userExcelDataList?.Count(); b++)
+            {
+                for (int i = 0; i < selectedFilters.Count; i++)
+                {
+
+                    var bookType = userExcelDataList[b].GetType();
+                    var property = bookType.GetProperty(selectedFilters[i].name);
+                    if (property != null) UsersSheet.Cells[row, i + 1].Value = property.GetValue(userExcelDataList[b]);
+                }
+                row++;
+            }
+            // Auto-fit columns
+            UsersSheet.Cells.AutoFitColumns();
+            return package.GetAsByteArray();
         }
     }
     public async Task<ApiResult> LoginAsync(UserLoginDto loginCredentials)

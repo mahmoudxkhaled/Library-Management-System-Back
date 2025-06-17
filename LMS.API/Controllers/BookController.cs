@@ -1,8 +1,13 @@
-﻿using LMS.BL;
+﻿using System.Drawing;
+using LMS.BL;
+using LMS.BL.Dtos;
 using LMS.BL.Dtos.Book;
 using LMS.BL.Shared.Models;
 using LMS.DAL.Data;
 using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml;
+using OfficeOpenXml.DataValidation;
+using OfficeOpenXml.Style;
 
 namespace LMS.API.Controllers;
 
@@ -33,7 +38,19 @@ public class BookController : ControllerBase
         }
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
-
+    [HttpPost("ExportToExcel")]
+    public async Task<ActionResult> ExportToExcel(List<SelectedFilters> selectedFilters)
+    {
+        try
+        {
+            var stream = await _bookService.ExportToExcel(selectedFilters);
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "BookRecords");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
     [HttpPost("{first}/{rows}")]
     public async Task<ActionResult> GetBooksPaged(int first, int rows, BookParams bookParams)
     {

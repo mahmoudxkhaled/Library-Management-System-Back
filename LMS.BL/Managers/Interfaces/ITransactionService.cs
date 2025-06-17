@@ -1,4 +1,5 @@
-﻿using LMS.BL.Dtos.Transaction;
+﻿using LMS.BL.Dtos;
+using LMS.BL.Dtos.Transaction;
 using LMS.BL.Shared.Models;
 
 namespace LMS.BL;
@@ -16,6 +17,7 @@ public interface ITransactionService
     Task<ApiResult> IssueBookAsync(IssueBookDto request);
 
     Task<ApiResult> ReturnBookAsync(ReturnBookDto request);
+    Task<byte[]> ExportToExcel(List<SelectedFilters> selectedFilters);
     Task<byte[]> GenerateTransactionReportAsync(TransactionReportDto request);
     Task<int> SendOverdueNotificationsAsync();
     Task<ApiResult> ChangeTransactionStatusAsync(ChangeTransactionStatusDto request);

@@ -1,4 +1,5 @@
 ﻿using LMS.BL;
+using LMS.BL.Dtos;
 using LMS.BL.Dtos.User;
 using LMS.BL.Shared.Models;
 using LMS.DAL;
@@ -77,7 +78,19 @@ public class UserController : ControllerBase
         var result = await _userService.AddRoleToUserAsync(request);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
-
+    [HttpPost("ExportToExcel")]
+    public async Task<ActionResult> ExportToExcel(List<SelectedFilters> selectedFilters)
+    {
+        try
+        {
+            var stream = await _userService.ExportToExcel(selectedFilters);
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "UserRecords");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
     [HttpPost("RemoveRoleFromUser")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> RemoveRoleFromUser([FromBody] UserRoleDto request)

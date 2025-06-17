@@ -1,4 +1,5 @@
-﻿using LMS.DAL.Data;
+﻿using System.Collections.Immutable;
+using LMS.DAL.Data;
 using LMS.DAL.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -99,6 +100,11 @@ public class BookRepository : GenericRepository<Book>, IBookRepository
             .AsNoTracking()
             .ToListAsync();
     }
+    public async Task<List<Book>> getAllBooksWithAuthorandCategory()
+    {
+        return await _context.Book.Include(b => b.Author).Include(b=>b.Category).AsNoTracking().ToListAsync();
+    }
+
 
     #endregion
 }
