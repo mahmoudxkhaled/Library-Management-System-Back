@@ -36,7 +36,20 @@ namespace LMS.BL.Managers.Services
         public async Task<pagedResult<GetAuthorDto>> GetAllAuthors(int first, int rows, AuthorParams authorParams)
         {
             var authors = await unitOfWork.AuthorRepository.GetAllAuthors(first,rows,authorParams.sortOrder,authorParams.sortField,authorParams.Search,authorParams.isActive);
-            return new pagedResult<GetAuthorDto> { TotalCount = authors.TotalCount, Result = authors.Result.Select(a => new GetAuthorDto { Id = a.Id, FullName = a.FullName, Description = a.Description,ImageURL=a.ImageUrl, DateOfBirth = a.DateOfBirth, IsActive = a.IsActive }).ToList() };
+            var authorIds = authors.Result.Select(a => a.Id).ToList();
+            var books = await unitOfWork.BookRepository.GetBooksByAuthorIds(authorIds);
+            return new pagedResult<GetAuthorDto> {
+                TotalCount = authors.TotalCount,
+                Result = authors.Result.Select(a => new GetAuthorDto {
+                    Id = a.Id,
+                    FullName = a.FullName,
+                    Description = a.Description,
+                    ImageURL = a.ImageUrl,
+                    DateOfBirth = a.DateOfBirth,
+                    IsActive = a.IsActive,
+                    BookCount = books.Count(b => b.AuthorId == a.Id)
+                }).ToList()
+            };
         }
         public async Task<int> DeleteAuthorById(int id, string userId)
         {
