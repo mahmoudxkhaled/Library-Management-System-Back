@@ -2,7 +2,6 @@
 using LMS.BL;
 using LMS.BL.Services;
 using LMS.DAL;
-using LMS.DAL.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -149,9 +148,9 @@ try
         {
             var userManager = services.GetRequiredService<UserManager<User>>();
             var unitOfWork = services.GetRequiredService<IUnitOfWork>();
-            await DbSeeder.SeedAdminAsync(userManager);
-            await DbSeeder.SeedLibrarianAsync(userManager);
-            await DbSeeder.SeedMembersAsync(userManager);
+            //await DbSeeder.SeedAdminAsync(userManager);
+            //  await DbSeeder.SeedLibrarianAsync(userManager);
+            // await DbSeeder.SeedMembersAsync(userManager);
             //await DbSeeder.SeedTransactionsAsync(unitOfWork); //one time run don't unComment
             // await DbSeeder.SeedUsersWithTransactionsAsync(userManager, unitOfWork,10);  //one time run don't unComment
         }
