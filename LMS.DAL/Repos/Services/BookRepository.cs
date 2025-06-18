@@ -105,6 +105,10 @@ public class BookRepository : GenericRepository<Book>, IBookRepository
         return await _context.Book.Include(b => b.Author).Include(b=>b.Category).AsNoTracking().ToListAsync();
     }
 
+    public async Task<List<Book>> GetBooksByAuthorIds(List<int> authorIds)
+    {
+        return await _context.Book.Where(b => authorIds.Contains(b.AuthorId)).ToListAsync();
+    }
 
     #endregion
 }

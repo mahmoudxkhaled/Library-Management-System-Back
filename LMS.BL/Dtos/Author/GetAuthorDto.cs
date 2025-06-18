@@ -14,6 +14,6 @@ namespace LMS.BL.Dtos.Author
         public DateOnly DateOfBirth { get; set; }
         public bool IsActive { get; set; }
         public string? ImageURL { get; set; }
-
+        public int BookCount { get; set; }
     }
 }

@@ -10,5 +10,5 @@ public interface IBookRepository : IGenericRepository<Book>
     Task<List<Book>> getAllBooksWithAuthorandCategory();
     Task<Book?> GetBookWithAuthorByIdAsync(int id);
     Task<IEnumerable<Book>> GetBooksByCategoryExceptBookAsync(int bookId);
-
+    Task<List<Book>> GetBooksByAuthorIds(List<int> authorIds);
 }
