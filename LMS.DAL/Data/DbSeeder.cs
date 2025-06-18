@@ -327,23 +327,41 @@ namespace LMS.DAL.Data
                         {
                             var randomBook = books.ElementAt(random.Next(books.Count()));
                             var requestDate = DateTime.Now.AddDays(-random.Next(1, 60));
-                            var issueDate = requestDate.AddDays(random.Next(1, 3));
                             var borrowDays = random.Next(7, 15);
-                            var dueDate = issueDate.AddDays(borrowDays);
-
+                            
                             // Randomly select a status
                             var statuses = new[] { "Pending", "Issued", "Returned", "Overdue" };
                             var status = statuses[random.Next(statuses.Length)];
+                            
+                            DateTime? issueDate = null;
+                            DateTime? dueDate = null;
                             DateTime? returnDate = null;
 
-                            if (status == "Returned")
+                            if (status == "Pending")
                             {
-                                returnDate = issueDate.AddDays(random.Next(1, borrowDays));
+                                // Pending transactions only have request date and borrow days
+                                issueDate = null;
+                                dueDate = null;
+                                returnDate = null;
                             }
-                            else if (status == "Overdue")
+                            else
                             {
-                                // Ensure the due date is in the past
-                                dueDate = DateTime.Now.AddDays(-random.Next(1, 10));
+                                // For Issued, Returned, and Overdue, we need issue date and due date
+                                issueDate = requestDate.AddDays(random.Next(1, 3));
+                                dueDate = issueDate.Value.AddDays(borrowDays);
+
+                                if (status == "Returned")
+                                {
+                                    // Returned transactions have all dates
+                                    returnDate = issueDate.Value.AddDays(random.Next(1, borrowDays));
+                                }
+                                else if (status == "Overdue")
+                                {
+                                    // Overdue transactions have issue date and due date in the past
+                                    issueDate = DateTime.Now.AddDays(-random.Next(borrowDays + 5, borrowDays + 15));
+                                    dueDate = issueDate.Value.AddDays(borrowDays);
+                                    returnDate = null;
+                                }
                             }
 
                             var transaction = new Transaction
