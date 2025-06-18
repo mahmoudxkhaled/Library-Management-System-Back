@@ -1,8 +1,12 @@
-﻿using LMS.BL.Dtos.Book;
+﻿using System.Drawing;
+using LMS.BL.Dtos;
+using LMS.BL.Dtos.Book;
 using LMS.BL.Shared.Models;
 using LMS.DAL;
 using LMS.DAL.Data;
 using Microsoft.AspNetCore.Http;
+using OfficeOpenXml.Style;
+using OfficeOpenXml;
 namespace LMS.BL;
 
 public class BookService : IBookService
@@ -21,7 +25,69 @@ public class BookService : IBookService
         _currentUserService = currentUserService;
 
     }
+    public async Task<ApiResult<List<BookWithDetailsDto>>> getAllBooksWithAuthorandCategory()
+    {
+        try
+        {
+            var books = await _unitOfWork.BookRepository.getAllBooksWithAuthorandCategory();
+            List<BookWithDetailsDto> booksWithDetails = books.Select(b=> new BookWithDetailsDto() {Title=b.Title,Description=b.Description,PublicationYear=b.PublicationYear,AvailableCopies=b.AvailableCopies,TotalCopies=b.TotalCopies,Category=b.Category.Name,Author=b.Author.FullName}).ToList();
+            return new ApiResult<List<BookWithDetailsDto>> { IsSuccess = true, Data = booksWithDetails };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult<List<BookWithDetailsDto>> { IsSuccess = false, Message = ex.Message };
+        }
+    }
+    public async Task<byte[]> ExportToExcel(List<SelectedFilters> selectedFilters)
+    {
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+        using (var package = new ExcelPackage())
+        {
+            var books = await _unitOfWork.BookRepository.getAllBooksWithAuthorandCategory();
+            List<BookWithDetailsDto> booksWithDetails = books.Select(b => new BookWithDetailsDto() { Title = b.Title, Description = b.Description, PublicationYear = b.PublicationYear, AvailableCopies = b.AvailableCopies, TotalCopies = b.TotalCopies, Category = b.Category.Name, Author = b.Author.FullName }).ToList();
+            var stream = new MemoryStream();
+            var BooksSheet = package.Workbook.Worksheets.Add("Books");
+            BooksSheet.Row(1).Height = 35;
+            BooksSheet.Row(1).Style.Locked = true;
+            // Unlock all cells
+            BooksSheet.Cells.Style.Locked = false;
+            BooksSheet.Cells[1, 1, 1, selectedFilters.Count].Style.Locked = true;
+            // Protect the sheet
+            BooksSheet.Protection.IsProtected = true;
+            BooksSheet.Protection.SetPassword("54321");
+            BooksSheet.Protection.AllowSelectLockedCells = true;
+            BooksSheet.Protection.AllowSelectUnlockedCells = true;
+            BooksSheet.Columns[1, 10].Width = 20;
+            BooksSheet.Row(1).Style.Font.Size = 15;
+            BooksSheet.Row(1).Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+            BooksSheet.Row(1).Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+            BooksSheet.Cells[1, 1, 1, selectedFilters.Count].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            BooksSheet.Cells[1, 1, 1, selectedFilters.Count].Style.Fill.BackgroundColor.SetColor(Color.SkyBlue);
+            BooksSheet.Row(1).Style.Font.Bold = true;
+            // set columns headers
+            for (int i = 0; i < selectedFilters.Count; i++)
+            {
+                BooksSheet.Cells[1, i + 1].Value = selectedFilters[i].name;
+            }
+            // set Book Records
+            var row = 2;
+            List<string> list = new List<string>();
+            for (int b = 0; b < booksWithDetails?.Count(); b++)
+            {
+                for (int i = 0; i < selectedFilters.Count; i++)
+                {
 
+                    var bookType = booksWithDetails[b].GetType();
+                    var property = bookType.GetProperty(selectedFilters[i].name);
+                    if (property != null) BooksSheet.Cells[row, i + 1].Value = property.GetValue(booksWithDetails[b]);
+                }
+                row++;
+            }
+            // Auto-fit columns
+            BooksSheet.Cells.AutoFitColumns();
+            return package.GetAsByteArray();
+        }
+    }
     public async Task<ApiResult<List<GetBookDto>>> GetAllBooksAsync()
     {
         try

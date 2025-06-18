@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using LMS.DAL;
 using LMS.BL.Dtos.Transaction;
+using LMS.BL.Dtos;
 
 namespace LMS.API.Controllers;
 
@@ -62,7 +63,19 @@ public class TransactionController : ControllerBase
         var result = await _transactionService.UpdateTransactionAsync(request);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
-
+    [HttpPost("ExportToExcel")]
+    public async Task<ActionResult> ExportToExcel(List<SelectedFilters> selectedFilters)
+    {
+        try
+        {
+            var stream = await _transactionService.ExportToExcel(selectedFilters);
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "TansactionRecords");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
     [HttpDelete("DeleteTransaction/{id}")]
     public async Task<IActionResult> DeleteTransaction(string id)
     {

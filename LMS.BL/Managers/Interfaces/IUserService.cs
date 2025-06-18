@@ -1,6 +1,11 @@
-﻿using LMS.BL.Dtos.User;
+﻿using LMS.BL.Dtos.Book;
+using LMS.BL.Dtos;
+using LMS.BL.Dtos.User;
 using LMS.BL.Shared.Models;
 using Microsoft.AspNetCore.Http;
+using OfficeOpenXml.Style;
+using OfficeOpenXml;
+using System.Drawing;
 using System.Threading.Tasks;
 
 namespace LMS.BL
@@ -14,6 +19,7 @@ namespace LMS.BL
         Task<ApiResult> GetAllRolesAsync();
         Task<ApiResult> AddRoleToUserAsync(UserRoleDto updateUserRoleDto);
         Task<ApiResult> RemoveRoleFromUserAsync(UserRoleDto updateUserRoleDto);
+        Task<byte[]> ExportToExcel(List<SelectedFilters> selectedFilters);
         Task<ApiResult> ActivateDeactivateUserAsync(ToggleUserActivationDto updateUserStatusDto);
         Task<ApiResult> AddUserAsync(AddUserDto userDto);
         Task<ApiResult> GetUserById(int id);
