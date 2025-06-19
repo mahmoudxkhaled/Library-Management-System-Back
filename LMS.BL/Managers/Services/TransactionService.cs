@@ -234,7 +234,8 @@ public class TransactionService : ITransactionService
                     IssueDate = t.IssueDate,
                     DueDate = t.DueDate,
                     ReturnDate = t.ReturnDate,
-                    Status = t.Status
+                    Status = t.Status,
+                    BookImageUrl = t.Book?.ImageUrl
                 }).ToList();
 
             return new ApiResult { IsSuccess = true, Data = transactionList };
