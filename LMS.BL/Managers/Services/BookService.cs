@@ -1,12 +1,12 @@
-﻿using System.Drawing;
-using LMS.BL.Dtos;
+﻿using LMS.BL.Dtos;
 using LMS.BL.Dtos.Book;
 using LMS.BL.Shared.Models;
 using LMS.DAL;
 using LMS.DAL.Data;
 using Microsoft.AspNetCore.Http;
-using OfficeOpenXml.Style;
 using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using System.Drawing;
 namespace LMS.BL;
 
 public class BookService : IBookService
@@ -30,7 +30,7 @@ public class BookService : IBookService
         try
         {
             var books = await _unitOfWork.BookRepository.getAllBooksWithAuthorandCategory();
-            List<BookWithDetailsDto> booksWithDetails = books.Select(b=> new BookWithDetailsDto() {Title=b.Title,Description=b.Description,PublicationYear=b.PublicationYear,AvailableCopies=b.AvailableCopies,TotalCopies=b.TotalCopies,Category=b.Category.Name,Author=b.Author.FullName}).ToList();
+            List<BookWithDetailsDto> booksWithDetails = books.Select(b => new BookWithDetailsDto() { Title = b.Title, Description = b.Description, PublicationYear = b.PublicationYear, AvailableCopies = b.AvailableCopies, TotalCopies = b.TotalCopies, Category = b.Category.Name, Author = b.Author.FullName }).ToList();
             return new ApiResult<List<BookWithDetailsDto>> { IsSuccess = true, Data = booksWithDetails };
         }
         catch (Exception ex)
@@ -119,8 +119,23 @@ public class BookService : IBookService
         try
         {
             pagedResult<ReadBookDto> pagedResultDto = new pagedResult<ReadBookDto>();
-            var pagedResult = await _unitOfWork.BookRepository.GetBooksPaged(first, rows, sortOrder, sortField, Search, categoryId, authorId);
-            pagedResultDto.Result = pagedResult.Result.Select(b => new ReadBookDto() { Id = b.Id, Title = b.Title, Description = b.Description, CoverImageUrl = b.ImageUrl, AuthorId = b.Author.Id, AuthorFullName = b.Author.FullName, AuthorImage = b.Author.ImageUrl, AvailableCopies = b.AvailableCopies, CategoryId = b.CategoryId, CategoryName = b.Category.Name, PublicationYear = b.PublicationYear, TotalCopies = b.TotalCopies }).ToList();
+            var pagedResult = await _unitOfWork.BookRepository.
+                GetBooksPaged(first, rows, sortOrder, sortField, Search, categoryId, authorId);
+            pagedResultDto.Result = pagedResult.Result.Select(b => new ReadBookDto()
+            {
+                Id = b.Id,
+                Title = b.Title,
+                Description = b.Description,
+                CoverImageUrl = b.ImageUrl,
+                AuthorId = b.Author.Id,
+                AuthorFullName = b.Author.FullName,
+                AuthorImage = b.Author.ImageUrl,
+                AvailableCopies = b.AvailableCopies,
+                CategoryId = b.CategoryId,
+                CategoryName = b.Category.Name,
+                PublicationYear = b.PublicationYear,
+                TotalCopies = b.TotalCopies
+            }).ToList();
             pagedResultDto.TotalCount = pagedResult.TotalCount;
             return new ApiResult<pagedResult<ReadBookDto>> { IsSuccess = true, Data = pagedResultDto };
         }
@@ -144,11 +159,11 @@ public class BookService : IBookService
             if (_currentUserService.UserId != null)
             {
                 var userId = int.Parse(_currentUserService.UserId);
-                IsBorrowed = await  _unitOfWork.TransactionRepository.AnyAsync(t =>
+                IsBorrowed = await _unitOfWork.TransactionRepository.AnyAsync(t =>
                                         t.UserId == userId &&
                                         t.BookId == id &&
                                         t.Status == TransactionStatus.Returned.ToString());
-                
+
             }
 
             return new ApiResult<BookDetailsDto>()
