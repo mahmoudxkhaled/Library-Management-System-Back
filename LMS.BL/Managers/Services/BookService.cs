@@ -134,7 +134,8 @@ public class BookService : IBookService
                 CategoryId = b.CategoryId,
                 CategoryName = b.Category.Name,
                 PublicationYear = b.PublicationYear,
-                TotalCopies = b.TotalCopies
+                TotalCopies = b.TotalCopies,
+                IsTrending = b.IsTrending
             }).ToList();
             pagedResultDto.TotalCount = pagedResult.TotalCount;
             return new ApiResult<pagedResult<ReadBookDto>> { IsSuccess = true, Data = pagedResultDto };

@@ -15,5 +15,6 @@
         public int AvailableCopies { get; set; }
         public int TotalCopies { get; set; }
         public string? CoverImageUrl { get; set; }
+        public bool IsTrending { get; set; }
     }
 }
