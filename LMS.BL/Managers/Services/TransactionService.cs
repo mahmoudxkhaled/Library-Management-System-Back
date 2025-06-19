@@ -46,7 +46,7 @@ public class TransactionService : ITransactionService
                 Status = t.Status,
                 UserFullName = $"{t.User?.FirstName} {t.User?.LastName}",
                 BookName = t.Book?.Title ?? "Unknown Book",
-
+                BookImageUrl = t.Book?.ImageUrl
             }).ToList();
 
             return new ApiResult { IsSuccess = true, Data = transactionList };

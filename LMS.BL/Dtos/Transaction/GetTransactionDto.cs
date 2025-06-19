@@ -6,6 +6,7 @@ public class GetTransactionDto
     public int BookId { get; set; }
     public string UserFullName { get; set; } = null!;
     public string BookName { get; set; } = null!;
+    public string? BookImageUrl { get; set; }
     public DateTime RequestDate { get; set; }
     public DateTime? IssueDate { get; set; }
     public DateTime? DueDate { get; set; }
