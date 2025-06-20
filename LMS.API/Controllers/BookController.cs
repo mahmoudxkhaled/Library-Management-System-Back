@@ -26,16 +26,6 @@ public class BookController : ControllerBase
     public async Task<IActionResult> GetAllBooks()
     {
         ApiResult<List<GetBookDto>> result = await _bookService.GetAllBooksAsync();
-        if (result.Data != null)
-        {
-            for (int i = 0; i < result.Data.Count; i++)
-            {
-                if (result.Data[i].ImageUrl != null)
-                {
-                    result.Data[i].ImageUrl = $"{Request.Scheme}://{Request.Host}/{result.Data[i].ImageUrl}";
-                }
-            };
-        }
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
     [HttpPost("ExportToExcel")]
@@ -55,34 +45,12 @@ public class BookController : ControllerBase
     public async Task<ActionResult> GetBooksPaged(int first, int rows, BookParams bookParams)
     {
         ApiResult<pagedResult<ReadBookDto>> Books = await _bookService.GetBooksPaged(first, rows, bookParams.sortOrder, bookParams.sortField, bookParams.Search, bookParams.categoryId, bookParams.authorId);
-        if (Books.Data != null)
-        {
-            for (int i = 0; i < Books.Data.Result.Count; i++)
-            {
-                if (Books.Data.Result[i].CoverImageUrl != null)
-                {
-                    Books.Data.Result[i].CoverImageUrl = $"{Request.Scheme}://{Request.Host}/{Books.Data.Result[i].CoverImageUrl}";
-                }
-            };
-        }
         return Ok(Books);
     }
     [HttpGet("{id}")]
     public async Task<ActionResult<BookDetailsDto>> getBookDetailsById(int id)
     {
         var result = await _bookService.getBookDetailsById(id);
-        if (result != null)
-        {
-            if (result.Data != null)
-            {
-                if (result.Data.ImageUrl != null)
-                    result.Data.ImageUrl = $"{Request.Scheme}://{Request.Host}/{result.Data.ImageUrl}";
-                if (result.Data.AuthorImageUrl != null)
-                    result.Data.AuthorImageUrl = $"{Request.Scheme}://{Request.Host}/{result.Data.AuthorImageUrl}";
-                if (result.Data.CategoryImageUrl != null)
-                    result.Data.CategoryImageUrl = $"{Request.Scheme}://{Request.Host}/{result.Data.CategoryImageUrl}";
-            }
-        }
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
@@ -126,16 +94,6 @@ public class BookController : ControllerBase
     public async Task<IActionResult> GetRelatedBooks(int bookId)
     {
         ApiResult<List<GetBookDto>> result = await _bookService.GetBooksByCategoryExceptBookAsync(bookId);
-        if (result.Data != null)
-        {
-            for (int i = 0; i < result.Data.Count; i++)
-            {
-                if (result.Data[i].ImageUrl != null)
-                {
-                    result.Data[i].ImageUrl = $"{Request.Scheme}://{Request.Host}/{result.Data[i].ImageUrl}";
-                }
-            };
-        }
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 

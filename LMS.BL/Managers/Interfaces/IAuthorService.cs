@@ -20,5 +20,6 @@ namespace LMS.BL.Managers.Interfaces
         Task<ApiResult> ActivateOrDeactivateAuthor(int id);
         Task<ApiResult> CreateAuthor(CreateAuthorDto createAuthorDto,HttpContext httpContext, string UserId);
         Task<ApiResult> UpdateAuthor(UpdateAuthorDto updateAuthorDto, HttpContext httpContext, string UserId);
+        Task<byte[]> ExportToExcel();
     }
 }

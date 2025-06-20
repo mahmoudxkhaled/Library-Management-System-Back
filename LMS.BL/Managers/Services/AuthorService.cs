@@ -7,8 +7,11 @@ using LMS.DAL.Data.Models;
 using LMS.DAL.Repos.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.VisualBasic;
+using OfficeOpenXml.Style;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -50,6 +53,50 @@ namespace LMS.BL.Managers.Services
                     BookCount = books.Count(b => b.AuthorId == a.Id)
                 }).ToList()
             };
+        }
+        public async Task<byte[]> ExportToExcel()
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            using (var package = new ExcelPackage())
+            {
+                var authors = await unitOfWork.AuthorRepository.GetAllAsync();
+                List<Author> authorList = authors.ToList();
+                var stream = new MemoryStream();
+                var authorsSheet = package.Workbook.Worksheets.Add("authors");
+                authorsSheet.Row(1).Height = 35;
+                authorsSheet.Row(1).Style.Locked = true;
+                // Unlock all cells
+                authorsSheet.Cells.Style.Locked = false;
+                authorsSheet.Cells[1, 1, 1, 3].Style.Locked = true;
+                // Protect the sheet
+                authorsSheet.Protection.IsProtected = true;
+                authorsSheet.Protection.SetPassword("54321");
+                authorsSheet.Protection.AllowSelectLockedCells = true;
+                authorsSheet.Protection.AllowSelectUnlockedCells = true;
+                authorsSheet.Columns[1, 3].Width = 20;
+                authorsSheet.Row(1).Style.Font.Size = 15;
+                authorsSheet.Row(1).Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                authorsSheet.Row(1).Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+                authorsSheet.Cells[1, 1, 1, 3].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                authorsSheet.Cells[1, 1, 1, 3].Style.Fill.BackgroundColor.SetColor(Color.SkyBlue);
+                authorsSheet.Row(1).Style.Font.Bold = true;
+                // set columns headers           
+                authorsSheet.Cells[1, 1].Value = "Name";
+                authorsSheet.Cells[1, 2].Value = "Description";
+                authorsSheet.Cells[1, 3].Value = "Date Of Birth";
+                // set Book Records
+                var row = 2;
+                for (int c = 0; c < authorList.Count(); c++)
+                {
+                    authorsSheet.Cells[row, 1].Value = authorList[c].FullName;
+                    authorsSheet.Cells[row, 2].Value = authorList[c].Description;
+                    authorsSheet.Cells[row, 3].Value = authorList[c].DateOfBirth;
+                    row++;
+                }
+                // Auto-fit columns
+                authorsSheet.Cells.AutoFitColumns();
+                return package.GetAsByteArray();
+            }
         }
         public async Task<int> DeleteAuthorById(int id, string userId)
         {

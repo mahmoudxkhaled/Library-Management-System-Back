@@ -36,16 +36,6 @@ namespace LMS.API.Controllers
             try
             {
                 pagedResult<GetAuthorDto> authors = await _authorService.GetAllAuthors(first, rows, authorParams);
-                if (authors.Result != null)
-                {
-                    for (int i = 0; i < authors.Result.Count; i++)
-                    {
-                        if (authors.Result[i].ImageURL != null)
-                        {
-                            authors.Result[i].ImageURL = $"{Request.Scheme}://{Request.Host}/{authors.Result[i].ImageURL}";
-                        }
-                    };
-                }
                 return Ok(new ApiResult { IsSuccess = true, Data = authors });
             }
             catch (Exception ex)
@@ -85,7 +75,19 @@ namespace LMS.API.Controllers
                 return BadRequest(new ApiResult { IsSuccess = false, Message = ex.Message });
             }
         }
-
+        [HttpGet("ExportToExcel")]
+        public async Task<ActionResult> ExportToExcel()
+        {
+            try
+            {
+                var stream = await _authorService.ExportToExcel();
+                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "AuthorRecords");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
         [HttpPut("ActivateOrDeactivateAuthor/{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ActivateOrDeactivateAuthor(int id)

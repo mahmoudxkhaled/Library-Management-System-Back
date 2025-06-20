@@ -11,4 +11,5 @@ public interface ICategoryService
     Task<ApiResult> UpdateCategoryAsync(UpdateCategoryDto request, HttpContext httpContext);
     Task<ApiResult> DeleteCategoryAsync(int id);
     Task<ApiResult> ActivateOrDeactivateCategoryAsync(int id);
+    Task<byte[]> ExportToExcel();
 }
