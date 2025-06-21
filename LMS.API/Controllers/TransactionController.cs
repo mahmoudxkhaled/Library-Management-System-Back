@@ -115,6 +115,14 @@ public class TransactionController : ControllerBase
         return Ok(new { Message = $"Overdue notifications sent: {sent}" });
     }
 
+    [HttpPost("send-issued-book-reminder/{transactionId}")]
+    [Authorize(Roles = "Admin,Librarian")]
+    public async Task<IActionResult> SendIssuedBookReminders(string transactionId)
+    {
+        int sent = await _transactionService.SendIssuedBookRemindersAsync(transactionId);
+        return Ok(new { Message = $"Issued book reminder sent: {sent}" });
+    }
+
     [HttpPut("ChangeStatus")]
     [Authorize(Roles = "Admin,Librarian")]
     public async Task<ActionResult<ApiResult>> ChangeTransactionStatus(ChangeTransactionStatusDto request)

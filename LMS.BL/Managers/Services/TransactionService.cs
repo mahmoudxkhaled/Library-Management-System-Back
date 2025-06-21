@@ -613,6 +613,81 @@ public class TransactionService : ITransactionService
         return sent;
     }
 
+    public async Task<int> SendIssuedBookRemindersAsync(string transactionId)
+    {
+        int sent = 0;
+        
+        // Get the specific transaction
+        var transaction = await _unitOfWork.TransactionRepository.GetWhereIncludeAsync(
+            t => t.Id.ToString() == transactionId && 
+                 t.Status == TransactionStatus.Issued.ToString() && 
+                 t.DueDate.HasValue && 
+                 t.DueDate.Value.Date >= DateTime.Now.Date, 
+            "User", "Book");
+
+        if (!transaction.Any())
+        {
+            return 0; // No valid transaction found
+        }
+
+        var targetTransaction = transaction.First();
+
+        if (targetTransaction.User?.Email != null)
+        {
+            // Check if email is a Gmail address
+            if (!targetTransaction.User.Email.EndsWith("@gmail.com", StringComparison.OrdinalIgnoreCase))
+            {
+                Console.WriteLine($"Skipping non-Gmail address: {targetTransaction.User.Email}");
+                return 0;
+            }
+
+            var subject = "Library Book Return Reminder";
+            var daysRemaining = (targetTransaction.DueDate.Value - DateTime.Now).Days;
+            var body = $@"
+                <html>
+                <body style='font-family: Arial, sans-serif; line-height: 1.6; color: #333;'>
+                    <div style='max-width: 600px; margin: 0 auto; padding: 20px;'>
+                        <h2 style='color: #5bc0de;'>Book Return Reminder</h2>
+                        
+                        <p>Dear {targetTransaction.User.FirstName},</p>
+                        
+                        <p>This is a friendly reminder about your borrowed book:</p>
+                        
+                        <div style='background-color: #f8f9fa; padding: 15px; border-left: 4px solid #5bc0de; margin: 20px 0;'>
+                            <p style='margin: 0;'><strong>Book Title:</strong> {targetTransaction.Book?.Title}</p>
+                            <p style='margin: 5px 0;'><strong>Issue Date:</strong> {targetTransaction.IssueDate:MMMM dd, yyyy}</p>
+                            <p style='margin: 5px 0;'><strong>Due Date:</strong> {targetTransaction.DueDate:MMMM dd, yyyy}</p>
+                            <p style='margin: 5px 0;'><strong>Days Remaining:</strong> {daysRemaining} day(s)</p>
+                        </div>
+                        
+                        <p>Please return this book to the library before the due date to avoid any late fees or penalties.</p>
+                        
+                        <p>If you need to extend your borrowing period, please contact the library staff.</p>
+                        
+                        <div style='margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;'>
+                            <p style='margin: 0;'>Best regards,</p>
+                            <p style='margin: 5px 0;'><strong>Library Management System</strong></p>
+                            <p style='margin: 0; color: #666;'>Your trusted source for knowledge</p>
+                        </div>
+                    </div>
+                </body>
+                </html>";
+
+            try
+            {
+                await _emailService.SendEmailAsync(targetTransaction.User.Email, subject, body);
+                sent++;
+                Console.WriteLine($"Successfully sent issued book reminder to {targetTransaction.User.Email}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to send issued book reminder to {targetTransaction.User.Email}: {ex.Message}");
+            }
+        }
+        await _unitOfWork.SaveChangesAsync();
+        return sent;
+    }
+
     public async Task<ApiResult> ChangeTransactionStatusAsync(ChangeTransactionStatusDto request)
     {
         try

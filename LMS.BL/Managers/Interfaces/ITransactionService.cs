@@ -20,5 +20,6 @@ public interface ITransactionService
     Task<byte[]> ExportToExcel(List<SelectedFilters> selectedFilters);
     Task<byte[]> GenerateTransactionReportAsync(TransactionReportDto request);
     Task<int> SendOverdueNotificationsAsync();
+    Task<int> SendIssuedBookRemindersAsync(string transactionId);
     Task<ApiResult> ChangeTransactionStatusAsync(ChangeTransactionStatusDto request);
 }
