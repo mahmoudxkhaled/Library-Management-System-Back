@@ -381,6 +381,18 @@ public class TransactionService : ITransactionService
             {
                 return new ApiResult { IsSuccess = false, Message = "Transaction should be pending" };
             }
+
+            //Validate Issue date eg. Issue date should be after request date
+            if(request.IssueDate <= transaction.RequestDate)
+            {
+                return new ApiResult { IsSuccess = false, Message = "Issue date can't be before request date" };
+            }
+            //Validate Issue date eg. Issue date can't be in the future
+            if (request.IssueDate >= DateTime.Now)
+            {
+                return new ApiResult { IsSuccess = false, Message = "Issue date can't be in the future" };
+            }
+
             transaction.IssueDate = request.IssueDate;
             transaction.DueDate = request.IssueDate.AddDays(transaction.BorrowDays);
             transaction.Status = TransactionStatus.Issued.ToString();
@@ -414,6 +426,19 @@ public class TransactionService : ITransactionService
             {
                 return new ApiResult { IsSuccess = false, Message = "Transaction should be issued" };
             }
+
+            //Validate Return date eg. Return date should be after Issue date
+            if (request.ReturnDate <= transaction.IssueDate)
+            {
+                return new ApiResult { IsSuccess = false, Message = "Return date can't be before issue date" };
+            }
+            //Validate Return date eg. Return date can't be in the future
+            if (request.ReturnDate >= DateTime.Now)
+            {
+                return new ApiResult { IsSuccess = false, Message = "Return date can't be in the future" };
+            }
+
+
             transaction.ReturnDate = request.ReturnDate;
             transaction.Status = TransactionStatus.Returned.ToString();
             transaction.ReturnNotes = request.Notes;
