@@ -6,7 +6,6 @@ using LMS.DAL;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace LMS.API.Controllers;
 
@@ -127,28 +126,7 @@ public class UserController : ControllerBase
         }
         return BadRequest();
     }
-    [HttpPut("admin")]
-    [Authorize(Roles = "Admin,Librarian")]
-    public async Task<ActionResult> updateUser(UpdateUserDto updateUser)
-    {
-        var result = await _userService.GetUserModelById(updateUser.Id);
-        if (result.IsSuccess && result.Data!=null)
-        {
-            await _userService.updateUser(updateUser, HttpContext);
-            var currentClaims = await userManager.GetClaimsAsync(result.Data);           
-            await userManager.RemoveClaimsAsync(result.Data,currentClaims);
-            List<Claim> claims = new()
-                {
-                new Claim(ClaimTypes.NameIdentifier, updateUser.Id.ToString()),
-                new Claim(ClaimTypes.Email, updateUser.Email.ToString()),
-                new Claim(ClaimTypes.Role, updateUser.Role.ToString()),
-                };
-            var claimsResult = await userManager.AddClaimsAsync(result.Data, claims);
-        }
-        return result.IsSuccess ? Ok(result) : BadRequest(result);
-
-    }
-    [HttpPut("Profile")]
+    [HttpPut]
     [Authorize]
     public async Task<ActionResult> updateUserProfile(UpdateUserProfileDto updateUserProfile)
     {
@@ -160,7 +138,7 @@ public class UserController : ControllerBase
         return result.IsSuccess ? Ok(result) : BadRequest(result);
 
     }
-    [HttpPut]
+
     [HttpGet("GetAllUsersByRole/{role}")]
     [Authorize(Roles = "Admin,Librarian")]
     public async Task<IActionResult> GetAllUsersByRole(string role)

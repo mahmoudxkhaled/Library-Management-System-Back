@@ -7,7 +7,6 @@ using OfficeOpenXml.Style;
 using OfficeOpenXml;
 using System.Drawing;
 using System.Threading.Tasks;
-using LMS.DAL;
 
 namespace LMS.BL
 {
@@ -24,9 +23,7 @@ namespace LMS.BL
         Task<ApiResult> ActivateDeactivateUserAsync(ToggleUserActivationDto updateUserStatusDto);
         Task<ApiResult> AddUserAsync(AddUserDto userDto);
         Task<ApiResult> GetUserById(int id);
-        Task<ApiResult<User>> GetUserModelById(int id);
         Task<ApiResult> updateUserProfile(UpdateUserProfileDto updateUserProfile,HttpContext httpContext);
         Task<ApiResult> UpdateUserDetailsAsync(UpdateUserDetailsDto updateUserDetails, HttpContext httpContext);
-        Task<ApiResult> updateUser(UpdateUserDto updateUserDto,HttpContext httpContext);
     }
 }
