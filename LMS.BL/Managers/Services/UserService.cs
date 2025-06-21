@@ -13,6 +13,7 @@ using System.Drawing;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Net.Http;
 namespace LMS.BL;
 
 public class UserService : IUserService
@@ -35,7 +36,15 @@ public class UserService : IUserService
         _manager = manager;
         _helperService = helperService;
     }
-
+    public async Task<ApiResult<User>> GetUserModelById(int id)
+    {
+        var user= await _unitOfWork.UserRepository.GetByIdAsync(id);
+        if (user == null)
+        {
+            return new ApiResult<User> { IsSuccess = false, Message = "User not found." };
+        }
+        return new ApiResult<User> { IsSuccess = true, Data = user };
+    }
     public async Task<ApiResult> RegisterUserAsync(UserRegisterDto registerCredientials)
     {
         try
@@ -98,6 +107,27 @@ public class UserService : IUserService
         {
             return new ApiResult { Message = ex.Message, IsSuccess = false, };
         }
+    }
+    public async Task<ApiResult> updateUser(UpdateUserDto updateUserDto,HttpContext httpContext)
+    {
+        var user = await _unitOfWork.UserRepository.GetByIdAsync(updateUserDto.Id);
+        if (user == null)
+        {
+            return new ApiResult { IsSuccess = true };
+        }
+
+        user.FirstName = updateUserDto.FirstName;
+        user.LastName = updateUserDto.LastName;
+        user.PhoneNumber = updateUserDto.PhoneNumber;
+        user.Email = updateUserDto.Email;
+        user.Role = updateUserDto.Role;
+        if (updateUserDto.ProfileImageUrl != null)
+        {
+            user.ProfileImageUrl = await _helperService.SaveFileAsync(updateUserDto.ProfileImageUrl, "Users", httpContext);
+        }
+        _unitOfWork.UserRepository.Update(user);
+        await _unitOfWork.SaveChangesAsync();
+        return new ApiResult { IsSuccess = true };
     }
     public async Task<byte[]> ExportToExcel(List<SelectedFilters> selectedFilters)
     {
