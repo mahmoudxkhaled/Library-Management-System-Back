@@ -30,22 +30,11 @@ namespace LMS.API.Controllers
             }
         }
         [HttpPost("{first}/{rows}")]
-        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ApiResult>> GettAllAuthorsPaged(int first, int rows, AuthorParams authorParams)
         {
             try
             {
                 pagedResult<GetAuthorDto> authors = await _authorService.GetAllAuthors(first, rows, authorParams);
-                if (authors.Result != null)
-                {
-                    for (int i = 0; i < authors.Result.Count; i++)
-                    {
-                        if (authors.Result[i].ImageURL != null)
-                        {
-                            authors.Result[i].ImageURL = $"{Request.Scheme}://{Request.Host}/{authors.Result[i].ImageURL}";
-                        }
-                    };
-                }
                 return Ok(new ApiResult { IsSuccess = true, Data = authors });
             }
             catch (Exception ex)
@@ -54,7 +43,6 @@ namespace LMS.API.Controllers
             }
         }
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ApiResult>> DeleteAuthorById(int id)
         {
             try
@@ -85,16 +73,26 @@ namespace LMS.API.Controllers
                 return BadRequest(new ApiResult { IsSuccess = false, Message = ex.Message });
             }
         }
-
+        [HttpGet("ExportToExcel")]
+        public async Task<ActionResult> ExportToExcel()
+        {
+            try
+            {
+                var stream = await _authorService.ExportToExcel();
+                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "AuthorRecords");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
         [HttpPut("ActivateOrDeactivateAuthor/{id}")]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ActivateOrDeactivateAuthor(int id)
         {
             var result = await _authorService.ActivateOrDeactivateAuthor(id);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
         [HttpPost]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateAuthor(CreateAuthorDto createAuthorDto)
         {
             var UserId = User?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
@@ -107,7 +105,6 @@ namespace LMS.API.Controllers
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
         [HttpPut]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateAuthor(UpdateAuthorDto updateAuthorDto)
         {
             var UserId = User?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;

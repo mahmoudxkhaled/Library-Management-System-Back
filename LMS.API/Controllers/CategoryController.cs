@@ -1,5 +1,11 @@
 ﻿using LMS.BL;
+using LMS.BL.Dtos;
+using LMS.BL.Dtos.Author;
+using LMS.BL.Dtos.Category;
 using LMS.BL.Shared.Models;
+using LMS.DAL;
+using LMS.DAL.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.API.Controllers;
@@ -14,21 +20,23 @@ public class CategoryController : ControllerBase
     {
         _categoryService = categoryService;
     }
-
+    [HttpPost("{first}/{rows}")]
+    public async Task<ActionResult<ApiResult>> GettAllAuthorsPaged(int first, int rows, CategoryParams categoryParams)
+    {
+        try
+        {
+            pagedResult<Category> authors = await _categoryService.GetAllCategoriesAsync(first, rows, categoryParams);
+            return Ok(new ApiResult { IsSuccess = true, Data = authors });
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
+        }
+    }
     [HttpGet("GetAllCategories")]
     public async Task<IActionResult> GetAllCategories()
     {
-        ApiResult<List<GetCategoryDto>> result = await _categoryService.GetAllCategoriesAsync();
-        if (result.Data != null)
-        {
-            for (int i = 0; i < result.Data.Count; i++)
-            {
-                if (result.Data[i].ImageUrl != null)
-                {
-                    result.Data[i].ImageUrl = $"{Request.Scheme}://{Request.Host}/{result.Data[i].ImageUrl}";
-                }
-            };
-        }
+        ApiResult<List<GetCategoryDto>> result = await _categoryService.GetAllCategoriesAsync();    
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
@@ -44,6 +52,19 @@ public class CategoryController : ControllerBase
     {
         var result = await _categoryService.AddCategoryAsync(request, HttpContext);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
+    [HttpGet("ExportToExcel")]
+    public async Task<ActionResult> ExportToExcel()
+    {
+        try
+        {
+            var stream = await _categoryService.ExportToExcel();
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "CategoryRecords");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
     [HttpPut("UpdateCategory")]
