@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Http;
 using OfficeOpenXml.Style;
 using OfficeOpenXml;
 using System.Drawing;
+using LMS.BL.Dtos.Author;
+using LMS.DAL.Data;
+using LMS.BL.Dtos.Category;
 namespace LMS.BL;
 
 public class CategoryService : ICategoryService
@@ -24,7 +27,10 @@ public class CategoryService : ICategoryService
         _currentUserService = currentUserService;
 
     }
-
+    public async Task<pagedResult<Category>> GetAllCategoriesAsync(int first, int rows, CategoryParams CategoryParams)
+    {
+        return await _unitOfWork.CategoryRepository.GetAllCategoriesAsync(first, rows, CategoryParams.sortOrder, CategoryParams.sortField, CategoryParams.Search, CategoryParams.isActive); 
+    }
     public async Task<ApiResult<List<GetCategoryDto>>> GetAllCategoriesAsync()
     {
         try

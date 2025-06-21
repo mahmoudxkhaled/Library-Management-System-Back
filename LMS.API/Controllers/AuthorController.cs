@@ -30,7 +30,6 @@ namespace LMS.API.Controllers
             }
         }
         [HttpPost("{first}/{rows}")]
-        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ApiResult>> GettAllAuthorsPaged(int first, int rows, AuthorParams authorParams)
         {
             try
@@ -44,7 +43,6 @@ namespace LMS.API.Controllers
             }
         }
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ApiResult>> DeleteAuthorById(int id)
         {
             try
@@ -89,14 +87,12 @@ namespace LMS.API.Controllers
             }
         }
         [HttpPut("ActivateOrDeactivateAuthor/{id}")]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ActivateOrDeactivateAuthor(int id)
         {
             var result = await _authorService.ActivateOrDeactivateAuthor(id);
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
         [HttpPost]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateAuthor(CreateAuthorDto createAuthorDto)
         {
             var UserId = User?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
@@ -109,7 +105,6 @@ namespace LMS.API.Controllers
             return result.IsSuccess ? Ok(result) : BadRequest(result);
         }
         [HttpPut]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateAuthor(UpdateAuthorDto updateAuthorDto)
         {
             var UserId = User?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
