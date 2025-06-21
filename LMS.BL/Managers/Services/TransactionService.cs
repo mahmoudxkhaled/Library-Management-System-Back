@@ -505,8 +505,29 @@ public class TransactionService : ITransactionService
     public async Task<int> SendOverdueNotificationsAsync()
     {
         int sent = 0;
+        
+        // First, update any issued books that are overdue to have "Overdue" status
+        var overdueIssuedTransactions = await _unitOfWork.TransactionRepository.GetWhereAsync(
+            t => t.Status == TransactionStatus.Issued.ToString() && 
+                 t.DueDate.HasValue && 
+                 t.DueDate.Value.Date < DateTime.Now.Date);
+        
+        foreach (var transaction in overdueIssuedTransactions)
+        {
+            transaction.Status = TransactionStatus.Overdue.ToString();
+            transaction.UpdateUserId = _currentUserService.UserId;
+            transaction.UpdateTime = DateTime.Now;
+            _unitOfWork.TransactionRepository.Update(transaction);
+        }
+        
+        // Save the status updates
+        await _unitOfWork.SaveChangesAsync();
+        
+        // Now get all overdue transactions (including newly updated ones) for notification
         var overdueTransactions = await _unitOfWork.TransactionRepository.GetWhereIncludeAsync(
-            t => t.Status == "Overdue" && (t.LastOverdueNotified == null || t.LastOverdueNotified.Value.Date < DateTime.Now.AddHours(0)), "User", "Book");
+            t => t.Status == TransactionStatus.Overdue.ToString() && 
+                 (t.LastOverdueNotified == null || t.LastOverdueNotified.Value.Date < DateTime.Now.AddHours(0)), 
+            "User", "Book");
 
         foreach (var transaction in overdueTransactions)
         {
