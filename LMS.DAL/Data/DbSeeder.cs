@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
-using LMS.DAL.Data.Models;
 
 namespace LMS.DAL.Data
 {
@@ -69,7 +68,7 @@ namespace LMS.DAL.Data
             {
                 // 🔹 Ensure librarian user exists
                 string librarianEmail = "Librarian@lms.com";
-                string librarianPassword = "123456789";
+                string librarianPassword = "Pass@123";
 
                 var librarianUser = await userManager.FindByEmailAsync(librarianEmail);
                 if (librarianUser == null)
@@ -279,7 +278,7 @@ namespace LMS.DAL.Data
                 {
                     string email = $"user{i}@lms.com";
                     var existingUser = await userManager.FindByEmailAsync(email);
-                    
+
                     if (existingUser == null)
                     {
                         // Use modulo to cycle through names if numberOfUsers > 10
@@ -328,11 +327,11 @@ namespace LMS.DAL.Data
                             var randomBook = books.ElementAt(random.Next(books.Count()));
                             var requestDate = DateTime.Now.AddDays(-random.Next(1, 60));
                             var borrowDays = random.Next(7, 15);
-                            
+
                             // Randomly select a status
                             var statuses = new[] { "Pending", "Issued", "Returned", "Overdue" };
                             var status = statuses[random.Next(statuses.Length)];
-                            
+
                             DateTime? issueDate = null;
                             DateTime? dueDate = null;
                             DateTime? returnDate = null;
