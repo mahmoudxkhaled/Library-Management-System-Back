@@ -1,12 +1,11 @@
 ﻿using LMS.BL.Dtos;
-using System.Drawing;
 using LMS.BL.Dtos.Transaction;
-using LMS.BL.Dtos.User;
 using LMS.BL.Managers.Interfaces;
 using LMS.BL.Shared.Models;
 using LMS.DAL;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
+using System.Drawing;
 namespace LMS.BL;
 
 public class TransactionService : ITransactionService
@@ -63,7 +62,7 @@ public class TransactionService : ITransactionService
         using (var package = new ExcelPackage())
         {
             var transactions = await _unitOfWork.TransactionRepository.GetAllAsync();
-            List<TransactionExcellData> TransactionExcellDataList = transactions.Select(t => new TransactionExcellData() { Book =t.Book?.Title,User = string.Concat(t.User?.FirstName,t.User?.LastName), RequestDate = t.RequestDate.ToString("d"), IssueDate = t.IssueDate?.ToString("d"), DueDate = t.DueDate?.ToString("d"), ReturnDate = t.ReturnDate?.ToString("d"),Status=t.Status,IssuedByUser= string.Concat(t.IssuedByUser?.FirstName, t.IssuedByUser?.LastName),ReturnedByUser= string.Concat(t.ReturnedByUser?.FirstName, t.ReturnedByUser?.LastName), }).ToList();
+            List<TransactionExcellData> TransactionExcellDataList = transactions.Select(t => new TransactionExcellData() { Book = t.Book?.Title, User = string.Concat(t.User?.FirstName, t.User?.LastName), RequestDate = t.RequestDate.ToString("d"), IssueDate = t.IssueDate?.ToString("d"), DueDate = t.DueDate?.ToString("d"), ReturnDate = t.ReturnDate?.ToString("d"), Status = t.Status, IssuedByUser = string.Concat(t.IssuedByUser?.FirstName, t.IssuedByUser?.LastName), ReturnedByUser = string.Concat(t.ReturnedByUser?.FirstName, t.ReturnedByUser?.LastName), }).ToList();
             var stream = new MemoryStream();
             var UsersSheet = package.Workbook.Worksheets.Add("Books");
             UsersSheet.Row(1).Height = 35;
@@ -384,7 +383,7 @@ public class TransactionService : ITransactionService
             }
 
             //Validate Issue date eg. Issue date should be after request date
-            if(request.IssueDate <= transaction.RequestDate)
+            if (request.IssueDate <= transaction.RequestDate)
             {
                 return new ApiResult { IsSuccess = false, Message = "Issue date can't be before request date" };
             }
@@ -531,13 +530,13 @@ public class TransactionService : ITransactionService
     public async Task<int> SendOverdueNotificationsAsync()
     {
         int sent = 0;
-        
+
         // First, update any issued books that are overdue to have "Overdue" status
         var overdueIssuedTransactions = await _unitOfWork.TransactionRepository.GetWhereAsync(
-            t => t.Status == TransactionStatus.Issued.ToString() && 
-                 t.DueDate.HasValue && 
+            t => t.Status == TransactionStatus.Issued.ToString() &&
+                 t.DueDate.HasValue &&
                  t.DueDate.Value.Date < DateTime.Now.Date);
-        
+
         foreach (var transaction in overdueIssuedTransactions)
         {
             transaction.Status = TransactionStatus.Overdue.ToString();
@@ -545,14 +544,16 @@ public class TransactionService : ITransactionService
             transaction.UpdateTime = DateTime.Now;
             _unitOfWork.TransactionRepository.Update(transaction);
         }
-        
+
+
+
         // Save the status updates
         await _unitOfWork.SaveChangesAsync();
-        
+
         // Now get all overdue transactions (including newly updated ones) for notification
         var overdueTransactions = await _unitOfWork.TransactionRepository.GetWhereIncludeAsync(
-            t => t.Status == TransactionStatus.Overdue.ToString() && 
-                 (t.LastOverdueNotified == null || t.LastOverdueNotified.Value.Date < DateTime.Now.AddHours(0)), 
+            t => t.Status == TransactionStatus.Overdue.ToString() &&
+                 (t.LastOverdueNotified == null || t.LastOverdueNotified.Value.Date < DateTime.Now.AddHours(0)),
             "User", "Book");
 
         foreach (var transaction in overdueTransactions)
@@ -617,13 +618,13 @@ public class TransactionService : ITransactionService
     public async Task<int> SendIssuedBookRemindersAsync(string transactionId)
     {
         int sent = 0;
-        
+
         // Get the specific transaction
         var transaction = await _unitOfWork.TransactionRepository.GetWhereIncludeAsync(
-            t => t.Id.ToString() == transactionId && 
-                 t.Status == TransactionStatus.Issued.ToString() && 
-                 t.DueDate.HasValue && 
-                 t.DueDate.Value.Date >= DateTime.Now.Date, 
+            t => t.Id.ToString() == transactionId &&
+                 t.Status == TransactionStatus.Issued.ToString() &&
+                 t.DueDate.HasValue &&
+                 t.DueDate.Value.Date >= DateTime.Now.Date,
             "User", "Book");
 
         if (!transaction.Any())

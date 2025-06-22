@@ -4,7 +4,6 @@ using LMS.BL.Services;
 using LMS.DAL;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -169,11 +168,7 @@ try
 
     app.UseCors("AllowAll");
 
-    app.UseStaticFiles(new StaticFileOptions()
-    {
-        FileProvider = new PhysicalFileProvider(Path.Combine(Environment.CurrentDirectory, "Uploads")),
-        RequestPath = "/Uploads"
-    });
+    app.UseStaticFiles();
     app.UseHttpsRedirection();
 
     app.UseAuthentication();

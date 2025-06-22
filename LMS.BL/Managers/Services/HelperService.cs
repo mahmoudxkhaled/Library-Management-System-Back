@@ -22,7 +22,7 @@ public class HelperService : IHelperService
         if (file == null || file.Length == 0)
             throw new ArgumentException("File cannot be empty");
 
-        var uploadsFolder = Path.Combine(_webHostEnvironment.ContentRootPath, "Uploads", folderName);
+        var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "Uploads", folderName);
         if (!Directory.Exists(uploadsFolder))
             Directory.CreateDirectory(uploadsFolder);
 

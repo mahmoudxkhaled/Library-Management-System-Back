@@ -1,5 +1,4 @@
-﻿using LMS.BL.Dtos.Book;
-using LMS.BL.Dtos;
+﻿using LMS.BL.Dtos;
 using LMS.BL.Dtos.User;
 using LMS.BL.Shared.Models;
 using LMS.DAL;
@@ -7,8 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using OfficeOpenXml.Style;
 using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using System.Drawing;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -44,6 +43,7 @@ public class UserService : IUserService
             {
                 return new ApiResult { Message = "Invalid Date Provided!!!", IsSuccess = false, };
             }
+            //chcek email by id in db
 
             User user = new()
             {
@@ -105,7 +105,7 @@ public class UserService : IUserService
         using (var package = new ExcelPackage())
         {
             var users = await _unitOfWork.UserRepository.GetAllAsync();
-            List<UserExcellData> userExcelDataList = users.Select(u => new UserExcellData() {FirstName=u.FirstName,LastName=u.LastName,Address=u.Address,DateOfBirth=u.DateOfBirth?.ToString("d"),Email=u.Email,PhoneNumber=u.PhoneNumber}).ToList();
+            List<UserExcellData> userExcelDataList = users.Select(u => new UserExcellData() { FirstName = u.FirstName, LastName = u.LastName, Address = u.Address, DateOfBirth = u.DateOfBirth?.ToString("d"), Email = u.Email, PhoneNumber = u.PhoneNumber }).ToList();
             var stream = new MemoryStream();
             var UsersSheet = package.Workbook.Worksheets.Add("Books");
             UsersSheet.Row(1).Height = 35;
