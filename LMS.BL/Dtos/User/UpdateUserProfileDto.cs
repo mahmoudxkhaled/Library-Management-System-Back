@@ -18,5 +18,6 @@ namespace LMS.BL.Dtos.User
 
         public IFormFile? ProfileImageUrl { get; set; }
 
+        public string? Role { get; set; } // Optional: if provided, update user role
     }
 }

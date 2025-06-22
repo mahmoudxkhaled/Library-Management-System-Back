@@ -445,6 +445,11 @@ public class UserService : IUserService
         {
             user.ProfileImageUrl = await _helperService.SaveFileAsync(updateUserProfile.ProfileImageUrl, "Users", httpContext);
         }
+        // If Role is provided and different, update it
+        if (!string.IsNullOrWhiteSpace(updateUserProfile.Role) && user.Role != updateUserProfile.Role)
+        {
+            user.Role = updateUserProfile.Role;
+        }
         _unitOfWork.UserRepository.Update(user);
         await _unitOfWork.SaveChangesAsync();
         return new ApiResult { IsSuccess = true };
