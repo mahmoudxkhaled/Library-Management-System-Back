@@ -108,11 +108,11 @@ public class TransactionController : ControllerBase
     }
 
     [HttpPost("SendOverdueNotifications")]
-    [Authorize(Roles = "Admin,Librarian")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> SendOverdueNotifications()
     {
         int sent = await _transactionService.SendOverdueNotificationsAsync();
-        return Ok(new { Message = $"Overdue notifications sent: {sent}" });
+        return Ok(new ApiResult { IsSuccess = true, Message = $"Overdue notifications sent: {sent}" });
     }
 
     [HttpPost("send-issued-book-reminder/{transactionId}")]
@@ -120,7 +120,7 @@ public class TransactionController : ControllerBase
     public async Task<IActionResult> SendIssuedBookReminders(string transactionId)
     {
         int sent = await _transactionService.SendIssuedBookRemindersAsync(transactionId);
-        return Ok(new { Message = $"Issued book reminder sent: {sent}" });
+        return Ok(new ApiResult { IsSuccess = true, Message = $"Issued book reminder sent: {sent}" });
     }
 
     [HttpPut("ChangeStatus")]
