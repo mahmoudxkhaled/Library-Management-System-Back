@@ -492,6 +492,20 @@ public class UserService : IUserService
             user.PhoneNumber = updateUserDetails.PhoneNumber.Trim();
             user.UserName = user.Email; // Keep username same as email
 
+            // If Role is provided, update the user's role and claims
+            if (!string.IsNullOrWhiteSpace(updateUserDetails.Role) && updateUserDetails.Role != user.Role)
+            {
+                // Remove old role claim
+                var oldRoleClaim = (await _manager.GetClaimsAsync(user)).FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role);
+                if (oldRoleClaim != null)
+                {
+                    await _manager.RemoveClaimAsync(user, oldRoleClaim);
+                }
+                // Add new role claim
+                await _manager.AddClaimAsync(user, new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Role, updateUserDetails.Role));
+                user.Role = updateUserDetails.Role;
+            }
+
             // Handle profile image if provided
             if (updateUserDetails.ProfileImage is not null)
             {
