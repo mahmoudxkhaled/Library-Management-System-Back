@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using LMS.DAL;
 using LMS.BL.Dtos.Transaction;
 using LMS.BL.Dtos;
+using Hangfire;
 
 namespace LMS.API.Controllers;
 
@@ -13,10 +14,12 @@ namespace LMS.API.Controllers;
 public class TransactionController : ControllerBase
 {
     private readonly ITransactionService _transactionService;
+    private readonly IBackgroundJobClient _backgroundJobClient;
 
-    public TransactionController(ITransactionService transactionService)
+    public TransactionController(ITransactionService transactionService, IBackgroundJobClient backgroundJobClient)
     {
         _transactionService = transactionService;
+        _backgroundJobClient = backgroundJobClient;
     }
 
     [HttpGet("GetAllTransactions")]
@@ -109,10 +112,10 @@ public class TransactionController : ControllerBase
 
     [HttpPost("SendOverdueNotifications")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> SendOverdueNotifications()
+    public IActionResult SendOverdueNotifications()
     {
-        int sent = await _transactionService.SendOverdueNotificationsAsync();
-        return Ok(new ApiResult { IsSuccess = true, Message = $"Overdue notifications sent: {sent}" });
+        _backgroundJobClient.Enqueue(() => _transactionService.SendOverdueNotificationsAsync());
+        return Ok(new ApiResult { IsSuccess = true, Message = "Overdue notifications job has been successfully queued." });
     }
 
     [HttpPost("send-issued-book-reminder/{transactionId}")]
