@@ -187,68 +187,74 @@ namespace LMS.DAL.Data
             }
         }
 
+        private static Transaction CreateRandomTransaction(int userId, int bookId, Random random)
+        {
+            var requestDate = DateTime.Now.AddDays(-random.Next(1, 60));
+            var borrowDays = random.Next(7, 15);
+            var statuses = new[] { "Pending", "Issued", "Pending", "Issued"/*, "Returned", "Overdue" */};
+            var status = statuses[random.Next(statuses.Length)];
+
+            DateTime? issueDate = null;
+            DateTime? dueDate = null;
+            DateTime? returnDate = null;
+
+            if (status == "Pending")
+            {
+                // Pending transactions only have request date and borrow days
+                issueDate = null;
+                dueDate = null;
+                returnDate = null;
+            }
+            else
+            {
+                // For Issued, Returned, and Overdue, we need issue date and due date
+                issueDate = requestDate.AddDays(random.Next(1, 3));
+                dueDate = issueDate.Value.AddDays(borrowDays);
+
+                if (status == "Returned")
+                {
+                    // Returned transactions have all dates
+                    returnDate = issueDate.Value.AddDays(random.Next(1, borrowDays));
+                }
+                else if (status == "Overdue")
+                {
+                    // Overdue transactions have issue date and due date in the past
+                    issueDate = DateTime.Now.AddDays(-random.Next(borrowDays + 5, borrowDays + 15));
+                    dueDate = issueDate.Value.AddDays(borrowDays);
+                    returnDate = null;
+                }
+            }
+
+            return new Transaction
+            {
+                UserId = userId,
+                BookId = bookId,
+                RequestDate = requestDate,
+                IssueDate = issueDate,
+                DueDate = dueDate,
+                ReturnDate = returnDate,
+                Status = status,
+                BorrowDays = borrowDays,
+                InsertedTime = DateTime.Now,
+                IsActive = true
+            };
+        }
+
         public static async Task SeedTransactionsAsync(IUnitOfWork unitOfWork)
         {
             try
             {
-                // Get all members
-                var members = await unitOfWork.UserRepository.GetWhereAsync(u => u.Role == "Member");
+                var members = await unitOfWork.UserRepository.GetWhereAsync(u => u.Role == "Member" && u.Email.Contains("gmail.com"));
                 var books = await unitOfWork.BookRepository.GetAllAsync();
                 var random = new Random();
 
                 foreach (var member in members)
                 {
-                    // Random number of transactions between 5-10
-                    int transactionCount = random.Next(5, 11);
-
+                    int transactionCount = random.Next(5, 10);
                     for (int i = 0; i < transactionCount; i++)
                     {
-                        // Random book selection
                         var randomBook = books.ElementAt(random.Next(books.Count()));
-
-                        // Random dates
-                        var requestDate = DateTime.Now.AddDays(-random.Next(1, 60)); // Random date in the past 60 days
-                        var issueDate = requestDate.AddDays(random.Next(1, 3)); // Issue 1-2 days after request
-                        var borrowDays = random.Next(7, 15); // Borrow for 7-14 days
-                        var dueDate = issueDate.AddDays(borrowDays);
-
-                        // Randomly decide if the book is returned
-                        bool isReturned = random.Next(2) == 1; // 50% chance of being returned
-                        DateTime? returnDate = null;
-                        string status;
-
-                        if (isReturned)
-                        {
-                            // If returned, return date is between issue date and due date
-                            returnDate = issueDate.AddDays(random.Next(1, borrowDays));
-                            status = "Returned";
-                        }
-                        else
-                        {
-                            // If not returned, check if it's overdue
-                            if (DateTime.Now > dueDate)
-                            {
-                                status = "Overdue";
-                            }
-                            else
-                            {
-                                status = "Issued";
-                            }
-                        }
-
-                        var transaction = new Transaction
-                        {
-                            UserId = member.Id,
-                            BookId = randomBook.Id,
-                            RequestDate = requestDate,
-                            IssueDate = issueDate,
-                            DueDate = dueDate,
-                            ReturnDate = returnDate,
-                            Status = status,
-                            InsertedTime = DateTime.Now,
-                            IsActive = true
-                        };
-
+                        var transaction = CreateRandomTransaction(member.Id, randomBook.Id, random);
                         await unitOfWork.TransactionRepository.AddAsync(transaction);
                     }
                 }
@@ -273,7 +279,6 @@ namespace LMS.DAL.Data
                 var firstNames = new[] { "Ahmed", "Mohamed", "Ali", "Youssef", "Omar", "Mostafa", "Hassan", "Mahmoud", "Khaled", "Ibrahim" };
                 var lastNames = new[] { "Hussein", "Farag", "Salah", "Saad", "Abdelrahman", "Tawfik", "Hamdy", "Gamal", "Nasser", "Zaki" };
 
-                // Create specified number of users
                 for (int i = 1; i <= numberOfUsers; i++)
                 {
                     string email = $"user{i}@lms.com";
@@ -281,7 +286,6 @@ namespace LMS.DAL.Data
 
                     if (existingUser == null)
                     {
-                        // Use modulo to cycle through names if numberOfUsers > 10
                         var firstNameIndex = (i - 1) % firstNames.Length;
                         var lastNameIndex = (i - 1) % lastNames.Length;
 
@@ -305,7 +309,6 @@ namespace LMS.DAL.Data
                             continue;
                         }
 
-                        // Assign claims
                         List<Claim> claims = new()
                         {
                             new Claim(ClaimTypes.NameIdentifier, newUser.Id.ToString()),
@@ -320,76 +323,18 @@ namespace LMS.DAL.Data
                             continue;
                         }
 
-                        // Create 1-5 random transactions for this user
                         int transactionCount = random.Next(1, 6);
                         for (int j = 0; j < transactionCount; j++)
                         {
                             var randomBook = books.ElementAt(random.Next(books.Count()));
-                            var requestDate = DateTime.Now.AddDays(-random.Next(1, 60));
-                            var borrowDays = random.Next(7, 15);
-
-                            // Randomly select a status
-                            var statuses = new[] { "Pending", "Issued", "Returned", "Overdue" };
-                            var status = statuses[random.Next(statuses.Length)];
-
-                            DateTime? issueDate = null;
-                            DateTime? dueDate = null;
-                            DateTime? returnDate = null;
-
-                            if (status == "Pending")
-                            {
-                                // Pending transactions only have request date and borrow days
-                                issueDate = null;
-                                dueDate = null;
-                                returnDate = null;
-                            }
-                            else
-                            {
-                                // For Issued, Returned, and Overdue, we need issue date and due date
-                                issueDate = requestDate.AddDays(random.Next(1, 3));
-                                dueDate = issueDate.Value.AddDays(borrowDays);
-
-                                if (status == "Returned")
-                                {
-                                    // Returned transactions have all dates
-                                    returnDate = issueDate.Value.AddDays(random.Next(1, borrowDays));
-                                }
-                                else if (status == "Overdue")
-                                {
-                                    // Overdue transactions have issue date and due date in the past
-                                    issueDate = DateTime.Now.AddDays(-random.Next(borrowDays + 5, borrowDays + 15));
-                                    dueDate = issueDate.Value.AddDays(borrowDays);
-                                    returnDate = null;
-                                }
-                            }
-
-                            var transaction = new Transaction
-                            {
-                                UserId = newUser.Id,
-                                BookId = randomBook.Id,
-                                RequestDate = requestDate,
-                                IssueDate = issueDate,
-                                DueDate = dueDate,
-                                ReturnDate = returnDate,
-                                Status = status,
-                                BorrowDays = borrowDays,
-                                InsertedTime = DateTime.Now,
-                                IsActive = true
-                            };
-
+                            var transaction = CreateRandomTransaction(newUser.Id, randomBook.Id, random);
                             await unitOfWork.TransactionRepository.AddAsync(transaction);
                         }
-
-                        Console.WriteLine($"✅ Created user {email} with {transactionCount} transactions");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"ℹ️ User {email} already exists");
                     }
                 }
 
                 await unitOfWork.SaveChangesAsync();
-                Console.WriteLine($"✅ Successfully seeded {numberOfUsers} users with random transactions");
+                Console.WriteLine("✅ Users with transactions seeded successfully.");
             }
             catch (Exception ex)
             {
