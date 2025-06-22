@@ -16,6 +16,7 @@ namespace LMS.BL.Dtos.Book
         public string? InsertedTime { get; set; }
         public string? Category { get; set; }
         public string? Author { get; set; }
+        public bool HasAvailableCopies { get; set; }
 
     }
 }

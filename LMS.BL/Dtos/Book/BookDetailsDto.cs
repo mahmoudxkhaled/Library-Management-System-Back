@@ -21,6 +21,7 @@
         public string? CategoryImageUrl { get; set; }
 
         public bool IsBorrowed { get; set; }
+        public bool HasAvailableCopies { get; set; }
 
 
     }

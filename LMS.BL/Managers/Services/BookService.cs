@@ -30,7 +30,16 @@ public class BookService : IBookService
         try
         {
             var books = await _unitOfWork.BookRepository.getAllBooksWithAuthorandCategory();
-            List<BookWithDetailsDto> booksWithDetails = books.Select(b => new BookWithDetailsDto() { Title = b.Title, Description = b.Description, PublicationYear = b.PublicationYear, AvailableCopies = b.AvailableCopies, TotalCopies = b.TotalCopies, Category = b.Category.Name, Author = b.Author.FullName }).ToList();
+            List<BookWithDetailsDto> booksWithDetails = books.Select(b => new BookWithDetailsDto() { 
+                Title = b.Title, 
+                Description = b.Description, 
+                PublicationYear = b.PublicationYear, 
+                AvailableCopies = b.AvailableCopies, 
+                TotalCopies = b.TotalCopies, 
+                Category = b.Category.Name, 
+                Author = b.Author.FullName,
+                HasAvailableCopies = b.AvailableCopies > 0
+            }).ToList();
             return new ApiResult<List<BookWithDetailsDto>> { IsSuccess = true, Data = booksWithDetails };
         }
         catch (Exception ex)
@@ -104,7 +113,8 @@ public class BookService : IBookService
                 TotalCopies = b.TotalCopies,
                 CategoryId = b.CategoryId,
                 ImageUrl = b.ImageUrl,
-                authorId = b.AuthorId
+                authorId = b.AuthorId,
+                HasAvailableCopies = b.AvailableCopies > 0
             }).ToList();
 
             return new ApiResult<List<GetBookDto>> { IsSuccess = true, Data = bookList };
@@ -135,7 +145,8 @@ public class BookService : IBookService
                 CategoryName = b.Category.Name,
                 PublicationYear = b.PublicationYear,
                 TotalCopies = b.TotalCopies,
-                IsTrending = b.IsTrending
+                IsTrending = b.IsTrending,
+                HasAvailableCopies = b.AvailableCopies > 0
             }).ToList();
             pagedResultDto.TotalCount = pagedResult.TotalCount;
             return new ApiResult<pagedResult<ReadBookDto>> { IsSuccess = true, Data = pagedResultDto };
@@ -179,6 +190,7 @@ public class BookService : IBookService
                     AvailableCopies = book.AvailableCopies,
                     TotalCopies = book.TotalCopies,
                     IsBorrowed = IsBorrowed,
+                    HasAvailableCopies = book.AvailableCopies > 0,
                     AuthorFullName = book.Author.FullName,
                     AuthorDescription = book.Author.Description,
                     AuthorImageUrl = book.Author.ImageUrl,
@@ -232,7 +244,8 @@ public class BookService : IBookService
                     TotalCopies = book.TotalCopies,
                     CategoryId = book.CategoryId,
                     ImageUrl = book.ImageUrl,
-                    IsBorrowed = IsBorrowed
+                    IsBorrowed = IsBorrowed,
+                    HasAvailableCopies = book.AvailableCopies > 0
                 }
             };
         }
@@ -366,7 +379,8 @@ public class BookService : IBookService
                 CategoryId = b.CategoryId,
                 CategoryName = b.Category.Name ?? "No Category",
                 ImageUrl = b.ImageUrl,
-                authorId = b.AuthorId
+                authorId = b.AuthorId,
+                HasAvailableCopies = b.AvailableCopies > 0
             }).ToList();
 
             return new ApiResult<List<GetBookDto>>

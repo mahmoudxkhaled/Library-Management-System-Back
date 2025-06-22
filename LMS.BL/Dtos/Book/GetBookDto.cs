@@ -14,4 +14,5 @@ public class GetBookDto
     public int CategoryId { get; set; }
     public string CategoryName { get; set; }
     public bool IsBorrowed { get; set; }
+    public bool HasAvailableCopies { get; set; }
 }

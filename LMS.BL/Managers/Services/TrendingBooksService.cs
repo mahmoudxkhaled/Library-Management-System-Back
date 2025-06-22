@@ -82,7 +82,8 @@ public class TrendingBooksService : ITrendingBooksService
                 TotalCopies = b.TotalCopies,
                 CategoryId = b.CategoryId,
                 ImageUrl = b.ImageUrl,
-                authorId = b.AuthorId
+                authorId = b.AuthorId,
+                HasAvailableCopies = b.AvailableCopies > 0
             }).ToList();
 
             var totalcount = bookList.Count;
