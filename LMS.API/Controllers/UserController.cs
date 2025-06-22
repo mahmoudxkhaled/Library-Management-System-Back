@@ -128,7 +128,7 @@ public class UserController : ControllerBase
     }
     [HttpPut]
     [Authorize]
-    public async Task<ActionResult> updateUserProfile(UpdateUserProfileDto updateUserProfile)
+    public async Task<ActionResult> updateUserProfile([FromForm] UpdateUserProfileDto updateUserProfile)
     {
         var result = await _userService.GetUserById(updateUserProfile.Id);
         if (result.IsSuccess)
