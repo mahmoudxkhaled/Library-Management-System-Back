@@ -12,4 +12,5 @@ public class GetTransactionDto
     public DateTime? DueDate { get; set; }
     public DateTime? ReturnDate { get; set; }
     public string Status { get; set; } = null!;
+    public int BorrowDays { get; set; }
 }
