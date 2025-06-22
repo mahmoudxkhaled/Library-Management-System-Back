@@ -147,7 +147,7 @@ public class UserController : ControllerBase
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpPut("UpdateCurrentUserDetails")]
+    [HttpPut("Profile")]
     [Authorize]
     public async Task<IActionResult> UpdateUserDetails([FromForm] UpdateUserDetailsDto updateUserDetails)
     {
