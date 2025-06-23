@@ -109,9 +109,9 @@ public class UserController : ControllerBase
 
     [HttpPost("AddUserWithDefaultPassword")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> AddUser([FromBody] AddUserDto request)
+    public async Task<IActionResult> AddUser([FromForm] AddUserDto request)
     {
-        var result = await _userService.AddUserAsync(request);
+        var result = await _userService.AddUserAsync(request,HttpContext);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
     [HttpGet("GetCurrentUserDetails")]
@@ -158,6 +158,16 @@ public class UserController : ControllerBase
         }
 
         var result = await _userService.UpdateUserDetailsAsync(updateUserDetails, HttpContext);
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
+    [HttpPut("admin")]
+    [Authorize]
+    public async Task<IActionResult> UpdateUserData([FromForm] UpdateUserDto Userdata)
+    {
+        var userId = User?.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+       
+
+        var result = await _userService.UpdateUserData(Userdata, HttpContext);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 

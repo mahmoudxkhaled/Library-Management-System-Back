@@ -21,9 +21,10 @@ namespace LMS.BL
         Task<ApiResult> RemoveRoleFromUserAsync(UserRoleDto updateUserRoleDto);
         Task<byte[]> ExportToExcel(List<SelectedFilters> selectedFilters);
         Task<ApiResult> ActivateDeactivateUserAsync(ToggleUserActivationDto updateUserStatusDto);
-        Task<ApiResult> AddUserAsync(AddUserDto userDto);
+        Task<ApiResult> AddUserAsync(AddUserDto userDto,HttpContext httpContext);
         Task<ApiResult> GetUserById(int id);
         Task<ApiResult> updateUserProfile(UpdateUserProfileDto updateUserProfile,HttpContext httpContext);
         Task<ApiResult> UpdateUserDetailsAsync(UpdateUserDetailsDto updateUserDetails, HttpContext httpContext);
+        Task<ApiResult> UpdateUserData(UpdateUserDto UpdateUserDto, HttpContext httpContext);
     }
 }

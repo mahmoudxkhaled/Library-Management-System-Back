@@ -10,6 +10,7 @@ using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System.Drawing;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 namespace LMS.BL;
@@ -333,7 +334,7 @@ public class UserService : IUserService
         return (jwtSecurityTokenHandler.WriteToken(jwtSecurity), expires);
     }
 
-    public async Task<ApiResult> AddUserAsync(AddUserDto userDto)
+    public async Task<ApiResult> AddUserAsync(AddUserDto userDto, HttpContext httpContext)
     {
         try
         {
@@ -357,7 +358,10 @@ public class UserService : IUserService
                 InsertedTime = DateTime.Now,
                 IsActive = true,
             };
-
+            if (userDto.ProfileImageUrl is not null)
+            {
+                user.ProfileImageUrl = await _helperService.SaveFileAsync(userDto.ProfileImageUrl, "Users", httpContext);
+            }
             // Save user in the repository
             await _unitOfWork.UserRepository.AddAsync(user);
 
@@ -529,4 +533,64 @@ public class UserService : IUserService
             return new ApiResult { IsSuccess = false, Message = ex.Message };
         }
     }
+    public async Task<ApiResult> UpdateUserData(UpdateUserDto UpdateUserDto, HttpContext httpContext)
+    {
+        try
+        {
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(UpdateUserDto.Id);
+            if (user == null)
+            {
+                return new ApiResult { IsSuccess = false, Message = "User not found" };
+            }
+
+            // Update user details
+            user.FirstName = UpdateUserDto.FirstName.Trim();
+            user.LastName = UpdateUserDto.LastName.Trim();
+            user.PhoneNumber = UpdateUserDto.PhoneNumber.Trim();
+            user.UserName = user.Email; // Keep username same as email
+            user.Role = UpdateUserDto.Role.Trim();
+            // Handle profile image if provided
+            if (UpdateUserDto.ProfileImageUrl is not null)
+            {
+                user.ProfileImageUrl = await _helperService.SaveFileAsync(UpdateUserDto.ProfileImageUrl, "Users", httpContext);
+            }
+            //update role
+            var existingClaims = await _manager.GetClaimsAsync(user);
+            var result = await _manager.RemoveClaimsAsync(user, existingClaims);
+            var newClaims = new List<Claim>
+                {
+                  new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                  new Claim(ClaimTypes.Email, user.Email.ToString()),
+                  new Claim(ClaimTypes.Role, UpdateUserDto.Role.ToString()),
+             };
+
+            var resultC = await _manager.AddClaimsAsync(user, newClaims);
+            // Update the user
+            _unitOfWork.UserRepository.Update(user);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return new ApiResult
+            {
+                IsSuccess = true,
+                Message = "User details updated successfully",
+                Data = new GetUserDto
+                {
+                    Id = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    PhoneNumber = user.PhoneNumber,
+                    ProfileImageUrl = user.ProfileImageUrl,
+                    Role = user.Role,
+                    IsActive = user.IsActive
+                }
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
+        }
+    }
+
 }

@@ -9,4 +9,6 @@ public class AddUserDto
     public string Role { get; set; } = null!;
     public string Email { get; set; } = null!;
     public string PhoneNumber { get; set; } = null!;
+    public IFormFile? ProfileImageUrl { get; set; }
+
 }
